@@ -42,5 +42,17 @@ export function tick(world: WorldState): WorldState {
         globalSignals: signals
     };
 }
+export function tick(world: WorldState): WorldState {
+    const updated = reduceWorld(world);
+    const signals = aggregateSignals(updated);
+    const rams = runRamsTick(updated);
+
+    return {
+        ...updated,
+        time: updated.time + 1,
+        globalSignals: signals,
+        ramsReport: rams
+    };
+}
 
 
