@@ -1,0 +1,1 @@
+Humanitarian subsystem initialized.
