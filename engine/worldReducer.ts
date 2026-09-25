@@ -13,6 +13,8 @@ import { applyIncentives } from "./incentives";
 import { applyEconomy } from "./economy";
 import { applyICC } from "./icc";
 import { applyEducation } from "./education";
+import { applyClassified } from "./classified";
+
 
 export async function reduceWorld(world: WorldState): Promise<WorldState> {
     let next = { ...world };
@@ -28,6 +30,8 @@ export async function reduceWorld(world: WorldState): Promise<WorldState> {
     next = applyICC(next);
     next = await applyEducation(next);
     next = applySynthesis(next);
+    next = applyClassified(next);
+
 
     return next;
 }
