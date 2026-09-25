@@ -1,0 +1,1 @@
+Education subsystem initialized.
