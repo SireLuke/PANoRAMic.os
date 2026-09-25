@@ -31,4 +31,10 @@ export const ramsIntegrity = {
 export const ramsEducation = {
     audit: auditEducation
 };
+import { auditClassified } from "./ramsClassified";
+
+export const ramsClassified = {
+    audit: auditClassified
+};
+
 
