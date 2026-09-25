@@ -1,4 +1,5 @@
 // engine/tick.ts
+import { runRamsTick } from "./ramsTick";
 export function tick(world) {
     // placeholder tick cycle
     return {
