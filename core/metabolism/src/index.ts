@@ -1,4 +1,9 @@
 export function metabolism() {
-    // Pure logic placeholder
-    return { status: "ready" };
+    return {
+        status: "ready",
+        par: "pending-api",
+        pool: "pending-api",
+        projectFund: "pending-api",
+        renewables: "pending-api"
+    };
 }
