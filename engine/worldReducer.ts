@@ -2,7 +2,6 @@
 
 import { WorldState } from "./worldState";
 
-// Subsystem imports (append more as they come online)
 import { applyMetabolism } from "./metabolism";
 import { applyStability } from "./stability";
 import { applyCatastrophe } from "./catastrophe";
@@ -12,11 +11,12 @@ import { applyEvents } from "./events";
 import { applyRenewables } from "./renewables";
 import { applyIncentives } from "./incentives";
 import { applyEconomy } from "./economy";
+import { applyICC } from "./icc";
+import { applyEducation } from "./education";
 
-export function reduceWorld(world: WorldState): WorldState {
+export async function reduceWorld(world: WorldState): Promise<WorldState> {
     let next = { ...world };
 
-    // Apply subsystem updates in logical order
     next = applyMetabolism(next);
     next = applyRenewables(next);
     next = applyIncentives(next);
@@ -24,8 +24,10 @@ export function reduceWorld(world: WorldState): WorldState {
     next = applyDampening(next);
     next = applyStability(next);
     next = applyEvents(next);
-    next = applySynthesis(next);
     next = applyEconomy(next);
+    next = applyICC(next);
+    next = await applyEducation(next);
+    next = applySynthesis(next);
 
     return next;
 }
