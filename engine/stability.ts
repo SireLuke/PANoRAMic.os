@@ -1,3 +1,6 @@
 export function stabilityScore(world) {
-    return "stable"; // placeholder
+    return {
+        status: "ready",
+        score: "pending-api"
+    };
 }
