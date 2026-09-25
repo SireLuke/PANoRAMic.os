@@ -1,49 +1,48 @@
 // engine/ramsTick.ts
 
 import { WorldState } from "./worldState";
-import { ramsIntegrity } from "../core/audits/src/index";
-import { ramsEducation } from "../core/audits/src/index";
-import { ramsFloat } from "../core/audits/src/index";
-import { ramsEconomy } from "../core/audits/src/index";
 
+import {
+    ramsIntegrity,
+    ramsEducation,
+    ramsFloat,
+    ramsEconomy,
+    ramsTrafficking,
+    ramsMigration,
+    ramsStability,
+    ramsCatastrophe,
+    ramsHumanitarian,
+    ramsGovernance,
+    ramsICC
+} from "../core/audits/src/index";
 
 export type RamsTickReport = {
     integrity: ReturnType<typeof ramsIntegrity.audit>;
     education: ReturnType<typeof ramsEducation.audit>;
     float: ReturnType<typeof ramsFloat.audit>;
+    economy: ReturnType<typeof ramsEconomy.audit>;
+    trafficking: ReturnType<typeof ramsTrafficking.audit>;
+    migration: ReturnType<typeof ramsMigration.audit>;
+    stability: ReturnType<typeof ramsStability.audit>;
+    catastrophe: ReturnType<typeof ramsCatastrophe.audit>;
+    humanitarian: ReturnType<typeof ramsHumanitarian.audit>;
+    governance: ReturnType<typeof ramsGovernance.audit>;
+    icc: ReturnType<typeof ramsICC.audit>;
 };
 
 export function runRamsTick(world: WorldState): RamsTickReport {
-    const integrity = ramsIntegrity.audit({
-        worldPopulation: world.population.total,
-        resourceParValue: world.resources.renewables,
-        floatMultiplier: 1.35,
-        resourceMultiplier: 0.9,
-        totalParSupply: world.economy.parSupply
-    });
-
-    const education = ramsEducation.audit({
-        education: {
-            topic: world.education.topic ?? "",
-            original: world.education.original ?? "",
-            translated: world.education.translated ?? "",
-            classification: {
-                domain: "general",
-                safe: true,
-                educationalValue: world.education.qualityScore ?? 0,
-                ageGroup: "all"
-            },
-            sourceUrl: null
-        }
-    });
-
-    const float = ramsFloat.audit({
-        worldPopulation: world.population.total,
-        resourceParValue: world.resources.renewables,
-        floatMultiplier: 1.35,
-        resourceMultiplier: 0.9,
-        totalParSupply: world.economy.parSupply
-    });
-
-    return { integrity, education, float };
+    return {
+        integrity: ramsIntegrity.audit({ world }),
+        education: ramsEducation.audit({ world }),
+        float: ramsFloat.audit({ world }),
+        economy: ramsEconomy.audit({ world }),
+        trafficking: ramsTrafficking.audit({ world }),
+        migration: ramsMigration.audit({ world }),
+        stability: ramsStability.audit({ world }),
+        catastrophe: ramsCatastrophe.audit({ world }),
+        humanitarian: ramsHumanitarian.audit({ world }),
+        governance: ramsGovernance.audit({ world }),
+        icc: ramsICC.audit({ world })
+    };
 }
+
