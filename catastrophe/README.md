@@ -1,1 +1,0 @@
-Catastrophe subsystem initialized.
