@@ -26,4 +26,9 @@ import { auditIntegrity } from "./ramsIntegrity";
 export const ramsIntegrity = {
     audit: auditIntegrity
 };
-}
+}import { auditEducation } from "./ramsEducation";
+
+export const ramsEducation = {
+    audit: auditEducation
+};
+
