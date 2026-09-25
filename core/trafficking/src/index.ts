@@ -1,10 +1,13 @@
-/ core/trafficking/src/index.ts
+// core/trafficking/src/index.ts
+
+import { computeTrafficking } from "./compute";
+import { scoreTrafficking } from "./score";
+import { traffickingFlags } from "./flags";
 
 export function trafficking() {
     return {
-        forcedLabor: 0,        // Global Slavery Index
-        sexualExploitation: 0, // UNODC reports
-        childTrafficking: 0,   // UNICEF, UNODC
-        migrationAbuse: 0      // IOM, UNHCR
+        compute: computeTrafficking,
+        score: scoreTrafficking,
+        flags: traffickingFlags
     };
 }
