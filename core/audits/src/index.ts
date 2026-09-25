@@ -21,5 +21,9 @@ export function audits() {
 export const ramsFloat = {
     audit: auditDynamicFloat
 };
+import { auditIntegrity } from "./ramsIntegrity";
 
+export const ramsIntegrity = {
+    audit: auditIntegrity
+};
 }
