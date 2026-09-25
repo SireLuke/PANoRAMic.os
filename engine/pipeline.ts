@@ -8,5 +8,6 @@ export const pipeline = [
     "catastrophe",
     "dampening",
     "events"
+    "travel",
     "incentive",
 ];
