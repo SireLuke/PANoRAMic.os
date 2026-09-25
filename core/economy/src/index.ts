@@ -1,11 +1,4 @@
 // core/economy/src/index.ts
-import { computeDynamicParCap } from "./dynamicFloat";
-import { canIssueParDynamic } from "./digitalIssuance";
-
-export const dynamicFloat = {
-    cap: computeDynamicParCap,
-    canIssue: canIssueParDynamic
-};
 import { convertPARToLocal } from "./currencyConversion";
 import { computeRealAssetValue } from "./realAssetEquivalence";
 import { computeNationAdjustment } from "./nationFactors";
@@ -56,4 +49,11 @@ export const stewardship = {
     canPay: canPaySteward,
     pay: applyStewardPayment,
     audit: auditStewardship
+};
+import { computeDynamicParCap } from "./dynamicFloat";
+import { canIssueParDynamic } from "./digitalIssuance";
+
+export const dynamicFloat = {
+    cap: computeDynamicParCap,
+    canIssue: canIssueParDynamic
 };
