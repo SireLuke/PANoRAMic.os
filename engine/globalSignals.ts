@@ -18,6 +18,12 @@ export type GlobalSignals = {
     trafficking: number;
     harm: number;
     coherence: number;
+    parSupply: world.economy.parSupply ?? 0,
+    parCap: world.economy.parCap ?? 0,
+    stewardship: world.economy.stewardshipFund ?? 0,
+    humanitarianPool: world.economy.humanitarianPool ?? 0,
+    taxLoad: world.economy.taxLoad ?? 0,
+
 };
 
 export function aggregateSignals(world: WorldState): GlobalSignals {
