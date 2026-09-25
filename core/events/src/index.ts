@@ -1,3 +1,7 @@
 export function events() {
-    return { status: "ready" };
+    return {
+        status: "ready",
+        feed: "pending-api",
+        categories: "pending-api"
+    };
 }
