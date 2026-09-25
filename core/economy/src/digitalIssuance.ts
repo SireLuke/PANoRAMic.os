@@ -1,16 +1,20 @@
 // core/economy/src/digitalIssuance.ts
 
-import { computeGlobalParCap } from "./globalFloat";
+import { computeDynamicParCap } from "./dynamicFloat";
 
-export function canIssuePar(
+export function canIssueParDynamic(
     currentSupply: number,
     issueAmount: number,
     worldPopulation: number,
-    floatMultiplier = 1.35
+    resourceParValue: number,
+    floatMultiplier = 1.35,
+    resourceMultiplier = 0.90
 ) {
-    const { globalCap } = computeGlobalParCap({
+    const { globalCap } = computeDynamicParCap({
         worldPopulation,
-        floatMultiplier
+        floatMultiplier,
+        resourceParValue,
+        resourceMultiplier
     });
 
     return currentSupply + issueAmount <= globalCap;
