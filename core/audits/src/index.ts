@@ -16,5 +16,10 @@ export function audits() {
             transparency: null,
             environment: null
         }
-    };
+    };import { auditDynamicFloat } from "./ramsDynamicFloat";
+
+export const ramsFloat = {
+    audit: auditDynamicFloat
+};
+
 }
