@@ -91,4 +91,9 @@ export type WorldState = {
     accessBlocked?: boolean;
     transparencyLow?: boolean;
 };
+import { ClassifiedRecord } from "../core/classified/src/types";
+
+export type WorldClassified = {
+    records: ClassifiedRecord[];
+};
 
