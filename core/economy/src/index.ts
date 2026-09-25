@@ -32,4 +32,22 @@ export const stewardship = {
     canPay: canPaySteward,
     pay: applyStewardPayment,
     audit: auditStewardship
+};import {
+    createStewardshipFund,
+    addContribution
+} from "./stewardshipFund";
+
+import {
+    canPaySteward,
+    applyStewardPayment
+} from "./stewardshipCaps";
+
+import { auditStewardship } from "./stewardshipGovernance";
+
+export const stewardship = {
+    create: createStewardshipFund,
+    contribute: addContribution,
+    canPay: canPaySteward,
+    pay: applyStewardPayment,
+    audit: auditStewardship
 };
