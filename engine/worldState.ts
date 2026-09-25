@@ -82,6 +82,8 @@ export type WorldState = {
     trafficking: WorldTrafficking;
     harmindex: WorldHarmIndex;
     travel: WorldTravel;
+    icc: WorldICC;
+
 };export type WorldICC = {
     score?: number;
     rightsViolation?: boolean;
