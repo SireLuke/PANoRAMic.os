@@ -4,6 +4,8 @@ import { WorldState } from "./worldState";
 import { ramsIntegrity } from "../core/audits/src/index";
 import { ramsEducation } from "../core/audits/src/index";
 import { ramsFloat } from "../core/audits/src/index";
+import { ramsEconomy } from "../core/audits/src/index";
+
 
 export type RamsTickReport = {
     integrity: ReturnType<typeof ramsIntegrity.audit>;
