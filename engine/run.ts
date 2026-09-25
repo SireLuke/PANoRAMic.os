@@ -49,7 +49,7 @@ export function createInitialWorldState(): WorldState {
         icc: {},
 
     };
-}
+}classified: { records: [] },
 
     return world;
 }
