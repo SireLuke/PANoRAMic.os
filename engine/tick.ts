@@ -1,4 +1,8 @@
-export function tick(world, subsystems) {
-    // Pure logic — no data
-    return world;
+// engine/tick.ts
+export function tick(world) {
+    // placeholder tick cycle
+    return {
+        ...world,
+        ticked: true
+    };
 }
