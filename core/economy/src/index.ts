@@ -8,4 +8,10 @@ export const currency = {
     convert: convertPARToLocal,
     realAssets: computeRealAssetValue,
     nationAdjustment: computeNationAdjustment
+};import { computeGlobalParCap } from "./globalFloat";
+import { canIssuePar } from "./digitalIssuance";
+
+export const globalFloat = {
+    cap: computeGlobalParCap,
+    canIssue: canIssuePar
 };
