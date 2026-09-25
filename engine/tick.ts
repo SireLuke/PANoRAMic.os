@@ -20,4 +20,14 @@ export function tick(world: WorldState): WorldState {
     return next;
 }
 
+}import { reduceWorld } from "./worldReducer";
+
+export function tick(world: WorldState): WorldState {
+    const updated = reduceWorld(world);
+
+    return {
+        ...updated,
+        time: updated.time + 1
+    };
 }
+
