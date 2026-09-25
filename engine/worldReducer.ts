@@ -11,6 +11,7 @@ import { applySynthesis } from "./synthesis";
 import { applyEvents } from "./events";
 import { applyRenewables } from "./renewables";
 import { applyIncentives } from "./incentives";
+import { applyEconomy } from "./economy";
 
 export function reduceWorld(world: WorldState): WorldState {
     let next = { ...world };
@@ -24,6 +25,7 @@ export function reduceWorld(world: WorldState): WorldState {
     next = applyStability(next);
     next = applyEvents(next);
     next = applySynthesis(next);
+    next = applyEconomy(next);
 
     return next;
 }
