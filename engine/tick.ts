@@ -29,5 +29,17 @@ export function tick(world: WorldState): WorldState {
         ...updated,
         time: updated.time + 1
     };
+}import { aggregateSignals } from "./globalSignals";
+
+export function tick(world: WorldState): WorldState {
+    const updated = reduceWorld(world);
+    const signals = aggregateSignals(updated);
+
+    return {
+        ...updated,
+        time: updated.time + 1,
+        globalSignals: signals
+    };
 }
+
 
