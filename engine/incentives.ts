@@ -1,20 +1,28 @@
-export function onboardingIncentive(population, projectFraction) {
-    const parMax = population * 1.35;
-    const incentive = population / 1.35;
-    const projectFund = parMax * projectFraction;
+// engine/incentive.ts
 
-    return {
-        parMax,
-        incentive,
-        projectFund,
-        status: "ready"
+import { incentive as coreIncentive } from "../core/incentive/src/index";
+
+export function processIncentive(world) {
+    // Initialize incentive structure from core
+    const inc = coreIncentive();
+
+    // Placeholder values from core (future API will populate these)
+    const rewards = inc.rewards;
+    const penalties = inc.penalties;
+
+    // Engine-level behavior:
+    // Later this will include:
+    // - reward scoring
+    // - penalty routing
+    // - population incentive modeling
+    // - stability + metabolism integration
+    // - synthesis merging
+
+    world.incentive = {
+        rewards,
+        penalties,
+        lastProcessed: Date.now()
     };
-    export function onboardingPAR(voterProfile) {
-    return {
-        eligibility: voterProfile.isVerified,
-        metrics: "pending-api",
-        share: "pending-calculation",
-        status: "ready"
-    };
-}
+
+    return world;
 }
