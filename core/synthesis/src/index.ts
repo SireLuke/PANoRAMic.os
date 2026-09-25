@@ -1,3 +1,6 @@
 export function synthesis() {
-    return { status: "ready" };
+    return {
+        status: "ready",
+        combined: "pending-api"
+    };
 }
