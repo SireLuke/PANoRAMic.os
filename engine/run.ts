@@ -46,6 +46,8 @@ export function createInitialWorldState(): WorldState {
         trafficking: {},
         harmindex: {},
         travel: {}
+        icc: {},
+
     };
 }
 
