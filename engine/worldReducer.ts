@@ -1,38 +1,36 @@
-// engine/worldReducer.ts
-// engine/worldReducer.ts
+// engine/trafficking.ts
 
 import { WorldState } from "./worldState";
 
-import { applyMetabolism } from "./metabolism";
-import { applyStability } from "./stability";
-import { applyCatastrophe } from "./catastrophe";
-import { applyDampening } from "./dampening";
-import { applySynthesis } from "./synthesis";
-import { applyEvents } from "./events";
-import { applyRenewables } from "./renewables";
-import { applyIncentives } from "./incentives";
-import { applyEconomy } from "./economy";
-import { applyICC } from "./icc";
-import { applyEducation } from "./education";
-import { applyPanitarian } from "./panitarian";
-import { applyMigration } from "./migration";
+/**
+ * Trafficking Tick Engine
+ *
+ * Computes trafficking pressure, trafficking flow, and trafficking score
+ * based on humanitarian need, migration, and governance.
+ */
 
-export async function reduceWorld(world: WorldState): Promise<WorldState> {
-    let next = { ...world };
+export function applyTrafficking(world: WorldState): WorldState {
+    const need = world.humanitarian.needScore ?? 0;
+    const relief = world.humanitarian.reliefScore ?? 0;
+    const migrationScore = world.migration.migrationScore ?? 0;
+    const governanceScore = world.governance.panitarianScore ?? 0;
 
-    next = applyMetabolism(next);
-    next = applyRenewables(next);
-    next = applyIncentives(next);
-    next = applyCatastrophe(next);
-    next = applyDampening(next);
-    next = applyStability(next);
-    next = applyEvents(next);
-    next = applyEconomy(next);
-    next = applyICC(next);
-    next = await applyEducation(next);
-    next = applyPanitarian(next);
-    next = applyMigration(next);
-    next = applySynthesis(next);
+    // Trafficking pressure: unmet need + migration vulnerability
+    const pressure = Math.max(0, (need - relief) + migrationScore);
 
-    return next;
+    // Trafficking flow: pressure reduced by governance
+    const flow = Math.max(0, pressure * (1 - governanceScore));
+
+    // Trafficking score: normalized indicator
+    const score = Math.min(1, flow);
+
+    return {
+        ...world,
+        trafficking: {
+            traffickingPressure: pressure,
+            traffickingFlow: flow,
+            traffickingScore: score
+        }
+    };
 }
+
