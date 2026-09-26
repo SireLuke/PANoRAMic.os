@@ -36,6 +36,7 @@ async function main() {
             console.log("  dashboard  Show dashboard summary in CLI");
             console.log("  rams       Run RAMS audits and print report");
             console.log("  signals    Print all global signals");
+             console.log("  search     Search world, signals, RAMS, dashboard")
             break;
     }case "search":
     const term = process.argv[3];
