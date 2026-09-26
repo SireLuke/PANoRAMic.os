@@ -67,4 +67,12 @@ Phase 7 — Documentation and Community
 - Invite contributions aligned with dignity, transparency, cooperation, and
   sustainability.
 
+## Phase 5 — Planetary Infrastructure Modeling
+
+- Add desalination network modeling (global freshwater stability).
+- Add equatorial solar belt modeling (renewable planetary energy).
+- Add anaerobic/aerobic waste-to-energy systems.
+- Add planetary recycling and material recovery loops.
+- Integrate infrastructure metrics with ecological, rights, labor, and PAR systems.
+
 Status: Planned.
