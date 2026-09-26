@@ -1,40 +1,18 @@
 // core/audits/src/index.ts
 
-import { computeImpact } from "./computeImpact";
-import { score } from "./score";
-import { flags } from "./flags";
-
-export function audits() {
-    return {
-        computeImpact,
-        score,
-        flags,
-        adapters: {
-            un: null,
-            nasa: null,
-            noaa: null,
-            transparency: null,
-            environment: null
-        }
-    };import { auditDynamicFloat } from "./ramsDynamicFloat";
-
-export const ramsFloat = {
-    audit: auditDynamicFloat
-};
-import { auditIntegrity } from "./ramsIntegrity";
-
-export const ramsIntegrity = {
-    audit: auditIntegrity
-};
-}import { auditEducation } from "./ramsEducation";
-
-export const ramsEducation = {
-    audit: auditEducation
-};
-import { auditClassified } from "./ramsClassified";
-
-export const ramsClassified = {
-    audit: auditClassified
-};
+export * from "./ramsIntegrity";
+export * from "./ramsEducation";
+export * from "./ramsFloat";
+export * from "./ramsEconomy";
+export * from "./ramsTrafficking";
+export * from "./ramsMigration";
+export * from "./ramsStability";
+export * from "./ramsCatastrophe";
+export * from "./ramsHumanitarian";
+export * from "./ramsGovernance";
+export * from "./ramsICC";
+export * from "./ramsClassified";
+export * from "./ramsHarmIndex";
+export * from "./ramsResources";
 
 
