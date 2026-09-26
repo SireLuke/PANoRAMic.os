@@ -1,4 +1,5 @@
 // engine/worldReducer.ts
+// engine/worldReducer.ts
 
 import { WorldState } from "./worldState";
 
@@ -14,6 +15,7 @@ import { applyEconomy } from "./economy";
 import { applyICC } from "./icc";
 import { applyEducation } from "./education";
 import { applyPanitarian } from "./panitarian";
+import { applyMigration } from "./migration";
 
 export async function reduceWorld(world: WorldState): Promise<WorldState> {
     let next = { ...world };
@@ -29,8 +31,8 @@ export async function reduceWorld(world: WorldState): Promise<WorldState> {
     next = applyICC(next);
     next = await applyEducation(next);
     next = applyPanitarian(next);
+    next = applyMigration(next);
     next = applySynthesis(next);
 
     return next;
 }
-
