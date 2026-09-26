@@ -17,6 +17,7 @@ import { applyPanitarian } from "./panitarian";
 import { applyMigration } from "./migration";
 import { applyTrafficking } from "./trafficking";
 import { applyHarmIndex } from "./harmindex";
+import { applyHumanitarian } from "./humanitarian";
 
 export async function reduceWorld(world: WorldState): Promise<WorldState> {
     let next = { ...world };
@@ -34,6 +35,7 @@ export async function reduceWorld(world: WorldState): Promise<WorldState> {
     next = applyPanitarian(next);
     next = applyMigration(next);
     next = applyTrafficking(next);
+    next = applyHumanitarian(next);
     next = applyHarmIndex(next);
     next = applySynthesis(next);
 
