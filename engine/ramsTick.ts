@@ -48,4 +48,3 @@ export function runRamsTick(world: WorldState): RamsTickReport {
         classified: ramsClassified.audit({ world })
     };
 }
-
