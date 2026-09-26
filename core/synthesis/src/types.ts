@@ -1,0 +1,20 @@
+export type SynthesisInput = {
+    risk: number;
+    resilience: number;
+    volatility: number;
+    parSupply: number;
+    governance: number;
+    humanitarianNeed: number;
+    humanitarianRelief: number;
+    migration: number;
+    trafficking: number;
+    harm: number;
+    population: number;
+    resources: number;
+    scarcity: number;
+    sustainability: number;
+    knowledge: number;
+    access: number;
+    equity: number;
+    icc: number;
+};
