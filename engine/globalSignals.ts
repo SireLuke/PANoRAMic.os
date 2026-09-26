@@ -25,8 +25,7 @@ export type GlobalSignals = {
     harm: number;
     coherence: number;
     icc: number;
-    classified: world.classified.records.length,
-
+    panitarian: number;
 };
 
 export function aggregateSignals(world: WorldState): GlobalSignals {
@@ -52,7 +51,8 @@ export function aggregateSignals(world: WorldState): GlobalSignals {
         trafficking: world.trafficking.traffickingScore ?? 0,
         harm: world.harmindex.harmScore ?? 0,
         coherence: world.synthesis.weights ?? 0,
-        icc: world.icc.score ?? 0
+        icc: world.icc.score ?? 0,
+        panitarian: world.governance.panitarianScore ?? 0
     };
 }
 
