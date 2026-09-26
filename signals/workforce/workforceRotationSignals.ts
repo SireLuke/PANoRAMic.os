@@ -1,10 +1,11 @@
 import { WorkforceRotationState } from "../../core/pillars/workforce/WORKFORCE_ROTATION_STATE"
 
-export function computeWorkforceRotation(state: WorkforceRotationState): WorkforceRotationState {
+export function emitWorkforceRotationSignals(state: WorkforceRotationState) {
   return {
-    ...state,
-    skillGainRate: state.disciplinesPerCycle * 0.05,
-    burnoutReductionIndex: 1 - (state.rotationLengthHours / 12),
-    workforceSatisfactionIndex: (state.skillGainRate + state.burnoutReductionIndex) / 2,
+    rotationLength: state.rotationLengthHours,
+    disciplinesPerCycle: state.disciplinesPerCycle,
+    skillGainRate: state.skillGainRate,
+    burnoutReduction: state.burnoutReductionIndex,
+    satisfaction: state.workforceSatisfactionIndex,
   }
 }
