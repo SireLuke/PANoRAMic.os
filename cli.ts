@@ -37,7 +37,15 @@ async function main() {
             console.log("  rams       Run RAMS audits and print report");
             console.log("  signals    Print all global signals");
             break;
+    }case "search":
+    const term = process.argv[3];
+    if (!term) {
+        console.log("Usage: node cli search <term>");
+    } else {
+        searchCommand(term);
     }
+    break;
+
 }
 
 main().catch(err => {
