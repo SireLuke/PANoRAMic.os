@@ -25,6 +25,8 @@ export type GlobalSignals = {
     harm: number;
     coherence: number;
     icc: number;
+    classified: world.classified.records.length,
+
 };
 
 export function aggregateSignals(world: WorldState): GlobalSignals {
