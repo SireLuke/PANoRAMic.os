@@ -1,5 +1,6 @@
 export * from "./types";
 export * from "./state";
+export * from "./Dashboard";
 export * from "./panels/WorldPanel";
 export * from "./panels/EconomyPanel";
 export * from "./panels/GovernancePanel";
