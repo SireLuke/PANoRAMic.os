@@ -1,0 +1,10 @@
+{
+  "tickSpeed": 1000,
+  "outputStyle": "pretty",
+  "theme": "dark",
+  "ramsVerbosity": "normal",
+  "search": {
+    "caseSensitive": false,
+    "maxResults": 25
+  }
+}
