@@ -1,7 +1,7 @@
 // engine/ramsTick.ts
 
 import { WorldState } from "./worldState";
-import { ramsClassified } from "../core/audits/src/index";
+
 import {
     ramsIntegrity,
     ramsEducation,
@@ -13,10 +13,9 @@ import {
     ramsCatastrophe,
     ramsHumanitarian,
     ramsGovernance,
-    ramsICC
+    ramsICC,
+    ramsClassified
 } from "../core/audits/src/index";
-
-
 
 export type RamsTickReport = {
     integrity: ReturnType<typeof ramsIntegrity.audit>;
@@ -31,7 +30,6 @@ export type RamsTickReport = {
     governance: ReturnType<typeof ramsGovernance.audit>;
     icc: ReturnType<typeof ramsICC.audit>;
     classified: ReturnType<typeof ramsClassified.audit>;
-
 };
 
 export function runRamsTick(world: WorldState): RamsTickReport {
@@ -46,9 +44,8 @@ export function runRamsTick(world: WorldState): RamsTickReport {
         catastrophe: ramsCatastrophe.audit({ world }),
         humanitarian: ramsHumanitarian.audit({ world }),
         governance: ramsGovernance.audit({ world }),
-        icc: ramsICC.audit({ world })
-        classified: ramsClassified.audit({ world }),
-
+        icc: ramsICC.audit({ world }),
+        classified: ramsClassified.audit({ world })
     };
 }
 
