@@ -3,7 +3,8 @@
 import { server } from "../server.js"
 import { bindAPIRoutes } from "./apiIntegration"
 import { bindPillarRoutes } from "./pillarRoutesIntegration"
-import { initLiveStreamIntegration, startLiveStream } from "./liveStreamIntegrationjs."
+import { liveStream } from "../liveStream.js"
+import { planetRouter } from "../routes/planetRouter.js"
 import { initAPIIntegration } from "./apiIntegration"
 
 /**
