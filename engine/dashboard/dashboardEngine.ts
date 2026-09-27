@@ -1,69 +1,46 @@
 // engine/dashboard/dashboardEngine.ts
 
-import { SystemState } from "../../core/SystemState"
+let dashboardState: any = {}
 
-export function computeDashboard(state: SystemState) {
-  // Global health (ecology + infrastructure + population)
-  const globalHealth =
-    state.ecology.regenerationIndex * 0.4 +
-    state.infrastructure.resilienceIndex * 0.4 +
-    state.population.populationHealthIndex * 0.2
+export const dashboardEngine = {
+  update(update: any) {
+    dashboardState = {
+      tick: update.tick ?? dashboardState.tick ?? 0,
 
-  // Global stability (markets + modes + par)
-  const globalStability =
-    state.markets.stabilityIndex * 0.4 +
-    state.modes.stabilityIndex * 0.3 +
-    (state.par.parCapCompliance ? 1 : 0) * 0.3
+      // NodeMap
+      nodeMap: update.nodeMap ?? dashboardState.nodeMap,
+      nodeSignals: update.nodeSignals ?? dashboardState.nodeSignals,
+      nodeAudits: update.nodeAudits ?? dashboardState.nodeAudits,
 
-  // Global risk (ecology degradation + infrastructure failure + market extraction)
-  const globalRisk =
-    state.ecology.degradationIndex * 0.4 +
-    state.infrastructure.failureIndex * 0.3 +
-    state.markets.extractivePressureIndex * 0.3
+      // Pillars
+      par: update.parState ?? dashboardState.par,
+      rights: update.rightsState ?? dashboardState.rights,
+      ecology: update.ecologyState ?? dashboardState.ecology,
+      infrastructure: update.infraState ?? dashboardState.infrastructure,
+      commons: update.commonsState ?? dashboardState.commons,
+      governance: update.governanceState ?? dashboardState.governance,
+      labor: update.laborState ?? dashboardState.labor,
+      markets: update.marketsState ?? dashboardState.markets,
+      population: update.populationState ?? dashboardState.population,
+      workforce: update.workforceState ?? dashboardState.workforce,
 
-  // Global synthesis (how well systems cooperate)
-  const globalSynthesis =
-    state.microAi.microAiCoverageIndex * 0.3 +
-    state.workforceRotation.skillGainRate * 0.3 +
-    state.nodes.reduce((sum, n) => sum + n.nodeConnectivityIndex, 0) /
-      Math.max(state.nodes.length, 1) *
-      0.4
+      // Modes
+      modesState: update.modesState ?? dashboardState.modesState,
 
-  // Catastrophe probability (immune system trigger)
-  const catastropheProbability =
-    globalRisk * 0.6 +
-    (1 - globalStability) * 0.4
+      // RAMS
+      systemAudits: update.systemAudits ?? dashboardState.systemAudits,
+      audits: update.audits ?? dashboardState.audits,
 
-  // Immune system activation
-  const immuneSystemActive = catastropheProbability > 0.7
+      // Signals
+      signals: update.signals ?? dashboardState.signals,
 
-  return {
-    globalHealth,
-    globalStability,
-    globalRisk,
-    globalSynthesis,
-    catastropheProbability,
-    immuneSystemActive,
-    activeMode: state.modes.activeMode,
-    par: {
-      cap: state.par.parCap,
-      mintRate: state.par.parMintRate,
-      velocity: state.par.parVelocity,
-      dignityFloor: state.par.dignityFloor,
-      stewardshipSalary: state.par.stewardshipSalary,
-    },
-    ecology: {
-      regen: state.ecology.regenerationIndex,
-      degradation: state.ecology.degradationIndex,
-    },
-    infrastructure: {
-      resilience: state.infrastructure.resilienceIndex,
-      failure: state.infrastructure.failureIndex,
-    },
-    markets: {
-      stability: state.markets.stabilityIndex,
-      extraction: state.markets.extractivePressureIndex,
-    },
-    nodes: state.nodes.length,
+      // Global/System
+      globalState: update.globalState ?? dashboardState.globalState,
+      systemState: update.systemState ?? dashboardState.systemState,
+    }
+  },
+
+  getState() {
+    return dashboardState
   }
 }
