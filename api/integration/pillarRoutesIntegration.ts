@@ -1,8 +1,8 @@
 // api/integration/pillarRoutesIntegration.ts
 
-import { server } from "../server"
-import { dashboardEngine } from "../../engine/dashboard/dashboardEngine"
-import { globalSignals } from "../../signals/globalSignals"
+import { server } from "../server.js"
+import { dashboardEngine } from "../../engine/dashboard/dashboardEngine.js"
+import { globalSignals } from "../../signals/globalSignals.js"
 
 export function bindPillarRoutes() {
   const dashboard = () => dashboardEngine.getState()
