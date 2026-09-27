@@ -1,7 +1,7 @@
 // cli/start.ts
 
-import { runContinuous } from "../engine/run/runIntegration"
-import { bootstrapAPI } from "../api/integration/apiBootstrap"
+import { runContinuous } from "../engine/run/runIntegration.js"
+import { bootstrapAPI } from "../api/integration/apiBootstrap.js"
 
 async function main() {
   console.log("PANoRAMic.OS: Starting planetary operating system...")
