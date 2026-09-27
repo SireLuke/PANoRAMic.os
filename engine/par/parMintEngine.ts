@@ -1,44 +1,54 @@
-// engine/par/parMintEngine.ts
+// engine/par/PARMintEngine.ts
 
-export function computeParMintRate({
-  par,
-  ecology,
-  infrastructure,
-  markets,
-  dashboard,
-}: {
-  par: any
-  ecology: any
-  infrastructure: any
-  markets: any
-  dashboard: any
-}) {
-  // Base mint rate from dignity + population
-  let mintRate =
-    par.population * 0.00001 * par.dignityFloat * par.resourceModifier
+export interface PARMintProfile {
+  renewableBackingIndex: number      // 0–1: ecological + renewable capacity
+  globalDignityIndex: number         // 0–1: rights + autonomy + safety stability
+  adoptionIndex: number              // 0–1: how many participants are active
+  currentSupplyIndex: number         // 0–1 normalized PAR supply
+}
 
-  // Ecology boosts minting when healthy
-  mintRate += ecology.regenerationIndex * 50
+export interface PARMintResult {
+  mintedPARIndex: number             // new PAR created this tick
+  updatedSupplyIndex: number         // new total supply
+}
 
-  // Infrastructure boosts minting when resilient
-  mintRate += infrastructure.resilienceIndex * 40
+/**
+ * PAR Mint Engine
+ *
+ * - Mints new PAR based on renewable backing, dignity stability, and adoption rate
+ * - Does NOT dilute existing holders
+ * - Does NOT extract from citizens
+ * - Supply expands only when the world is stable enough to support it
+ */
+export function runPARMintEngine(
+  profile: PARMintProfile
+): PARMintResult {
+  const {
+    renewableBackingIndex,
+    globalDignityIndex,
+    adoptionIndex,
+    currentSupplyIndex,
+  } = profile
 
-  // Markets reduce minting when extraction pressure is high
-  mintRate -= markets.extractivePressureIndex * 60
+  // Minting capacity is driven by renewable + dignity
+  const baseCapacity =
+    renewableBackingIndex * 0.6 +
+    globalDignityIndex * 0.4
 
-  // Immune system activation reduces minting to stabilize the planet
-  if (dashboard.immuneSystemActive) {
-    mintRate *= 0.8
+  // Adoption determines how much of that capacity activates
+  const activationFactor = adoptionIndex
+
+  // Mint amount (normalized)
+  const mintedPARIndex = baseCapacity * activationFactor * 0.1
+
+  // Update supply, capped at 1
+  const updatedSupplyIndex = Math.min(
+    1,
+    currentSupplyIndex + mintedPARIndex
+  )
+
+  return {
+    mintedPARIndex,
+    updatedSupplyIndex,
   }
-
-  // Catastrophe probability reduces minting sharply
-  mintRate *= 1 - dashboard.catastropheProbability * 0.5
-
-  // Bound mint rate by PAR Cap
-  mintRate = Math.min(mintRate, par.parCap)
-
-  // Ensure mint rate never goes negative
-  mintRate = Math.max(0, mintRate)
-
-  return mintRate
 }
