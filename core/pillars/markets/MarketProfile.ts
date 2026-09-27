@@ -55,5 +55,65 @@ export function evaluateMarketHealth(market: MarketProfile) {
   return {
     healthScore,
     mode,
+  }// core/pillars/markets/MarketProfile.ts
+
+export interface MarketProfile {
+  name: string
+  marketType:
+    | "local"
+    | "regional"
+    | "national"
+    | "global"
+    | "digital"
+    | "resource"
+    | "labor"
+    | "infrastructure"
+    | "ecological"
+
+  // Core metrics
+  stabilityIndex: number            // 0–1
+  riskIndex: number                 // 0–1
+  loadIndex: number                 // 0–1
+  resilienceIndex: number           // 0–1
+
+  // Economic metrics
+  volatilityIndex: number           // 0–1
+  liquidityIndex: number            // 0–1
+  dignityComplianceIndex: number    // 0–1
+  predatoryPressureIndex: number    // 0–1
+
+  // Dependency metrics
+  ecologicalDependencyIndex: number // 0–1
+  infrastructureDependencyIndex: number // 0–1
+  workforceDependencyIndex: number  // 0–1
+
+  // Collapse metrics
+  collapseRiskIndex: number         // 0–1
+}
+
+export function evaluateMarketHealth(market: MarketProfile) {
+  let healthScore =
+    market.stabilityIndex * 40 +
+    market.resilienceIndex * 30 -
+    market.riskIndex * 25 -
+    market.loadIndex * 25 -
+    market.volatilityIndex * 25 -
+    market.predatoryPressureIndex * 25
+
+  healthScore -= market.ecologicalDependencyIndex * 15
+  healthScore -= market.infrastructureDependencyIndex * 15
+  healthScore -= market.workforceDependencyIndex * 15
+  healthScore -= market.collapseRiskIndex * 30
+
+  healthScore = Math.max(0, Math.min(healthScore, 100))
+
+  let mode = "stable"
+  if (healthScore < 40) mode = "critical"
+  else if (healthScore < 70) mode = "unstable"
+
+  return {
+    healthScore,
+    mode,
   }
+}
 }
