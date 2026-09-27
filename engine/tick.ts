@@ -8,7 +8,11 @@ import { runRamsTick } from "./ramsTick";
 export async function tick(world: WorldState): Promise<WorldState> {
     const updated = await reduceWorld(world);
     const signals = aggregateSignals(updated);
-    const rams = runRamsTick(updated);
+    const rams = runRamsTick(updated);                    const newResult = runGlobalLoop(state)
+setResult(newResult)
+
+// Track PAR adoption over time
+setParHistory((prev) => [...prev, state.par.adoptionIndex])
 
     return {
         ...updated,
