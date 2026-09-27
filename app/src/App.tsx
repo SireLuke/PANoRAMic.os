@@ -7,7 +7,8 @@ import { initialWorld } from "@engine/worldState";
 
 export default function App() {
   const [world, setWorld] = useState(initialWorld);
-  const [dashboard, setDashboard] = useState(buildDashboard(initialWorld));
+  const [dashboard, setDashboard] =
+const [parHistory, setParHistory] = useState([initialState.par.adoptionIndex]) useState(buildDashboard(initialWorld));
 
   useEffect(() => {
     const interval = setInterval(() => {
