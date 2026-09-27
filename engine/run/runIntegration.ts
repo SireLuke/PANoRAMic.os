@@ -1,8 +1,9 @@
 // engine/run/runIntegration.ts
 
-import { initSystemTickIntegration, runSystemTick } from "../system/systemTickIntegration"
-import { dashboardEngine } from "../dashboard/dashboardEngine"
-import { globalSignals } from "../../signals/globalSignals"
+import { initSystemTickIntegration, runSystemTick } from "../system/systemTickIntegration.js"
+import { dashboardEngine } from "../dashboard/dashboardEngine.js"
+import { globalSignals } from "../../signals/globalSignals.js"
+
 
 export interface RunIntegration {
   tick: number
