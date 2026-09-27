@@ -1,35 +1,13 @@
 // engine/par/parEngine.ts
 
-import { ParState } from "../../core/pillars/par/PAR_STATE"
-import { WorkforceRotationState } from "../../core/pillars/workforce/WORKFORCE_ROTATION_STATE"
-import { ModesState } from "../../core/pillars/modes/MODES_STATE"
-import { NodeState } from "../../core/pillars/nodes/NODES_STATE"
-import { MarketsState } from "../../core/pillars/markets/MARKETS_STATE"
-import { EcologyState } from "../../core/pillars/ecology/ECOLOGY_STATE"
-import { InfrastructureState } from "../../core/pillars/infrastructure/INFRASTRUCTURE_STATE"
-
 import { computeParCap } from "../../core/pillars/par/PAR_CAP"
 import { computeParSalary } from "./parSalaryEngine"
 import { enforceParRules } from "./parEnforcementEngine"
 
-export function computePar({
-  par,
-  workforceRotation,
-  modes,
-  nodes,
-  markets,
-  ecology,
-  infrastructure,
-}: {
-  par: ParState
-  workforceRotation: WorkforceRotationState
-  modes: ModesState
-  nodes: NodeState[]
-  markets: MarketsState
-  ecology: EcologyState
-  infrastructure: InfrastructureState
-}): ParState {
-  // 1. Compute PAR Cap
+export function parEngine(state: any) {
+  const { par, ecology, infrastructure, markets, workforceRotation, nodes } = state
+
+  // Compute PAR Cap
   const parCap = computeParCap({
     population: par.population,
     dignityFloat: par.dignityFloat,
@@ -39,50 +17,42 @@ export function computePar({
     infrastructureResilience: infrastructure.resilienceIndex,
   })
 
-  // 2. Compute PAR Salary Logic
-  const parSalary = computeParSalary({
+  par.parCap = parCap
+
+  // Compute salaries
+  const salaries = computeParSalary({
     par,
     workforceRotation,
     nodes,
   })
 
-  // 3. Build preliminary PAR state (before enforcement)
-  const parPreEnforcement: ParState = {
-    ...par,
-    parCap,
-
-    parVelocity:
-      workforceRotation.skillGainRate +
-      markets.cooperativeMarketShare,
-
-    parMintRate:
-      (parCap * 0.01) +
-      ecology.regenerationIndex +
-      infrastructure.resilienceIndex -
-      markets.extractivePressureIndex,
-
-    dignityFloor: parSalary.dignityFloor,
-    stewardshipSalary: parSalary.stewardshipSalary,
-    contributionSalary: parSalary.contributionSalary,
-    nodeDividend: parSalary.nodeDividend,
-  }
-
-  // 4. Enforce rules
-  const enforced = enforceParRules({
-    par: parPreEnforcement,
-    modes,
-    nodes,
+  // Enforce rules
+  const enforcement = enforceParRules({
+    par,
+    salaries,
+    markets,
+    ecology,
+    infrastructure,
   })
 
-  // 5. Return final PAR state
+  // Update PAR velocity (simple model)
+  par.parVelocity = Math.max(
+    0.1,
+    1 -
+      markets.extractivePressureIndex * 0.3 +
+      ecology.regenerationIndex * 0.2 +
+      infrastructure.resilienceIndex * 0.2
+  )
+
+  // Update mint rate (bounded by cap)
+  par.parMintRate = Math.min(par.parMintRate, par.parCap)
+
   return {
-    ...parPreEnforcement,
-    dignityFloor: enforced.dignityFloor,
-    stewardshipSalary: enforced.stewardshipSalary,
-    contributionSalary: enforced.contributionSalary,
-    nodeDividend: enforced.nodeDividend,
-    parMintRate: enforced.parMintRate,
-    parVelocity: enforced.parVelocity,
-    parCapCompliance: enforced.parCapCompliance,
+    ...state,
+    par,
+    salaries,
+    enforcement,
   }
+}
+
 }
