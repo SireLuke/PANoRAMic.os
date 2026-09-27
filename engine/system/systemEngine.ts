@@ -1,108 +1,79 @@
 // engine/system/systemEngine.ts
+// engine/system/systemEngine.ts
 
 import { SystemState } from "../../core/SystemState"
+
 import { computeWorkforceRotation } from "../workforce/workforceRotationEngine"
 import { computeMicroAi } from "../microAI/microAiEngine"
 import { computeMarkets } from "../markets/marketsEngine"
+
 import { computeModes } from "../modes/modesEngine"
-import { computeParCap } from "../../core/pillars/par/PAR_CAP"
-import { computeParSalary } from "../par/parSalaryEngine"
+import { computeModeTriggers } from "../modes/modeTriggersEngine"
+
+import { computePar } from "../par/parEngine"
+
+import { evolveNodes } from "../nodes/nodeEvolutionEngine"
+import { computeDashboard } from "../dashboard/dashboardEngine"
+
 import { auditSystem } from "../../rams/system/systemAudit"
 
 export function computeSystem(state: SystemState): SystemState {
 
-  // 1. Compute subsystem updates
+  // 1. Subsystem updates
   const workforceRotation = computeWorkforceRotation(state.workforceRotation)
   const microAi = computeMicroAi(state.microAi)
   const markets = computeMarkets(state.markets)
-  const modes = computeModes(state.modes)
 
-  // 2. Compute PAR Cap
-  const parCap = computeParCap({
-    population: state.par.population,
-    dignityFloat: state.par.dignityFloat,
-    resourceModifier: state.par.resourceModifier,
-    marketBurden: markets.extractivePressureIndex,
-    ecologyRegen: state.ecology.regenerationIndex,
-    infrastructureResilience: state.infrastructure.resilienceIndex,
+  // 2. Mode triggers (immune system reflexes)
+  const modesTriggered = computeModeTriggers({
+    modes: state.modes,
+    ecology: state.ecology,
+    infrastructure: state.infrastructure,
+    markets,
+    par: state.par,
   })
 
-  // 3. Compute PAR Salary Logic
-  const parSalary = computeParSalary({
+  const modes = computeModes(modesTriggered)
+
+  // 3. Node evolution (planetary nervous system)
+  const nodes = evolveNodes({
+    nodes: state.nodes,
+    ecology: state.ecology,
+    infrastructure: state.infrastructure,
+    microAi,
+  })
+
+  // 4. PAR economy (cap → salary → enforcement)
+  const par = computePar({
     par: state.par,
     workforceRotation,
-    nodes: state.nodes,
+    modes,
+    nodes,
+    markets,
+    ecology: state.ecology,
+    infrastructure: state.infrastructure,
   })
 
-  // 4. Update PAR economy
-  const par = {
-    ...state.par,
-
-    // PAR Cap (max mintable PAR)
-    parCap,
-
-    // PAR Velocity (how fast PAR moves through system)
-    parVelocity:
-      workforceRotation.skillGainRate +
-      markets.cooperativeMarketShare +
-      microAi.microAiCoverageIndex,
-
-    // PAR Mint Rate (how much PAR is created this cycle)
-    parMintRate:
-      (parCap * 0.01) + // 1% of cap per cycle
-      state.ecology.regenerationIndex +
-      state.infrastructure.resilienceIndex -
-      markets.extractivePressureIndex,
-
-    // Salary Logic
-    dignityFloor: parSalary.dignityFloor,
-    stewardshipSalary: parSalary.stewardshipSalary,
-    contributionSalary: parSalary.contributionSalary,
-    nodeDividend: parSalary.nodeDividend,
-  }
-
-  // 5. Update nodes
-  const nodes = state.nodes.map(node => ({
-    ...node,
-    nodeHealthIndex:
-      node.nodeHealthIndex +
-      state.ecology.regenerationIndex +
-      state.infrastructure.resilienceIndex,
-
-    nodeAiPresenceIndex:
-      microAi.nodeIntelligenceIndex +
-      microAi.microAiCoverageIndex,
-  }))
-
-  // 6. Update modes
-  const modesAdjusted = {
-    ...modes,
-    stabilityIndex:
-      markets.stabilityIndex +
-      state.ecology.regenerationIndex +
-      state.infrastructure.resilienceIndex,
-
-    responsivenessIndex:
-      microAi.retrievalQualityIndex +
-      workforceRotation.skillGainRate,
-  }
-
-  // 7. Build new state
-  const newState = {
+  // 5. Build new state
+  const newState: SystemState = {
     ...state,
     workforceRotation,
     microAi,
     markets,
-    modes: modesAdjusted,
-    par,
+    modes,
     nodes,
+    par,
   }
 
-  // 8. Global audit
+  // 6. Global dashboard (planetary immune system)
+  const dashboard = computeDashboard(newState)
+
+  // 7. Global audit (RAMS)
   const audit = auditSystem(newState)
 
   return {
     ...newState,
+    dashboard,
     audit,
   }
 }
