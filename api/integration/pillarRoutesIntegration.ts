@@ -49,8 +49,17 @@ export function bindPillarRoutes() {
   server.get("/workforce", (req, res) => {
     res.json(dashboard().workforce)
   })
-
+  server.get("/tick", (req, res) =>
+    res.json({ tick: dashboard().tick })
   server.get("/modes", (req, res) => {
     res.json(globalSignals.modes)
+    
+  server.get("/system", (req, res) => 
+    res.json(dashboard().systemState)
+  server.get("/global", (req, res) =>
+    res.json(dashboard().globalState)
+  server.get("/audits", (req, res) =>
+    res.json(dashboard().systemAudits)
+
   })
 }
