@@ -1,10 +1,12 @@
 // api/integration/apiIntegration.ts
 
-import { initRunIntegration, runOneTick } from "../../engine/system/runIntegration"
-import { dashboardEngine } from "../../engine/dashboard/dashboardEngine"
-import { globalSignals } from "../../signals/globalSignals"
-import { server } from "../server"
-import { liveStream } from "../liveStream"
+import { initRunIntegration, runOneTick } from "../../engine/system/runIntegration.js"
+import { dashboardEngine } from "../../engine/dashboard/dashboardEngine.js"
+import { globalSignals } from "../../signals/globalSignals.js"
+import { server } from "../server.js"
+import { liveStream } from "../liveStream.js"
+import { planetRouter } from "../routes/planetRouter.js"
+
 
 export interface APIIntegration {
   run: ReturnType<typeof initRunIntegration>
