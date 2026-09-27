@@ -40,7 +40,11 @@ export const PANDashboard = ({ synthesis, risk, stability, globalScore }) => {
         ))}
       </section>
     </main>
-  )
+  )<section style={styles.globalScore}>
+  <Pulse trigger={globalScore} />
+  <h3 style={styles.sectionHeader}>Global Score</h3>
+  <div style={styles.scoreValue}>{globalScore.toFixed(2)}</div>
+</section>
 }
 
 const styles = {
