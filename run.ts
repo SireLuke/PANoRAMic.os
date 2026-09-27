@@ -1,8 +1,8 @@
 // run.ts
 
-import { initCLIIntegration, cliDispatch } from "./cli/integration/cliIntegration"
-import { bootstrapAPI } from "./api/integration/apiBootstrap"
-import { initRunIntegration, runContinuous } from "./engine/system/runIntegration"
+import { initCLIIntegration, cliDispatch } from "./cli/integration/cliIntegration.js"
+import { bootstrapAPI } from "./api/integration/apiBootstrap.js"
+import { initRunIntegration, runContinuous } from "./engine/system/runIntegration.js"
 
 async function main() {
   console.log("PANoRAMic.OS: Booting planetary operating system...")
