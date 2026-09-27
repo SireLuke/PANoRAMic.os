@@ -1,8 +1,9 @@
 // engine/system/systemTickIntegration.ts
 
-import { initSystemLoopIntegration, runSystemLoopIntegration } from "./systemLoopIntegration"
-import { globalSignals } from "../../signals/globalSignals"
-import { dashboardEngine } from "../dashboard/dashboardEngine"
+import { initSystemLoopIntegration, runSystemLoopIntegration } from "./systemLoopIntegration.js"
+import { globalSignals } from "../../signals/globalSignals.js"
+import { dashboardEngine } from "../dashboard/dashboardEngine.js"
+
 
 /**
  * SystemTickIntegration
