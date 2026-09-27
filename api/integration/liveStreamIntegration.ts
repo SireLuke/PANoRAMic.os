@@ -1,9 +1,10 @@
 // api/integration/liveStreamIntegration.ts
 
-import { initAPIIntegration, apiTick } from "./apiIntegration"
-import { liveStream } from "../liveStream"
-import { dashboardEngine } from "../../engine/dashboard/dashboardEngine"
-import { globalSignals } from "../../signals/globalSignals"
+import { liveStream } from "../liveStream.js"
+import { dashboardEngine } from "../../engine/dashboard/dashboardEngine.js"
+import { globalSignals } from "../../signals/globalSignals.js"
+import { initAPIIntegration } from "./apiIntegration.js"
+
 
 /**
  * LiveStreamIntegration
