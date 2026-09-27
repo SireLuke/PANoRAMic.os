@@ -1,4 +1,5 @@
 // engine/system/systemEngine.ts
+import { computeParCap } from "../../core/pillars/par/PAR_CAP"
 import { SystemState } from "../../core/SystemState"
 import { computeWorkforceRotation } from "../workforce/workforceRotationEngine"
 import { computeMicroAi } from "../microAI/microAiEngine"
