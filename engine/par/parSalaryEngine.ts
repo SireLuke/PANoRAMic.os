@@ -1,40 +1,32 @@
-import { ParState } from "../../core/pillars/par/PAR_STATE"
-import { WorkforceRotationState } from "../../core/pillars/workforce/WORKFORCE_ROTATION_STATE"
-import { NodeState } from "../../core/pillars/nodes/NODES_STATE"
+// engine/par/parSalaryEngine.ts
 
 export function computeParSalary({
   par,
   workforceRotation,
   nodes,
 }: {
-  par: ParState
-  workforceRotation: WorkforceRotationState
-  nodes: NodeState[]
+  par: any
+  workforceRotation: any
+  nodes: any[]
 }) {
-  // 1. Dignity Floor (everyone gets this)
-  const dignityFloor = par.parCap * 0.000001 // 0.0001% of PAR cap per person
+  // Dignity floor scales with population + dignityFloat
+  const dignityFloor = par.dignityFloat * 100
 
-  // 2. Stewardship Salary (you + maintainers)
+  // Stewardship salary rewards ecological + infrastructure care
   const stewardshipSalary =
     dignityFloor +
-    (par.parCap * 0.00001) + // 0.001% of PAR cap
-    workforceRotation.skillGainRate * 0.5
+    workforceRotation.skillGainRate * 50 +
+    nodes.length * 2
 
-  // 3. Contribution Salary (workforce rotation)
+  // Contribution salary rewards productive participation
   const contributionSalary =
-    workforceRotation.skillGainRate +
-    workforceRotation.burnoutReductionIndex +
-    workforceRotation.workforceSatisfactionIndex
+    dignityFloor +
+    workforceRotation.rotationIndex * 40
 
-  // 4. Node Dividend (distributed to nodes)
-  const nodeDividend = nodes.map(node => ({
-    nodeId: node.nodeId,
-    dividend:
-      (node.nodeHealthIndex +
-        node.nodeAutonomyIndex +
-        node.nodeConnectivityIndex) *
-      0.01, // 1% of node health/autonomy/connectivity
-  }))
+  // Node dividend distributes PAR to node operators
+  const nodeDividend = nodes.length > 0
+    ? (par.parMintRate * 0.05) / nodes.length
+    : 0
 
   return {
     dignityFloor,
