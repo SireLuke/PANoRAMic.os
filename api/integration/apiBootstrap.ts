@@ -1,9 +1,9 @@
 // api/integration/apiBootstrap.ts
 
-import { server } from "../server"
+import { server } from "../server.js"
 import { bindAPIRoutes } from "./apiIntegration"
 import { bindPillarRoutes } from "./pillarRoutesIntegration"
-import { initLiveStreamIntegration, startLiveStream } from "./liveStreamIntegration"
+import { initLiveStreamIntegration, startLiveStream } from "./liveStreamIntegrationjs."
 import { initAPIIntegration } from "./apiIntegration"
 
 /**
