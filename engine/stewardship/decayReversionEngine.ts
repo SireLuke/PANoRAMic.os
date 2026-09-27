@@ -1,64 +1,91 @@
 // engine/stewardship/decayReversionEngine.ts
 
-export interface EntityCapitalProfile {
+export interface StewardshipDecayProfile {
   id: string
   name: string
+
+  // Activity / time
   isActive: boolean
   lastActiveTick: number
-  totalCapital: number          // normalized 0–1 representation of capital
-  decaySensitivityIndex: number // 0–1: how quickly this entity should decay when inactive
+
+  // Capital / presence
+  totalCapitalIndex: number          // 0–1 normalized capital presence
+  decaySensitivityIndex: number      // 0–1: how quickly this entity should decay when inactive
+
+  // Optional tags
+  sector?: string
+  region?: string
 }
 
-export interface DecayReversionResult {
-  totalDecayedCapital: number
-  humanitarianPoolAllocation: number
-  stewardshipFundAllocation: number
+export interface StewardshipDecayConfig {
+  currentTick: number
+  inactivityThresholdTicks: number   // ticks of inactivity before decay starts
+  maxDecayRatePerTick: number        // cap on decay per tick (0–1 of capital index)
+  humanitarianShare: number          // fraction of decayed capital → humanitarian pool (e.g. 0.6)
+  stewardshipShare: number           // fraction → stewardship fund (e.g. 0.4)
+}
+
+export interface StewardshipDecayResult {
+  totalDecayedCapitalIndex: number
+  humanitarianPoolIndex: number
+  stewardshipFundIndex: number
   retainedCapitalByEntity: Record<string, number>
 }
 
-interface DecayReversionConfig {
-  currentTick: number
-  inactivityThresholdTicks: number // after this many ticks, decay begins
-  humanitarianShare: number        // e.g. 0.6 → 60% to humanitarian pool
-  stewardshipShare: number         // e.g. 0.4 → 40% to stewardship fund
-  maxDecayRatePerTick: number      // cap on how fast capital can decay per tick
-}
-
+/**
+ * Decay Reversion Engine
+ *
+ * - Only decays inactive / stagnant entities
+ * - Does NOT touch PAR balances
+ * - Routes decayed capital into:
+ *   - Humanitarian Infrastructure Pool
+ *   - Stewardship Fund (dignity floor backing)
+ */
 export function runDecayReversionEngine(
-  entities: EntityCapitalProfile[],
-  config: DecayReversionConfig
-): DecayReversionResult {
-  let totalDecayedCapital = 0
+  profiles: StewardshipDecayProfile[],
+  config: StewardshipDecayConfig
+): StewardshipDecayResult {
+  let totalDecayedCapitalIndex = 0
   const retainedCapitalByEntity: Record<string, number> = {}
 
-  for (const entity of entities) {
-    const inactiveTicks = config.currentTick - entity.lastActiveTick
-    const shouldDecay = !entity.isActive && inactiveTicks >= config.inactivityThresholdTicks
+  for (const profile of profiles) {
+    const inactiveTicks = config.currentTick - profile.lastActiveTick
+    const shouldDecay =
+      !profile.isActive && inactiveTicks >= config.inactivityThresholdTicks
 
     if (!shouldDecay) {
-      retainedCapitalByEntity[entity.id] = entity.totalCapital
+      retainedCapitalByEntity[profile.id] = profile.totalCapitalIndex
       continue
     }
 
-    // Decay rate scales with inactivity and sensitivity, capped by maxDecayRatePerTick
-    const inactivityFactor = Math.min(1, inactiveTicks / (config.inactivityThresholdTicks * 4))
+    // Inactivity factor ramps up over time, capped at 1
+    const inactivityFactor = Math.min(
+      1,
+      inactiveTicks / (config.inactivityThresholdTicks * 4)
+    )
+
+    // Raw decay rate based on sensitivity, inactivity, and global cap
     const rawDecayRate =
-      entity.decaySensitivityIndex * inactivityFactor * config.maxDecayRatePerTick
+      profile.decaySensitivityIndex *
+      inactivityFactor *
+      config.maxDecayRatePerTick
 
-    const decayAmount = Math.min(entity.totalCapital, rawDecayRate)
+    const decayAmount = Math.min(profile.totalCapitalIndex, rawDecayRate)
+    const retained = profile.totalCapitalIndex - decayAmount
 
-    const retained = entity.totalCapital - decayAmount
-    retainedCapitalByEntity[entity.id] = retained
-    totalDecayedCapital += decayAmount
+    retainedCapitalByEntity[profile.id] = retained
+    totalDecayedCapitalIndex += decayAmount
   }
 
-  const humanitarianPoolAllocation = totalDecayedCapital * config.humanitarianShare
-  const stewardshipFundAllocation = totalDecayedCapital * config.stewardshipShare
+  const humanitarianPoolIndex =
+    totalDecayedCapitalIndex * config.humanitarianShare
+  const stewardshipFundIndex =
+    totalDecayedCapitalIndex * config.stewardshipShare
 
   return {
-    totalDecayedCapital,
-    humanitarianPoolAllocation,
-    stewardshipFundAllocation,
+    totalDecayedCapitalIndex,
+    humanitarianPoolIndex,
+    stewardshipFundIndex,
     retainedCapitalByEntity,
   }
 }
