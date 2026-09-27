@@ -1,17 +1,17 @@
 // engine/global/globalLoopIntegration.ts
 
-import { initNodeMapIntegration, runNodeMapIntegration } from "../../nodeMap/nodeMapIntegration"
-import { globalSignals } from "../../signals/globalSignals"
-import { modesEngine } from "../modes/modesEngine"
-import { dashboardEngine } from "../dashboard/dashboardEngine"
-import { systemAudit } from "../../rams/system/systemAudit"
-import { runPARFlowEngine } from "../par/PARFlowEngine"
-import { runRightsFlowEngine } from "../rights/RightsFlowEngine"
-import { runEcologyFlowEngine } from "../ecology/EcologyFlowEngine"
-import { runInfrastructureFlowEngine } from "../infrastructure/InfrastructureFlowEngine"
-import { runCommonsFlowEngine } from "../commons/CommonsFlowEngine"
-import { runGovernanceFlowEngine } from "../governance/GovernanceFlowEngine"
-import { runPopulationFlowEngine } from "../population/PopulationFlowEngine"
+import { initNodeMapIntegration, runNodeMapIntegration } from "../../nodeMap/nodeMapIntegration.js"
+import { globalSignals } from "../../signals/globalSignals.js"
+import { modesEngine } from "../modes/modesEngine.js"
+import { dashboardEngine } from "../dashboard/dashboardEngine.js"
+import { systemAudit } from "../../rams/system/systemAudit.js"
+import { runPARFlowEngine } from "../par/PARFlowEngine.js"
+import { runRightsFlowEngine } from "../rights/RightsFlowEngine.js"
+import { runEcologyFlowEngine } from "../ecology/EcologyFlowEngine.js"
+import { runInfrastructureFlowEngine } from "../infrastructure/InfrastructureFlowEngine.js"
+import { runCommonsFlowEngine } from "../commons/CommonsFlowEngine.js"
+import { runGovernanceFlowEngine } from "../governance/GovernanceFlowEngine.js"
+import { runPopulationFlowEngine } from "../population/PopulationFlowEngine.js"
 
 export interface GlobalLoopIntegration {
   tick: number
