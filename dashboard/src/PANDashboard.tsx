@@ -2,6 +2,7 @@
 
 import React from "react"
 import { theme } from "./theme"
+import { Pulse } from "./Pulse"
 
 export const PANDashboard = ({ synthesis, risk, stability, globalScore }) => {
   return (
