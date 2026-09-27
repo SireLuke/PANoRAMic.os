@@ -1,0 +1,81 @@
+// engine/infrastructure/InfrastructureFailureEngine.ts
+
+import { InfrastructureProfile } from "../../core/pillars/infrastructure/InfrastructureProfile"
+
+export function applyInfrastructureFailure(infra: InfrastructureProfile) {
+  const actions: string[] = []
+
+  let {
+    degradationRate,
+    failurePressureIndex,
+    resilienceIndex,
+    redundancyIndex,
+    loadIndex,
+    collapseRiskIndex,
+  } = infra
+
+  // Natural degradation
+  actions.push("Applying natural infrastructure degradation.")
+  degradationRate *= 1.05
+
+  // Load-induced failure
+  if (loadIndex > 0.7) {
+    actions.push("High load — increasing failure pressure and degradation.")
+    failurePressureIndex *= 1.15
+    degradationRate *= 1.1
+  }
+
+  // Low resilience penalty
+  if (resilienceIndex < 0.4) {
+    actions.push("Low resilience — accelerating failure pressure.")
+    failurePressureIndex *= 1.2
+  }
+
+  // Low redundancy penalty
+  if (redundancyIndex < 0.4) {
+    actions.push("Low redundancy — increasing collapse risk.")
+    collapseRiskIndex += 0.1
+  }
+
+  // Failure cascade trigger
+  const cascadeRisk =
+    failurePressureIndex * 0.4 +
+    degradationRate * 0.3 +
+    (1 - resilienceIndex) * 0.2 +
+    (1 - redundancyIndex) * 0.1
+
+  if (cascadeRisk > 0.75) {
+    actions.push("Failure cascade risk — applying emergency degradation dampening.")
+    degradationRate *= 0.85
+    failurePressureIndex *= 0.9
+    collapseRiskIndex += 0.05
+  }
+
+  // Normalize
+  degradationRate = Math.max(0, Math.min(degradationRate, 1))
+  failurePressureIndex = Math.max(0, Math.min(failurePressureIndex, 1))
+  resilienceIndex = Math.max(0, Math.min(resilienceIndex, 1))
+  redundancyIndex = Math.max(0, Math.min(redundancyIndex, 1))
+  loadIndex = Math.max(0, Math.min(loadIndex, 1))
+  collapseRiskIndex = Math.max(0, Math.min(collapseRiskIndex, 1))
+
+  // Update infra
+  infra.degradationRate = degradationRate
+  infra.failurePressureIndex = failurePressureIndex
+  infra.resilienceIndex = resilienceIndex
+  infra.redundancyIndex = redundancyIndex
+  infra.loadIndex = loadIndex
+  infra.collapseRiskIndex = collapseRiskIndex
+
+  return {
+    actions,
+    updatedInfrastructure: infra,
+    degradationRate,
+    failurePressureIndex,
+    resilienceIndex,
+    redundancyIndex,
+    loadIndex,
+    collapseRiskIndex,
+    cascadeRisk,
+  }
+}
