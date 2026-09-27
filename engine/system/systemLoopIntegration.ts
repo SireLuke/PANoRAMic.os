@@ -1,10 +1,11 @@
 // engine/system/systemLoopIntegration.ts
 
-import { initGlobalLoopIntegration, runGlobalLoopIntegration } from "../global/globalLoopIntegration"
-import { systemEngine } from "./systemEngine"
-import { systemAudit } from "../../rams/system/systemAudit"
-import { dashboardEngine } from "../dashboard/dashboardEngine"
-import { globalSignals } from "../../signals/globalSignals"
+import { initGlobalLoopIntegration, runGlobalLoopIntegration } from "../global/globalLoopIntegration.js"
+import { systemEngine } from "./systemEngine.js"
+import { systemAudit } from "../../rams/system/systemAudit.js"
+import { dashboardEngine } from "../dashboard/dashboardEngine.js"
+import { globalSignals } from "../../signals/globalSignals.js"
+
 
 export interface SystemLoopIntegration {
   tick: number
