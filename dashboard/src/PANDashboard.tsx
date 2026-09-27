@@ -14,7 +14,7 @@ export const PANDashboard = ({ synthesis, risk, stability, globalScore }) => {
       <Card title="Global Score">
         <div style={styles.score}>{globalScore.toFixed(2)}</div>
       </Card>
-
+import { PARCurve } from "./PARCurve"
       <div style={styles.grid}>
         {Object.keys(synthesis).map((pillar) => (
           <Card key={pillar} title={pillar.toUpperCase()}>
