@@ -1,21 +1,21 @@
 // engine/system/systemEngine.ts
 // engine/system/systemEngine.ts
 
-import { SystemState } from "../../core/SystemState"
+import { SystemState } from "../../core/SystemState.js"
 
-import { computeWorkforceRotation } from "../workforce/workforceRotationEngine"
-import { computeMicroAi } from "../microAI/microAiEngine"
-import { computeMarkets } from "../markets/marketsEngine"
+import { computeWorkforceRotation } from "../workforce/workforceRotationEngine.js"
+import { computeMicroAi } from "../microAI/microAiEngine.js"
+import { computeMarkets } from "../markets/marketsEngine.js"
 
-import { computeModes } from "../modes/modesEngine"
-import { computeModeTriggers } from "../modes/modeTriggersEngine"
+import { computeModes } from "../modes/modesEngine.js"
+import { computeModeTriggers } from "../modes/modeTriggersEngine.js"
 
-import { computePar } from "../par/parEngine"
+import { computePar } from "../par/parEngine.js"
 
-import { evolveNodes } from "../nodes/nodeEvolutionEngine"
-import { computeDashboard } from "../dashboard/dashboardEngine"
+import { evolveNodes } from "../nodes/nodeEvolutionEngine.js"
+import { computeDashboard } from "../dashboard/dashboardEngine.js"
 
-import { auditSystem } from "../../rams/system/systemAudit"
+import { auditSystem } from "../../rams/system/systemAudit.js"
 
 export function computeSystem(state: SystemState): SystemState {
 
