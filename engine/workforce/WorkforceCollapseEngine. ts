@@ -1,0 +1,105 @@
+// engine/workforce/WorkforceCollapseEngine.ts
+
+import { WorkforceProfile } from "../../core/pillars/workforce/WorkforceProfile"
+
+export function applyWorkforceCollapse(work: WorkforceProfile) {
+  const actions: string[] = []
+
+  let {
+    stabilityIndex,
+    riskIndex,
+    loadIndex,
+    resilienceIndex,
+    burnoutIndex,
+    ecologicalDependencyIndex,
+    infrastructureDependencyIndex,
+    economicDependencyIndex,
+    collapseRiskIndex,
+  } = work
+
+  // Natural collapse pressure
+  actions.push("Applying natural workforce collapse pressure.")
+  collapseRiskIndex *= 1.05
+
+  // High load increases collapse
+  if (loadIndex > 0.7) {
+    actions.push("High workload — accelerating collapse and burnout.")
+    collapseRiskIndex *= 1.15
+    burnoutIndex *= 1.1
+    stabilityIndex *= 0.9
+  }
+
+  // High burnout increases collapse
+  if (burnoutIndex > 0.6) {
+    actions.push("High burnout — reducing stability and increasing collapse pressure.")
+    collapseRiskIndex *= 1.1
+    stabilityIndex *= 0.85
+  }
+
+  // Low resilience penalty
+  if (resilienceIndex < 0.4) {
+    actions.push("Low resilience — increasing collapse pressure.")
+    collapseRiskIndex *= 1.1
+  }
+
+  // Dependency pressure
+  const dependencyPressure =
+    ecologicalDependencyIndex * 0.3 +
+    infrastructureDependencyIndex * 0.3 +
+    economicDependencyIndex * 0.3
+
+  if (dependencyPressure > 0.6) {
+    actions.push("High dependency pressure — increasing collapse risk.")
+    collapseRiskIndex *= 1.1
+  }
+
+  // Collapse event trigger
+  const collapseEventTrigger =
+    collapseRiskIndex * 0.4 +
+    burnoutIndex * 0.3 +
+    (1 - stabilityIndex) * 0.2 +
+    loadIndex * 0.1
+
+  if (collapseEventTrigger > 0.8) {
+    actions.push("Workforce collapse event triggered — forcing critical mode.")
+    stabilityIndex *= 0.7
+    resilienceIndex *= 0.8
+  }
+
+  // Normalize
+  stabilityIndex = Math.max(0, Math.min(stabilityIndex, 1))
+  riskIndex = Math.max(0, Math.min(riskIndex, 1))
+  loadIndex = Math.max(0, Math.min(loadIndex, 1))
+  resilienceIndex = Math.max(0, Math.min(resilienceIndex, 1))
+  burnoutIndex = Math.max(0, Math.min(burnoutIndex, 1))
+  ecologicalDependencyIndex = Math.max(0, Math.min(ecologicalDependencyIndex, 1))
+  infrastructureDependencyIndex = Math.max(0, Math.min(infrastructureDependencyIndex, 1))
+  economicDependencyIndex = Math.max(0, Math.min(economicDependencyIndex, 1))
+  collapseRiskIndex = Math.max(0, Math.min(collapseRiskIndex, 1))
+
+  // Update work
+  work.stabilityIndex = stabilityIndex
+  work.riskIndex = riskIndex
+  work.loadIndex = loadIndex
+  work.resilienceIndex = resilienceIndex
+  work.burnoutIndex = burnoutIndex
+  work.ecologicalDependencyIndex = ecologicalDependencyIndex
+  work.infrastructureDependencyIndex = infrastructureDependencyIndex
+  work.economicDependencyIndex = economicDependencyIndex
+  work.collapseRiskIndex = collapseRiskIndex
+
+  return {
+    actions,
+    updatedWorkforce: work,
+    stabilityIndex,
+    riskIndex,
+    loadIndex,
+    resilienceIndex,
+    burnoutIndex,
+    ecologicalDependencyIndex,
+    infrastructureDependencyIndex,
+    economicDependencyIndex,
+    collapseRiskIndex,
+    collapseEventTrigger,
+  }
+}
