@@ -3,12 +3,10 @@
 import { NodeProfile } from "../core/pillars/nodes/NodeProfile.ts"
 import { NodeState, createNodeState } from "../core/pillars/nodes/NODES_STATE.ts"
 
-import { evolveNode } from "../engine/nodes/NodeEvolutionEngine.ts"
+import { evolveNodes } from "../engine/nodes/NodeEvolutionEngine.ts"
 import { computeNodeRisk } from "../engine/nodes/NodeRiskEngine.ts"
 import { computeNodeStability } from "../engine/nodes/NodeStabilityEngine.ts"
 import { computeNodeFlow } from "../engine/nodes/NodeFlowEngine.ts"
-import { computeNodeRecovery } from "../engine/nodes/NodeRecoveryEngine.ts"
-import { computeNodeCollapse } from "../engine/nodes/NodeCollapseEngine.ts"
 import { computeNodeSynthesis } from "../engine/nodes/NodeSynthesisEngine.ts"
 
 // Build initial node map from profiles
@@ -29,19 +27,17 @@ export function updateNodeMap(nodes: Record<string, NodeState>): Record<string, 
   for (const id in nodes) {
     const node = nodes[id]
 
-    // Gather neighbors
+    // Gather neighbors (not used by engines yet, but kept for future logic)
     const neighbors = node.connections
       .map(connId => nodes[connId])
       .filter(Boolean)
 
     // Engine pipeline
-    let next = evolveNode(node)
+    let next = evolveNodes(node)
     next = computeNodeRisk(next)
-    next = computeNodeStability(next, neighbors)
-    next = computeNodeFlow(next, neighbors)
-    next = computeNodeRecovery(next, neighbors)
-    next = computeNodeCollapse(next, neighbors)
-    next = computeNodeSynthesis(next, neighbors)
+    next = computeNodeStability(next)
+    next = computeNodeFlow(next)
+    next = computeNodeSynthesis(next)
 
     updated[id] = next
   }
@@ -59,6 +55,3 @@ export function getNodeNeighbors(id: string, nodes: Record<string, NodeState>): 
     .filter(Boolean)
 }
 
-
-  return audits
-}
