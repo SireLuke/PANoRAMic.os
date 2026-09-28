@@ -1,11 +1,13 @@
-import { InfrastructureState } from "./INFRA_STATE"
+export interface InfrastructureMetrics {
+  stability: number
+  load: number
+  efficiency: number
+}
 
-export const defaultInfrastructureState: InfrastructureState = {
-  desalinationCapacity: 0,
-  solarBeltOutput: 0,
-  recyclingLoopEfficiency: 0,
-  wasteToEnergyRate: 0,
-  cooperativeHousingUnits: 0,
-  gridStabilityIndex: 0,
-  infrastructureHealthIndex: 0,
+export function computeInfrastructureMetrics(): InfrastructureMetrics {
+  return {
+    stability: 0.8,
+    load: 0.3,
+    efficiency: 0.9,
+  }
 }
