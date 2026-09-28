@@ -32,7 +32,7 @@ PANoRAMic.os is built on the idea that a planet can be managed like a living sys
 - Audit = memory
 
   
--  🏛️ Library of Alexandria — Planetary Memory Layer
+- Library of Alexandria — Planetary Memory Layer
 
 PANoRAMic.os includes a long-term planetary memory system inspired by the Library of Alexandria.
 
