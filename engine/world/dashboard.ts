@@ -1,7 +1,7 @@
 // engine/world/dashboard.ts
 
 import { WorldStatus, computeWorldStatus } from "./worldStatus.ts"
-import { WorldReport, generateWorldReport } from "./worldReporter.ts"
+import { WorldReport, generateWorldReport, printWorldReport } from "./worldReporter.ts"
 import { GlobalFrame } from "../global/globalLoopIntegration.ts"
 
 export interface DashboardPacket {
