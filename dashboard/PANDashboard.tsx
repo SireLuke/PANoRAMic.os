@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { buildDashboard } from "../engine/world/dashboard.ts"
 import { WorldState } from "../engine/world/worldState.ts"
 import { TickResult } from "../engine/world/tick.ts"
+import { createLiveStream } from "./liveStream.ts"
 
 interface Props {
   world: WorldState
@@ -11,6 +12,18 @@ interface Props {
 export default function PANDashboard({ world, onTick }: Props) {
   const [packet, setPacket] = useState(() => buildDashboard({ world, signals: world.synthesis, tick: world.tick }))
 
+const stream = createLiveStream("http://localhost:3000")
+
+useEffect(() => {
+  stream.connect()
+
+  stream.onPlanetUpdate(packet => {
+    setPacket(packet)
+  })
+
+  return () => stream.disconnect()
+}, [])
+  
   useEffect(() => {
     const interval = setInterval(() => {
       const result = onTick()
