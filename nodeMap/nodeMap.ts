@@ -29,7 +29,7 @@ export function updateNodeMap(nodes: Record<string, NodeState>): Record<string, 
     let node = nodes[id]
 
     // Convert NodeState back to NodeProfile for engine processing
-    const profile: NodeProfile = {
+    let profile: NodeProfile = {
       id: node.id,
       name: node.name,
       nodeType: node.nodeType,
@@ -44,24 +44,24 @@ export function updateNodeMap(nodes: Record<string, NodeState>): Record<string, 
       connections: node.connections,
     }
 
-    // Engine pipeline
-    let result = computeNodeRisk(profile)
-    profile.riskIndex = result.riskScore / 100 // Normalize back to 0-1
+    // Engine pipeline - each engine returns updated profile properties
+    const riskResult = computeNodeRisk(profile)
+    profile.riskIndex = riskResult.riskScore / 100 // Normalize back to 0-1
     
-    result = computeNodeStability(profile)
-    profile.stabilityIndex = result.stabilityScore / 100
+    const stabilityResult = computeNodeStability(profile)
+    profile.stabilityIndex = stabilityResult.stabilityScore / 100
     
-    result = computeNodeFlow(profile)
-    Object.assign(profile, result.updatedNode)
+    const flowResult = computeNodeFlow(profile)
+    profile = flowResult.updatedNode
     
-    result = applyNodeRecovery(profile)
-    Object.assign(profile, result.updatedNode)
+    const recoveryResult = applyNodeRecovery(profile)
+    profile = recoveryResult.updatedNode
     
-    result = applyNodeCollapse(profile)
-    Object.assign(profile, result.updatedNode)
+    const collapseResult = applyNodeCollapse(profile)
+    profile = collapseResult.updatedNode
     
-    result = computeNodeSynthesis(profile)
-    profile.stabilityIndex = result.synthesisScore / 100
+    const synthesisResult = computeNodeSynthesis(profile)
+    profile.stabilityIndex = synthesisResult.synthesisScore / 100
 
     // Convert back to NodeState
     node = {
