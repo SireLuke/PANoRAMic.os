@@ -6,6 +6,7 @@ import { createLiveStream } from "./liveStream.ts"
 import PlanetView from "./PlanetView.tsx"
 import PlanetFlow from "./PlanetFlow.tsx"
 import PlanetSignals from "./PlanetSignals.tsx"
+import PlanetTimeline from "./PlanetTimeline.tsx"
 
 interface Props {
   world: WorldState
@@ -63,6 +64,9 @@ export default function PANDashboard({ world }: Props) {
 
       {/* Planet Signals */}
       <PlanetSignals packet={packet} />
+
+      {/* Planet Timeline */}
+      <PlanetTimeline packet={packet} />
     </div>
   )
 }
@@ -115,5 +119,13 @@ const styles = {
     padding: "15px",
     borderRadius: "8px",
     textAlign: "center",
-    border: "
+    border: "1px solid #333",
+  },
+  value: {
+    marginTop: "10px",
+    fontSize: "1.4rem",
+    fontWeight: "bold",
+    color: "#4caf50",
+  },
+}
 
