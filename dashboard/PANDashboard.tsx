@@ -4,6 +4,7 @@ import { WorldState } from "../engine/world/worldState.ts"
 import { TickResult } from "../engine/world/tick.ts"
 import { createLiveStream } from "./liveStream.ts"
 import PlanetView from "./PlanetView.tsx"
+import PlanetFlow from "./PlanetFlow.tsx"
 
 interface Props {
   world: WorldState
@@ -55,6 +56,9 @@ export default function PANDashboard({ world }: Props) {
 
       {/* Planet Map */}
       <PlanetView packet={packet} />
+
+      {/* Planet Flow */}
+      <PlanetFlow packet={packet} />
     </div>
   )
 }
@@ -116,3 +120,4 @@ const styles = {
     color: "#4caf50",
   },
 }
+
