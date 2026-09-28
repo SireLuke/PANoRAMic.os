@@ -5,9 +5,7 @@
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "strict": false,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "outDir": "dist"
+    "skipLibCheck": true
   },
-  "include": ["core/**/*", "api/**/*"]
+  "include": ["api/**/*", "core/**/*", "engine/**/*"]
 }
