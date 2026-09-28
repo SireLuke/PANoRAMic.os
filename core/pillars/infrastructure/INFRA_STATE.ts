@@ -1,9 +1,4 @@
-export interface InfrastructureState {
-  desalinationCapacity: number
-  solarBeltOutput: number
-  recyclingLoopEfficiency: number
-  wasteToEnergyRate: number
-  cooperativeHousingUnits: number
-  gridStabilityIndex: number
-  infrastructureHealthIndex: number
+export const defaultInfrastructureState = {
+  resilienceIndex: 0.8,
+  failureIndex: 0.1,
 }
