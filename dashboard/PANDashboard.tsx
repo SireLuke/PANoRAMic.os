@@ -3,6 +3,7 @@ import { buildDashboard } from "../engine/world/dashboard.ts"
 import { WorldState } from "../engine/world/worldState.ts"
 import { TickResult } from "../engine/world/tick.ts"
 import { createLiveStream } from "./liveStream.ts"
+import PlanetView from "./PlanetView.tsx"
 
 interface Props {
   world: WorldState
@@ -51,6 +52,9 @@ export default function PANDashboard({ world }: Props) {
           <Panel key={key} title={key} value={value} />
         ))}
       </div>
+
+      {/* Planet Map */}
+      <PlanetView packet={packet} />
     </div>
   )
 }
