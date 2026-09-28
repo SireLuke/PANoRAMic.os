@@ -2,7 +2,7 @@
 
 import { WorldState } from "./worldState.ts"
 import { GlobalFrame } from "../global/globalLoopIntegration.ts"
-import { applyResources } from "../resources/resources.ts"
+import { computeResourceScores } from "../resources/src/index.ts"
 
 export function worldReducer(prev: WorldState, frame: GlobalFrame) {
   const { world: updatedWorld, signals, tick } = frame
@@ -10,7 +10,7 @@ export function worldReducer(prev: WorldState, frame: GlobalFrame) {
   const nextWorld: WorldState = {
     ...prev,
     ...updatedWorld,
-    resources: applyResources(updatedWorld.resources),
+    resources: computeResourceScores(updatedWorld.resources),
   }
 
   return {
@@ -18,6 +18,4 @@ export function worldReducer(prev: WorldState, frame: GlobalFrame) {
     tick,
     signals,
   }
-}
-
 }
