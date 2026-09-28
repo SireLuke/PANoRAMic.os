@@ -5,7 +5,14 @@
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "strict": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true
   },
-  "include": ["api/**/*", "core/**/*", "engine/**/*"]
+  "include": [
+    "api/**/*",
+    "core/**/*",
+    "engine/**/*",
+    "rams/**/*",
+    "cli/**/*"
+  ]
 }
