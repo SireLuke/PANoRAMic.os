@@ -1,22 +1,32 @@
 // api/server.ts
+import { initWorld } from "../engine/world/initWorld.ts"
+import { tick } from "../engine/world/tick.ts"
+import { buildDashboard } from "../engine/world/dashboard.ts"
+import { createServer } from "http"
+import { Server } from "socket.io"
 
-import express from "express"
-import { initialSystemState } from "../core/SystemInitialState"
-import { computeSystem } from "../engine/system/systemEngine"
-import { buildPlanetDashboard } from "../engine/dashboard/planetDashboard"
+const world = initWorld([])
 
-const app = express()
-const PORT = process.env.PORT || 3000
-
-let state = initialSystemState
-
-// advance PAN one tick each request (you can later move this to a timer/loop)
-app.get("/planet", (req, res) => {
-  state = computeSystem(state)
-  const dashboard = buildPlanetDashboard(state)
-  res.json(dashboard)
+const httpServer = createServer()
+const io = new Server(httpServer, {
+  cors: { origin: "*" }
 })
 
-app.listen(PORT, () => {
-  console.log(`PANoRAMic.os API running on http://localhost:${PORT}`)
+io.on("connection", socket => {
+  console.log("client connected")
+})
+
+setInterval(() => {
+  const result = tick(world)
+  const packet = buildDashboard({
+    world: result.world,
+    signals: result.signals,
+    tick: result.tick
+  })
+
+  io.emit("planet_update", packet)
+}, 1000)
+
+httpServer.listen(3000, () => {
+  console.log("PANoRAMic.os live stream running on ws://localhost:3000")
 })
