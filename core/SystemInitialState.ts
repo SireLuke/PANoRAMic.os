@@ -10,7 +10,7 @@ import { defaultModesState } from "./pillars/modes/MODES_METRICS"
 import { defaultWorkforceRotationState } from "./pillars/workforce/WORKFORCE_ROTATION_METRICS"
 import { defaultParState } from "./pillars/par/PAR_METRICS"
 import { defaultEcologyState } from "./pillars/ecology/ECOLOGY_METRICS"
-import { defaultInfrastructureState } from "./pillars/infrastructure/INFRASTRUCTURE_METRICS"
+import { computeInfrastructureMetrics } from "./pillars/infrastructure/INFRASTRUCTURE_METRICS.ts"
 
 export const initialSystemState: SystemState = {
   markets: defaultMarketsState,
