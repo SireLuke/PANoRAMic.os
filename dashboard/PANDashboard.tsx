@@ -9,33 +9,21 @@ interface Props {
   onTick: () => TickResult
 }
 
-export default function PANDashboard({ world, onTick }: Props) {
-  const [packet, setPacket] = useState(() => buildDashboard({ world, signals: world.synthesis, tick: world.tick }))
+export default function PANDashboard({ world }: Props) {
+  const [packet, setPacket] = useState(() =>
+    buildDashboard({ world, signals: world.synthesis, tick: world.tick })
+  )
 
-const stream = createLiveStream("http://localhost:3000")
+  const stream = createLiveStream("http://localhost:3000")
 
-useEffect(() => {
-  stream.connect()
-
-  stream.onPlanetUpdate(packet => {
-    setPacket(packet)
-  })
-
-  return () => stream.disconnect()
-}, [])
-  
   useEffect(() => {
-    const interval = setInterval(() => {
-      const result = onTick()
-      const nextPacket = buildDashboard({
-        world: result.world,
-        signals: result.signals,
-        tick: result.tick,
-      })
-      setPacket(nextPacket)
-    }, 1000)
+    stream.connect()
 
-    return () => clearInterval(interval)
+    stream.onPlanetUpdate(packet => {
+      setPacket(packet)
+    })
+
+    return () => stream.disconnect()
   }, [])
 
   return (
@@ -71,12 +59,14 @@ function Panel({ title, value }: { title: string; value: number }) {
   return (
     <div style={styles.panel}>
       <h4>{title}</h4>
-      <div style={styles.value}>{typeof value === "number" ? value.toFixed(3) : value}</div>
+      <div style={styles.value}>
+        {typeof value === "number" ? value.toFixed(3) : value}
+      </div>
     </div>
   )
 }
 
-const styles: Record<string, React.CSSProperties> = {
+const styles = {
   container: {
     padding: "20px",
     fontFamily: "Arial, sans-serif",
