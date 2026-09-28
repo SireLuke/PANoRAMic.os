@@ -1,9 +1,8 @@
 // nodeMap/nodeMap.ts
 
 import { NodeProfile } from "../core/pillars/nodes/NodeProfile.ts"
-import { NodeState, createNodeState } from "../core/pillars/nodes/NODES_STATE.ts"
+import { NodeState, createNodeState, computeNodeHealth } from "../core/pillars/nodes/NODES_STATE.ts"
 
-import { evolveNodes } from "../engine/nodes/NodeEvolutionEngine.ts"
 import { computeNodeRisk } from "../engine/nodes/NodeRiskEngine.ts"
 import { computeNodeStability } from "../engine/nodes/NodeStabilityEngine.ts"
 import { computeNodeFlow } from "../engine/nodes/NodeFlowEngine.ts"
@@ -27,18 +26,59 @@ export function updateNodeMap(nodes: Record<string, NodeState>): Record<string, 
   const updated: Record<string, NodeState> = {}
 
   for (const id in nodes) {
-    const node = nodes[id]
+    let node = nodes[id]
+
+    // Convert NodeState back to NodeProfile for engine processing
+    const profile: NodeProfile = {
+      id: node.id,
+      name: node.name,
+      nodeType: node.nodeType,
+      stabilityIndex: node.stability,
+      riskIndex: node.risk,
+      loadIndex: node.load,
+      resilienceIndex: node.resilience,
+      ecologicalDependencyIndex: node.ecologicalDependency,
+      infrastructureDependencyIndex: node.infrastructureDependency,
+      economicDependencyIndex: node.economicDependency,
+      collapseRiskIndex: node.collapseRisk,
+      connections: node.connections,
+    }
 
     // Engine pipeline
-    let next = evolveNodes(node)
-    next = computeNodeRisk(next)
-    next = computeNodeStability(next)
-    next = computeNodeFlow(next)
-    next = applyNodeRecovery(next)
-    next = applyNodeCollapse(next)
-    next = computeNodeSynthesis(next)
+    let result = computeNodeRisk(profile)
+    profile.riskIndex = result.riskScore / 100 // Normalize back to 0-1
+    
+    result = computeNodeStability(profile)
+    profile.stabilityIndex = result.stabilityScore / 100
+    
+    result = computeNodeFlow(profile)
+    Object.assign(profile, result.updatedNode)
+    
+    result = applyNodeRecovery(profile)
+    Object.assign(profile, result.updatedNode)
+    
+    result = applyNodeCollapse(profile)
+    Object.assign(profile, result.updatedNode)
+    
+    result = computeNodeSynthesis(profile)
+    profile.stabilityIndex = result.synthesisScore / 100
 
-    updated[id] = next
+    // Convert back to NodeState
+    node = {
+      ...node,
+      stability: profile.stabilityIndex,
+      risk: profile.riskIndex,
+      load: profile.loadIndex,
+      resilience: profile.resilienceIndex,
+      ecologicalDependency: profile.ecologicalDependencyIndex,
+      infrastructureDependency: profile.infrastructureDependencyIndex,
+      economicDependency: profile.economicDependencyIndex,
+      collapseRisk: profile.collapseRiskIndex,
+    }
+
+    // Compute final health
+    node = computeNodeHealth(node)
+    updated[id] = node
   }
 
   return updated
