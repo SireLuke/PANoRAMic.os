@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PAN‑OS Provenance Viewer</title>
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #333;
+    }
+    th {
+      background: #222;
+    }
+  </style>
+</head>
+<body>
+  <h1>Provenance History</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Funnel</th>
+        <th>Source</th>
+        <th>Trust</th>
+        <th>Affected</th>
+      </tr>
+    </thead>
+    <tbody id="provBody"></tbody>
+  </table>
+
+  <script src="provenance.js"></script>
+</body>
+</html>
