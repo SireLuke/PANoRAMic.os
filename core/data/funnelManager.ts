@@ -2,6 +2,7 @@
 
 import { normalizeWorld } from "./normalize"
 import { validateWorld } from "./validate"
+import { computeTrustScore, checkStructuralIntegrity } from "./trustEngine"
 
 /**
  * FunnelManager:
@@ -28,29 +29,15 @@ export type FunnelType =
   | "quantum"
   | "nodes"
   | "global"
-  | "libraryOfAlexandria"   
+  | "libraryOfAlexandria"
   | "unknown"
 
-/**
- * Funnel adapters will be added in Step 24.
- * For now, we create a placeholder registry.
- */
+const adapters: Record<string, (data: any, world: any) => any> = {}
 
-const adapters: Record<string, (data: any) => any> = {}
-
-/**
- * registerFunnel:
- * Allows adapters to register themselves.
- */
-export function registerFunnel(type: FunnelType, handler: (data: any) => any) {
+export function registerFunnel(type: FunnelType, handler: (data: any, world: any) => any) {
   adapters[type] = handler
 }
 
-/**
- * detectFunnelType:
- * Determines which funnel should handle the incoming dataset.
- * Step 24 will expand this logic.
- */
 export function detectFunnelType(data: any): FunnelType {
   if (!data || typeof data !== "object") return "unknown"
 
@@ -58,24 +45,10 @@ export function detectFunnelType(data: any): FunnelType {
   if (data.globalSignals) return "global"
   if (data.library) return "libraryOfAlexandria"
 
-  // Pillar detection
   const pillarKeys = [
-    "population",
-    "resources",
-    "economy",
-    "governance",
-    "medical",
-    "humanitarian",
-    "markets",
-    "crime",
-    "education",
-    "migration",
-    "trafficking",
-    "transparency",
-    "corporatecapture",
-    "epistemic",
-    "repairability",
-    "quantum"
+    "population","resources","economy","governance","medical","humanitarian",
+    "markets","crime","education","migration","trafficking","transparency",
+    "corporatecapture","epistemic","repairability","quantum"
   ]
 
   for (const key of pillarKeys) {
@@ -85,15 +58,6 @@ export function detectFunnelType(data: any): FunnelType {
   return "unknown"
 }
 
-/**
- * processFunnelData:
- * Main entry point for ingesting external datasets.
- * Applies:
- *  - funnel detection
- *  - adapter routing
- *  - validation
- *  - normalization
- */
 export function processFunnelData(world: any, incomingData: any, pillarDefaults: any): any {
   const type = detectFunnelType(incomingData)
 
@@ -103,13 +67,26 @@ export function processFunnelData(world: any, incomingData: any, pillarDefaults:
     return world
   }
 
+  // ⭐ STEP 32 — Trust scoring
+  const trustScore = computeTrustScore({
+    sourceReputation: incomingData.sourceReputation ?? 0.5,
+    structuralIntegrity: checkStructuralIntegrity(incomingData),
+    historicalConsistency: 0.5, // Step 33 will expand this
+    recency: incomingData.timestamp ? 1 : 0.5,
+    crossSourceAgreement: incomingData.crossSourceAgreement ?? 0.5
+  })
+
+  if (trustScore < 0.2) {
+    console.warn("Incoming dataset rejected due to low trust score.")
+    return world
+  }
+
+  incomingData._trustWeight = trustScore
+
   // Adapter transforms incoming data → partial world update
   const updatedWorld = adapter(incomingData, world)
 
-  // Validate structure
   const validated = validateWorld(updatedWorld, pillarDefaults)
-
-  // Normalize values
   const normalized = normalizeWorld(validated)
 
   return normalized
