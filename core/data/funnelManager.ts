@@ -28,7 +28,7 @@ export type FunnelType =
   | "quantum"
   | "nodes"
   | "global"
-  | "libraryOfAlexandria"   // Step 30 will plug in here
+  | "libraryOfAlexandria"   
   | "unknown"
 
 /**
