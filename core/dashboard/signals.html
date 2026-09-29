@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PAN‑OS Global Signals</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .chart-container {
+      width: 600px;
+      margin-bottom: 40px;
+      background: #222;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    h2 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>PAN‑OS Global Signals</h1>
+
+  <div class="chart-container">
+    <h2>Stability</h2>
+    <canvas id="stabilityChart"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <h2>Risk</h2>
+    <canvas id="riskChart"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <h2>Synthesis</h2>
+    <canvas id="synthesisChart"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <h2>Collapse Pressure</h2>
+    <canvas id="collapseChart"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <h2>Recovery Strength</h2>
+    <canvas id="recoveryChart"></canvas>
+  </div>
+
+  <script src="signals.js"></script>
+</body>
+</html>
