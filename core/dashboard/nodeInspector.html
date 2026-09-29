@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PAN‑OS Node Inspector</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    #mapCanvas {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      background: #000;
+    }
+    #infoPanel {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 350px;
+      background: #222;
+      padding: 20px;
+      border-radius: 8px;
+      display: none;
+    }
+    pre {
+      background: #000;
+      padding: 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="mapCanvas"></canvas>
+
+  <div id="infoPanel">
+    <h2 id="nodeName"></h2>
+    <pre id="nodeData"></pre>
+  </div>
+
+  <script src="nodeInspector.js"></script>
+</body>
+</html>
