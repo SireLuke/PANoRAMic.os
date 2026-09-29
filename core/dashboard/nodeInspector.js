@@ -17,6 +17,29 @@ function latLongToXY(lat, long) {
   return { x, y }
 }
 
+function drawConnection(nodeA, nodeB) {
+  const { x: xA, y: yA } = latLongToXY(nodeA.latitude, nodeA.longitude)
+  const { x: xB, y: yB } = latLongToXY(nodeB.latitude, nodeB.longitude)
+
+  // Color based on stability/risk
+  const stability = (nodeA.stability + nodeB.stability) / 2
+  const risk = (nodeA.risk + nodeB.risk) / 2
+
+  const color = `rgba(${risk * 255}, ${stability * 255}, 50, 0.7)`
+
+  // Thickness based on resilience
+  const resilience = (nodeA.resilience + nodeB.resilience) / 2
+  const thickness = 1 + resilience * 4
+
+  ctx.strokeStyle = color
+  ctx.lineWidth = thickness
+
+  ctx.beginPath()
+  ctx.moveTo(xA, yA)
+  ctx.lineTo(xB, yB)
+  ctx.stroke()
+}
+
 function drawNode(node) {
   const { x, y } = latLongToXY(node.latitude, node.longitude)
 
@@ -39,6 +62,15 @@ function drawNode(node) {
 function renderMap() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
 
+  // Draw connections first
+  Object.values(nodes).forEach(node => {
+    node.connections.forEach(connId => {
+      const target = nodes[connId]
+      if (target) drawConnection(node, target)
+    })
+  })
+
+  // Draw nodes on top
   Object.values(nodes).forEach(drawNode)
 }
 
