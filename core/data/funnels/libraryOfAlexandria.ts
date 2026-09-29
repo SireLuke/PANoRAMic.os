@@ -8,15 +8,11 @@ import { ProvenanceTracker, hashData } from "../../data/provenance"
 
 const provenance = new ProvenanceTracker()
 
-/**
- * Library of Alexandria Funnel:
- * Ingests structured + unstructured knowledge and maps it into PAN‑OS.
- */
-
 registerFunnel("libraryOfAlexandria", (incoming, world) => {
   const updatedWorld = { ...world }
+  const weight = incoming._trustWeight ?? 1
 
-  // 1. Node updates (geospatial or semantic)
+  // ⭐ NODE UPDATES
   if (incoming.nodeData) {
     const { location, radiusKm, updates } = incoming.nodeData
 
@@ -28,26 +24,44 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
       matchedNodes = matchByLocation(world.nodes, incoming.nodeData)
     }
 
-    updatedWorld = applyNodeUpdates(updatedWorld, matchedNodes, updates)
+    // apply trust weighting
+    const weightedUpdates: any = {}
+    for (const key in updates) {
+      weightedUpdates[key] = updates[key] * weight
+    }
+
+    Object.assign(updatedWorld, applyNodeUpdates(updatedWorld, matchedNodes, weightedUpdates))
   }
 
-  // 2. Pillar updates (semantic mapping)
+  // ⭐ PILLAR UPDATES
   if (incoming.pillarData) {
     for (const pillarName in incoming.pillarData) {
       const { mappingRules, values } = incoming.pillarData[pillarName]
 
       const mapped = mapIncomingToPillar(values, pillarName, mappingRules)
-      updatedWorld = applyPillarUpdates(updatedWorld, pillarName, mapped)
+
+      const weightedMapped: any = {}
+      for (const key in mapped) {
+        weightedMapped[key] = mapped[key] * weight
+      }
+
+      Object.assign(updatedWorld, applyPillarUpdates(updatedWorld, pillarName, weightedMapped))
     }
   }
 
-  // 3. Global signal updates
+  // ⭐ GLOBAL UPDATES
   if (incoming.globalData) {
     const mapped = mapIncomingToGlobal(incoming.globalData.values, incoming.globalData.mappingRules)
-    updatedWorld = applyGlobalUpdates(updatedWorld, mapped)
+
+    const weightedMapped: any = {}
+    for (const key in mapped) {
+      weightedMapped[key] = mapped[key] * weight
+    }
+
+    Object.assign(updatedWorld, applyGlobalUpdates(updatedWorld, weightedMapped))
   }
 
-  // 4. Provenance tracking
+  // ⭐ PROVENANCE
   provenance.addRecord({
     timestamp: Date.now(),
     funnelType: "libraryOfAlexandria",
@@ -56,7 +70,7 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
     affectedNodes: incoming.nodeData ? Object.keys(incoming.nodeData) : [],
     affectedPillars: incoming.pillarData ? Object.keys(incoming.pillarData) : [],
     affectedGlobals: incoming.globalData ? Object.keys(incoming.globalData.values) : [],
-    trustScore: incoming.trustScore || 0.5,
+    trustScore: weight,
     rawDataHash: hashData(incoming)
   })
 
