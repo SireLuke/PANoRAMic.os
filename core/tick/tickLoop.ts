@@ -2,6 +2,7 @@
 
 import { WorldState } from "../worldstate/WorldState"
 import { updateNodeMap } from "../../nodeMap/updateNodeMap"
+import { computeGlobalSignals } from "../worldstate/globalSignalsEngine"
 
 import { updatePopulation } from "../pillars/population/populationEngine"
 import { updateResources } from "../pillars/resources/resourcesEngine"
@@ -46,6 +47,9 @@ export function tick(world: WorldState): WorldState {
   updated.repairability = updateRepairability(updated)
   updated.quantum = updateQuantum(updated)
 
-  // 3. Return updated world
+  // 3. Compute global signals
+  updated = computeGlobalSignals(updated)
+
   return updated
 }
+
