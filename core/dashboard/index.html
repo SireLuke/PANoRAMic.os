@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PAN‑OS Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    .section {
+      margin-bottom: 20px;
+      padding: 10px;
+      background: #222;
+      border-radius: 8px;
+    }
+    h2 {
+      margin-top: 0;
+    }
+    pre {
+      background: #000;
+      padding: 10px;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>PAN‑OS Dashboard</h1>
+
+  <div class="section">
+    <h2>Global Signals</h2>
+    <pre id="signals"></pre>
+  </div>
+
+  <div class="section">
+    <h2>Nodes</h2>
+    <pre id="nodes"></pre>
+  </div>
+
+  <div class="section">
+    <h2>Pillars</h2>
+    <pre id="pillars"></pre>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>
