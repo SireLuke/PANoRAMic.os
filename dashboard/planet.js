@@ -1,4 +1,11 @@
 import * as THREE from "https://cdn.skypack.dev/three@0.152.2";
+let metrics = { stability: 0.8, rsdv: 0.8, parMax: 0, stagnation: 0.2 };
+
+async function loadMetrics() {
+  const res = await fetch("/metrics");
+  metrics = await res.json();
+}
+await loadMetrics();
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
