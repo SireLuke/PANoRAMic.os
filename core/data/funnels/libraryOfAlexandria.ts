@@ -9,11 +9,13 @@ import { AlertEngine } from "../../data/alertEngine"
 import { ForecastEngine } from "../../data/forecastEngine"
 import { generateSnapshot } from "../../data/stateSnapshot"
 import { computeDiff } from "../../data/stateDiff"
+import { EventLog } from "../../data/eventLog"
 import { ProvenanceTracker, hashData } from "../../data/provenance"
 
 const provenance = new ProvenanceTracker()
 const alertEngine = new AlertEngine()
 const forecastEngine = new ForecastEngine()
+const eventLog = new EventLog()
 
 let lastSnapshot: any = null
 let lastDiff: any = null
@@ -21,6 +23,13 @@ let lastDiff: any = null
 registerFunnel("libraryOfAlexandria", (incoming, world) => {
   const updatedWorld = { ...world }
   const weight = incoming._trustWeight ?? 1
+
+  // Log ingestion event
+  eventLog.add("ingestion", "Library of Alexandria ingestion event", {
+    source: incoming.sourceName,
+    trustWeight: weight,
+    rawHash: hashData(incoming)
+  })
 
   // NODE UPDATES
   if (incoming.nodeData) {
@@ -58,7 +67,7 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
     }
   }
 
-  // GLOBAL UPDATES + SMOOTHING + ALERTS + FORECAST + SNAPSHOT + DIFF
+  // GLOBAL UPDATES + SMOOTHING + ALERTS + FORECAST + SNAPSHOT + DIFF + LOGGING
   if (incoming.globalData) {
     const mapped = mapIncomingToGlobal(incoming.globalData.values, incoming.globalData.mappingRules)
 
@@ -77,9 +86,11 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
 
     // Alerts
     alertEngine.evaluate(updatedWorld.globalSignals)
+    eventLog.add("alert", "Global alert evaluation", alertEngine.getRecent())
 
     // Forecast
     const forecast = forecastEngine.compute(updatedWorld.globalSignals)
+    eventLog.add("forecast", "Forecast update", forecast)
 
     // Snapshot
     const newSnapshot = generateSnapshot(
@@ -91,6 +102,7 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
     // Diff
     if (lastSnapshot) {
       lastDiff = computeDiff(lastSnapshot, newSnapshot)
+      eventLog.add("diff", "World state diff", lastDiff)
     }
 
     lastSnapshot = newSnapshot
@@ -118,4 +130,8 @@ export function getWorldSnapshot() {
 
 export function getWorldDiff() {
   return lastDiff
+}
+
+export function getEventLog() {
+  return eventLog.getRecent()
 }
