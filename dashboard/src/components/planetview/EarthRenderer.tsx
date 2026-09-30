@@ -6,6 +6,7 @@ import * as THREE from "three"
 import { listenToPanOsSignals } from "./SignalBridge"
 import { applyNasaOverlay } from "./overlays/NasaOverlay"
 import { applyNoaaOverlay } from "./overlays/NoaaOverlay"
+import { listenToPanOsSignals } from "./SignalBridge"
 
 useEffect(() => {
   listenToPanOsSignals((signal) => {
