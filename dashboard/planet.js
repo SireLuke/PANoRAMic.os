@@ -23,8 +23,23 @@ camera.position.z = 5;
 
 function animate() {
   requestAnimationFrame(animate);
-  earth.rotation.y += 0.002;
+
+  // rotation speed from RAMS stability
+  earth.rotation.y += 0.001 + metrics.stability * 0.002;
+
+  // glow intensity from RSDV scarcity
+  earth.material.emissive = new THREE.Color(0x222200);
+  earth.material.emissiveIntensity = metrics.rsdv;
+
+  // brightness from PAR supply
+  earth.material.color.setHSL(0.15, 1.0, 0.3 + metrics.parMax / 1e10);
+
+  // pulse color from stagnation
+  const pulse = Math.sin(Date.now() * 0.001) * metrics.stagnation;
+  earth.material.color.offsetHSL(pulse * 0.02, 0, 0);
+
   renderer.render(scene, camera);
 }
+
 
 animate();
