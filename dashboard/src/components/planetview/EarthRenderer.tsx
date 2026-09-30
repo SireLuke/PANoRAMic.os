@@ -5,6 +5,7 @@ import { useFrame } from "@react-three/fiber"
 import * as THREE from "three"
 import { listenToPanOsSignals } from "./SignalBridge"
 import { applyNasaOverlay } from "./overlays/NasaOverlay"
+import { applyNoaaOverlay } from "./overlays/NoaaOverlay"
 
 useEffect(() => {
   listenToPanOsSignals((signal) => {
