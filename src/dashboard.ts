@@ -1,23 +1,19 @@
-import { serve } from "https://deno.land/std/http/server.ts";
-import { runPreAudit } from "./rams.ts";
-import { computeRSDV } from "./rsdv.ts";
-import { initPAR } from "./par.ts";
-import { initStagnation } from "./stagnation.ts";
+import { serveDir } from "https://deno.land/std@0.224.0/http/file_server.ts";
 
 export async function initDashboard() {
   console.log("[DASH] Starting PlanetView server on http://localhost:3000");
 
-  const audit = await runPreAudit();
-  const rsdv = computeRSDV(audit);
-  const par = initPAR(audit.globalPopulation, rsdv);
-  const stag = initStagnation();
+  // Auto‑open browser
+  const openCommand = Deno.build.os === "windows"
+    ? ["cmd", "/c", "start", "http://localhost:3000"]
+    : ["xdg-open", "http://localhost:3000"];
+  Deno.run({ cmd: openCommand });
 
-  const metrics = { stability: audit.stabilityScore, rsdv, parMax: par.parMax, stagnation: stag.metric };
-
-  serve((req) => {
-    if (req.url === "/metrics") {
-      return new Response(JSON.stringify(metrics), { headers: { "content-type": "application/json" } });
-    }
-    return new Response(Deno.readTextFileSync("./dashboard/index.html"), { headers: { "content-type": "text/html" } });
-  }, { port: 3000 });
+  // Serve the dashboard directory with correct MIME types
+  await serveDir({
+    fsRoot: "./dashboard",
+    port: 3000,
+    showDirListing: false,
+    enableCors: true,
+  });
 }
