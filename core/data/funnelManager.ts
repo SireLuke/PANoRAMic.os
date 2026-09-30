@@ -4,6 +4,7 @@ import { normalizeWorld } from "./normalize"
 import { validateWorld } from "./validate"
 import { computeTrustScore, checkStructuralIntegrity } from "./trustEngine"
 import { HistoryStore, computeHistoricalConsistency } from "./history"
+import { SourceAgreementStore } from "./crossSource"
 
 /**
  * FunnelManager:
@@ -35,6 +36,9 @@ export type FunnelType =
 
 // ⭐ Step 33 — Historical store
 const historyStore = new HistoryStore(200)
+
+// ⭐ Step 34 — Cross‑source agreement store
+const agreementStore = new SourceAgreementStore(100)
 
 const adapters: Record<string, (data: any, world: any) => any> = {}
 
@@ -71,13 +75,19 @@ export function processFunnelData(world: any, incomingData: any, pillarDefaults:
     return world
   }
 
-  // ⭐ STEP 32 + 33 — Trust scoring with historical consistency
+  // ⭐ Step 34 — Add incoming to cross‑source store
+  const sourceName = incomingData.sourceName || "Unknown"
+  agreementStore.add(sourceName, incomingData)
+
+  const crossSourceAgreement = agreementStore.computeAgreement(incomingData)
+
+  // ⭐ STEP 32 + 33 + 34 — Trust scoring with historical + cross‑source
   const trustScore = computeTrustScore({
     sourceReputation: incomingData.sourceReputation ?? 0.5,
     structuralIntegrity: checkStructuralIntegrity(incomingData),
     historicalConsistency: computeHistoricalConsistency(historyStore.getAll(), incomingData),
     recency: incomingData.timestamp ? 1 : 0.5,
-    crossSourceAgreement: incomingData.crossSourceAgreement ?? 0.5
+    crossSourceAgreement
   })
 
   if (trustScore < 0.2) {
