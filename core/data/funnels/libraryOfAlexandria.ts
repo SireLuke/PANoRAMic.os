@@ -6,10 +6,12 @@ import { mapIncomingToPillar, applyPillarUpdates } from "../../data/pillarMappin
 import { mapIncomingToGlobal, applyGlobalUpdates } from "../../data/globalMapping"
 import { smoothGlobalSignals } from "../../data/globalSmoothing"
 import { AlertEngine } from "../../data/alertEngine"
+import { ForecastEngine } from "../../data/forecastEngine"
 import { ProvenanceTracker, hashData } from "../../data/provenance"
 
 const provenance = new ProvenanceTracker()
 const alertEngine = new AlertEngine()
+const forecastEngine = new ForecastEngine()
 
 registerFunnel("libraryOfAlexandria", (incoming, world) => {
   const updatedWorld = { ...world }
@@ -51,7 +53,7 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
     }
   }
 
-  // GLOBAL UPDATES + SMOOTHING + ALERTS
+  // GLOBAL UPDATES + SMOOTHING + ALERTS + FORECAST
   if (incoming.globalData) {
     const mapped = mapIncomingToGlobal(incoming.globalData.values, incoming.globalData.mappingRules)
 
@@ -68,8 +70,11 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
 
     Object.assign(updatedWorld, applyGlobalUpdates(updatedWorld, smoothed))
 
-    // ⭐ Step 36 — evaluate alerts
+    // Alerts
     alertEngine.evaluate(updatedWorld.globalSignals)
+
+    // Forecast
+    forecastEngine.compute(updatedWorld.globalSignals)
   }
 
   // PROVENANCE
@@ -94,4 +99,8 @@ export function getLibraryProvenance() {
 
 export function getGlobalAlerts() {
   return alertEngine.getRecent()
+}
+
+export function getForecastHistory() {
+  return forecastEngine.getRecent()
 }
