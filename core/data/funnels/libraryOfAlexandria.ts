@@ -5,15 +5,17 @@ import { matchByLocation, matchByRadius, applyNodeUpdates } from "../../data/nod
 import { mapIncomingToPillar, applyPillarUpdates } from "../../data/pillarMapping"
 import { mapIncomingToGlobal, applyGlobalUpdates } from "../../data/globalMapping"
 import { smoothGlobalSignals } from "../../data/globalSmoothing"
+import { AlertEngine } from "../../data/alertEngine"
 import { ProvenanceTracker, hashData } from "../../data/provenance"
 
 const provenance = new ProvenanceTracker()
+const alertEngine = new AlertEngine()
 
 registerFunnel("libraryOfAlexandria", (incoming, world) => {
   const updatedWorld = { ...world }
   const weight = incoming._trustWeight ?? 1
 
-  // ⭐ NODE UPDATES
+  // NODE UPDATES
   if (incoming.nodeData) {
     const { location, radiusKm, updates } = incoming.nodeData
 
@@ -33,7 +35,7 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
     Object.assign(updatedWorld, applyNodeUpdates(updatedWorld, matchedNodes, weightedUpdates))
   }
 
-  // ⭐ PILLAR UPDATES
+  // PILLAR UPDATES
   if (incoming.pillarData) {
     for (const pillarName in incoming.pillarData) {
       const { mappingRules, values } = incoming.pillarData[pillarName]
@@ -49,7 +51,7 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
     }
   }
 
-  // ⭐ GLOBAL UPDATES (with smoothing)
+  // GLOBAL UPDATES + SMOOTHING + ALERTS
   if (incoming.globalData) {
     const mapped = mapIncomingToGlobal(incoming.globalData.values, incoming.globalData.mappingRules)
 
@@ -58,7 +60,6 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
       weightedMapped[key] = mapped[key] * weight
     }
 
-    // Apply smoothing
     const smoothed = smoothGlobalSignals(
       updatedWorld.globalSignals,
       weightedMapped,
@@ -66,9 +67,12 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
     )
 
     Object.assign(updatedWorld, applyGlobalUpdates(updatedWorld, smoothed))
+
+    // ⭐ Step 36 — evaluate alerts
+    alertEngine.evaluate(updatedWorld.globalSignals)
   }
 
-  // ⭐ PROVENANCE
+  // PROVENANCE
   provenance.addRecord({
     timestamp: Date.now(),
     funnelType: "libraryOfAlexandria",
@@ -86,4 +90,8 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
 
 export function getLibraryProvenance() {
   return provenance.getHistory()
+}
+
+export function getGlobalAlerts() {
+  return alertEngine.getRecent()
 }
