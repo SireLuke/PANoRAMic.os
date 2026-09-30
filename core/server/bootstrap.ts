@@ -6,6 +6,7 @@ import { wireActuation } from "../actuation/wireActuation"
 
 import { pollNasaPower } from "../feeds/nasaPower"
 import { pollNoaa } from "../feeds/noaa"
+import { pollUsgs } from "../feeds/usgs"
 
 const pillarDefaults: any = { /* your pillar defaults */ }
 let world: any = { /* your initial world */ }
@@ -38,7 +39,16 @@ export function startPanOs() {
     }
   }, 10_000)
 
-  console.log("PAN-OS: NOAA feed loop active.")
+  // USGS earthquake feed loop
+  setInterval(async () => {
+    try {
+      world = await pollUsgs(world, pillarDefaults)
+    } catch (err) {
+      console.error("USGS feed error:", err)
+    }
+  }, 10_000)
+
+  console.log("PAN-OS: USGS feed loop active.")
 }
 
 if (require.main === module) {
