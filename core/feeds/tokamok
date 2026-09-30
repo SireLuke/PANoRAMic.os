@@ -1,0 +1,31 @@
+// core/feeds/tokamak.ts
+
+/**
+ * Tokamak Flux Board Feed
+ * Local hardware, no auth required.
+ *
+ * Replace the fetch with serial, USB, BLE, or websocket later.
+ */
+
+import { pushExternalFeedToPanOs } from "./feedBridge"
+
+async function fetchTokamakFlux(): Promise<{ flux: number }> {
+  // Placeholder for your hardware interface
+  return { flux: Math.random() * 100 }
+}
+
+export async function pollTokamak(world: any, pillarDefaults: any) {
+  const data = await fetchTokamakFlux()
+
+  const packet = {
+    sourceName: "Tokamak",
+    sourceUrl: "local-hardware",
+    values: {
+      reactorFlux: data.flux,
+      reactorStress: data.flux * 0.02
+    }
+  }
+
+  const updated = pushExternalFeedToPanOs(world, packet, pillarDefaults)
+  return updated
+}
