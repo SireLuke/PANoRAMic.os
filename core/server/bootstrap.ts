@@ -1,67 +1,35 @@
 // core/server/bootstrap.ts
 
-/**
- * PAN-OS Bootstrap:
- * Wires up funnels, world model, and starts the World API server.
- */
-
 import { startWorldApiServer } from "./worldApi"
-import { registerFunnel } from "../data/funnelManager"
-import "./../data/funnels/libraryOfAlexandria"
+import { Actuator } from "../actuation/actuator"
+import { wireActuation } from "../actuation/wireActuation"
+import { pollNasaPower } from "../feeds/nasaPower"
 
-// Initial world state
-const world: any = {
-  nodes: [],
-  pillars: {},
-  globalSignals: {
-    stability: 0.5,
-    risk: 0.5,
-    collapsePressure: 0.5,
-    recoveryStrength: 0.5,
-    synthesis: 0.5
-  }
-}
+const pillarDefaults: any = { /* your existing defaults */ }
+let world: any = { /* your initial world */ }
 
-// Pillar defaults (can be expanded later)
-const pillarDefaults: any = {
-  population: {},
-  resources: {},
-  economy: {},
-  governance: {},
-  medical: {},
-  humanitarian: {},
-  markets: {},
-  crime: {},
-  education: {},
-  migration: {},
-  trafficking: {},
-  transparency: {},
-  corporatecapture: {},
-  epistemic: {},
-  repairability: {},
-  quantum: {}
-}
-
-// Register core funnels (Library of Alexandria already self-registers)
-function initializeFunnels() {
-  console.log("PAN-OS: Funnels initialized.")
-}
-
-// Start world API
-function initializeApi() {
-  startWorldApiServer()
-  console.log("PAN-OS: World API started.")
-}
-
-// Main bootstrap
 export function startPanOs() {
   console.log("PAN-OS: Booting planetary operating system...")
-  initializeFunnels()
-  initializeApi()
-  console.log("PAN-OS: System online.")
+
+  startWorldApiServer()
+  console.log("PAN-OS: World API started.")
+
+  const actuator = new Actuator()
+  wireActuation(actuator)
+  console.log("PAN-OS: Actuation layer online.")
+
+  // Real NASA POWER feed loop
+  setInterval(async () => {
+    try {
+      world = await pollNasaPower(world, pillarDefaults)
+    } catch (err) {
+      console.error("NASA POWER feed error:", err)
+    }
+  }, 10_000) // every 10 seconds, tune as needed
+
+  console.log("PAN-OS: NASA POWER feed loop active.")
 }
 
-// Auto-start if run directly
 if (require.main === module) {
   startPanOs()
 }
