@@ -6,14 +6,12 @@ export async function initDashboard() {
   serve(async (req) => {
     const url = new URL(req.url);
 
-    // Serve index.html
     if (url.pathname === "/") {
       return new Response(await Deno.readTextFile("./dashboard/index.html"), {
         headers: { "content-type": "text/html" },
       });
     }
 
-    // Serve planet.js correctly
     if (url.pathname === "/planet.js") {
       return new Response(await Deno.readTextFile("./dashboard/planet.js"), {
         headers: { "content-type": "application/javascript" },
