@@ -3,29 +3,23 @@
 import { registerFunnel } from "../../data/funnelManager"
 import { mapIncomingToPillar, applyPillarUpdates } from "../../data/pillarMapping"
 import { mapIncomingToGlobal, applyGlobalUpdates } from "../../data/globalMapping"
+import { UniversalMappingRules, applyMappingRules } from "../mappingRules"
 import { ProvenanceTracker, hashData } from "../../data/provenance"
 
 const provenance = new ProvenanceTracker()
-
-/**
- * ICC-Universal Funnel:
- * Handles WHO, UN, IMF, World Bank, WTO, NGO, regulatory, climate, energy,
- * humanitarian, migration, crime, trafficking, corporate transparency,
- * epistemic integrity, and planetary health feeds.
- *
- * This is the broadest adapter in PAN-OS.
- */
 
 registerFunnel("epistemic", (incoming, world) => {
   const updatedWorld = { ...world }
   const weight = incoming._trustWeight ?? 1
 
-  // UNIVERSAL PILLAR UPDATES
-  if (incoming.pillarData) {
-    for (const pillarName in incoming.pillarData) {
-      const { mappingRules, values } = incoming.pillarData[pillarName]
+  const values = incoming.values || {}
+  const rules = UniversalMappingRules
 
-      const mapped = mapIncomingToPillar(values, pillarName, mappingRules)
+  // PILLAR UPDATES (medical, humanitarian, resources, economy, governance, markets, crime, quantum...)
+  if (rules.pillarRules) {
+    for (const pillarName in rules.pillarRules) {
+      const pillarRuleSet = rules.pillarRules[pillarName]
+      const mapped = applyMappingRules(values, pillarRuleSet)
 
       const weightedMapped: any = {}
       for (const key in mapped) {
@@ -36,26 +30,38 @@ registerFunnel("epistemic", (incoming, world) => {
     }
   }
 
-  // UNIVERSAL GLOBAL UPDATES
-  if (incoming.globalData) {
-    const mapped = mapIncomingToGlobal(incoming.globalData.values, incoming.globalData.mappingRules)
+  // GLOBAL UPDATES (risk, stability, collapsePressure, etc.)
+  if (rules.globalRules) {
+    const mappedGlobals = applyMappingRules(values, rules.globalRules)
 
-    const weightedMapped: any = {}
-    for (const key in mapped) {
-      weightedMapped[key] = mapped[key] * weight
+    const weightedGlobals: any = {}
+    for (const key in mappedGlobals) {
+      weightedGlobals[key] = mappedGlobals[key] * weight
     }
 
-    Object.assign(updatedWorld, applyGlobalUpdates(updatedWorld, weightedMapped))
+    Object.assign(updatedWorld, applyGlobalUpdates(updatedWorld, weightedGlobals))
   }
 
-  // PROVENANCE
+  // NODE UPDATES (local stress signals)
+  if (rules.nodeRules && incoming.nodeTargets) {
+    const mappedNode = applyMappingRules(values, rules.nodeRules)
+
+    const weightedNode: any = {}
+    for (const key in mappedNode) {
+      weightedNode[key] = mappedNode[key] * weight
+    }
+
+    // you can plug this into your existing nodeMapping.applyNodeUpdates
+    // when you’re ready to route by location / ids
+  }
+
   provenance.addRecord({
     timestamp: Date.now(),
     funnelType: "iccUniversal",
     sourceName: incoming.sourceName || "Unknown",
     sourceUrl: incoming.sourceUrl,
-    affectedPillars: incoming.pillarData ? Object.keys(incoming.pillarData) : [],
-    affectedGlobals: incoming.globalData ? Object.keys(incoming.globalData.values) : [],
+    affectedPillars: rules.pillarRules ? Object.keys(rules.pillarRules) : [],
+    affectedGlobals: rules.globalRules ? rules.globalRules.map(r => r.targetKey) : [],
     trustScore: weight,
     rawDataHash: hashData(incoming)
   })
