@@ -24,7 +24,6 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
       matchedNodes = matchByLocation(world.nodes, incoming.nodeData)
     }
 
-    // apply trust weighting
     const weightedUpdates: any = {}
     for (const key in updates) {
       weightedUpdates[key] = updates[key] * weight
