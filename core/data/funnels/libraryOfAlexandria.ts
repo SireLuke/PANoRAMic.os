@@ -4,6 +4,7 @@ import { registerFunnel } from "../../data/funnelManager"
 import { matchByLocation, matchByRadius, applyNodeUpdates } from "../../data/nodeMapping"
 import { mapIncomingToPillar, applyPillarUpdates } from "../../data/pillarMapping"
 import { mapIncomingToGlobal, applyGlobalUpdates } from "../../data/globalMapping"
+import { smoothGlobalSignals } from "../../data/globalSmoothing"
 import { ProvenanceTracker, hashData } from "../../data/provenance"
 
 const provenance = new ProvenanceTracker()
@@ -48,7 +49,7 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
     }
   }
 
-  // ⭐ GLOBAL UPDATES
+  // ⭐ GLOBAL UPDATES (with smoothing)
   if (incoming.globalData) {
     const mapped = mapIncomingToGlobal(incoming.globalData.values, incoming.globalData.mappingRules)
 
@@ -57,7 +58,14 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
       weightedMapped[key] = mapped[key] * weight
     }
 
-    Object.assign(updatedWorld, applyGlobalUpdates(updatedWorld, weightedMapped))
+    // Apply smoothing
+    const smoothed = smoothGlobalSignals(
+      updatedWorld.globalSignals,
+      weightedMapped,
+      incoming.globalData.alpha ?? 0.3
+    )
+
+    Object.assign(updatedWorld, applyGlobalUpdates(updatedWorld, smoothed))
   }
 
   // ⭐ PROVENANCE
