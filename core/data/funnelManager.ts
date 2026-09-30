@@ -3,6 +3,7 @@
 import { normalizeWorld } from "./normalize"
 import { validateWorld } from "./validate"
 import { computeTrustScore, checkStructuralIntegrity } from "./trustEngine"
+import { HistoryStore, computeHistoricalConsistency } from "./history"
 
 /**
  * FunnelManager:
@@ -31,6 +32,9 @@ export type FunnelType =
   | "global"
   | "libraryOfAlexandria"
   | "unknown"
+
+// ⭐ Step 33 — Historical store
+const historyStore = new HistoryStore(200)
 
 const adapters: Record<string, (data: any, world: any) => any> = {}
 
@@ -67,11 +71,11 @@ export function processFunnelData(world: any, incomingData: any, pillarDefaults:
     return world
   }
 
-  // ⭐ STEP 32 — Trust scoring
+  // ⭐ STEP 32 + 33 — Trust scoring with historical consistency
   const trustScore = computeTrustScore({
     sourceReputation: incomingData.sourceReputation ?? 0.5,
     structuralIntegrity: checkStructuralIntegrity(incomingData),
-    historicalConsistency: 0.5, // Step 33 will expand this
+    historicalConsistency: computeHistoricalConsistency(historyStore.getAll(), incomingData),
     recency: incomingData.timestamp ? 1 : 0.5,
     crossSourceAgreement: incomingData.crossSourceAgreement ?? 0.5
   })
@@ -88,6 +92,9 @@ export function processFunnelData(world: any, incomingData: any, pillarDefaults:
 
   const validated = validateWorld(updatedWorld, pillarDefaults)
   const normalized = normalizeWorld(validated)
+
+  // ⭐ Step 33 — Add to historical store
+  historyStore.add(incomingData)
 
   return normalized
 }
