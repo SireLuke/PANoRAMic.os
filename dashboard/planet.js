@@ -1,3 +1,7 @@
+if (!WEBGL.isWebGLAvailable()) {
+  document.body.innerHTML = "<h1 style='color:white'>WebGL not supported</h1>";
+}
+
 import * as THREE from "https://cdn.skypack.dev/three@0.152.2";
 
 // SCENE + CAMERA
