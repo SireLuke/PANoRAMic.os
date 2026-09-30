@@ -3,9 +3,11 @@
 import { startWorldApiServer } from "./worldApi"
 import { Actuator } from "../actuation/actuator"
 import { wireActuation } from "../actuation/wireActuation"
-import { pollNasaPower } from "../feeds/nasaPower"
 
-const pillarDefaults: any = { /* your existing defaults */ }
+import { pollNasaPower } from "../feeds/nasaPower"
+import { pollNoaa } from "../feeds/noaa"
+
+const pillarDefaults: any = { /* your pillar defaults */ }
 let world: any = { /* your initial world */ }
 
 export function startPanOs() {
@@ -18,16 +20,25 @@ export function startPanOs() {
   wireActuation(actuator)
   console.log("PAN-OS: Actuation layer online.")
 
-  // Real NASA POWER feed loop
+  // NASA POWER feed loop
   setInterval(async () => {
     try {
       world = await pollNasaPower(world, pillarDefaults)
     } catch (err) {
       console.error("NASA POWER feed error:", err)
     }
-  }, 10_000) // every 10 seconds, tune as needed
+  }, 10_000)
 
-  console.log("PAN-OS: NASA POWER feed loop active.")
+  // NOAA feed loop
+  setInterval(async () => {
+    try {
+      world = await pollNoaa(world, pillarDefaults)
+    } catch (err) {
+      console.error("NOAA feed error:", err)
+    }
+  }, 10_000)
+
+  console.log("PAN-OS: NOAA feed loop active.")
 }
 
 if (require.main === module) {
