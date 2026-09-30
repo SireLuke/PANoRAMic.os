@@ -8,6 +8,7 @@ import { smoothGlobalSignals } from "../../data/globalSmoothing"
 import { AlertEngine } from "../../data/alertEngine"
 import { ForecastEngine } from "../../data/forecastEngine"
 import { generateSnapshot } from "../../data/stateSnapshot"
+import { computeDiff } from "../../data/stateDiff"
 import { ProvenanceTracker, hashData } from "../../data/provenance"
 
 const provenance = new ProvenanceTracker()
@@ -15,6 +16,7 @@ const alertEngine = new AlertEngine()
 const forecastEngine = new ForecastEngine()
 
 let lastSnapshot: any = null
+let lastDiff: any = null
 
 registerFunnel("libraryOfAlexandria", (incoming, world) => {
   const updatedWorld = { ...world }
@@ -56,7 +58,7 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
     }
   }
 
-  // GLOBAL UPDATES + SMOOTHING + ALERTS + FORECAST + SNAPSHOT
+  // GLOBAL UPDATES + SMOOTHING + ALERTS + FORECAST + SNAPSHOT + DIFF
   if (incoming.globalData) {
     const mapped = mapIncomingToGlobal(incoming.globalData.values, incoming.globalData.mappingRules)
 
@@ -80,11 +82,18 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
     const forecast = forecastEngine.compute(updatedWorld.globalSignals)
 
     // Snapshot
-    lastSnapshot = generateSnapshot(
+    const newSnapshot = generateSnapshot(
       updatedWorld,
       alertEngine.getRecent(),
       forecastEngine.getRecent()
     )
+
+    // Diff
+    if (lastSnapshot) {
+      lastDiff = computeDiff(lastSnapshot, newSnapshot)
+    }
+
+    lastSnapshot = newSnapshot
   }
 
   // PROVENANCE
@@ -103,18 +112,10 @@ registerFunnel("libraryOfAlexandria", (incoming, world) => {
   return updatedWorld
 })
 
-export function getLibraryProvenance() {
-  return provenance.getHistory()
-}
-
-export function getGlobalAlerts() {
-  return alertEngine.getRecent()
-}
-
-export function getForecastHistory() {
-  return forecastEngine.getRecent()
-}
-
 export function getWorldSnapshot() {
   return lastSnapshot
+}
+
+export function getWorldDiff() {
+  return lastDiff
 }
