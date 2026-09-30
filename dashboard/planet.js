@@ -14,7 +14,9 @@ renderer.setSize(innerWidth, innerHeight);
 document.body.appendChild(renderer.domElement);
 
 const geometry = new THREE.SphereGeometry(2, 64, 64);
-const texture = new THREE.TextureLoader().load("https://raw.githubusercontent.com/ajayns/earth/master/earthmap1k.jpg");
+const texture = new THREE.TextureLoader().load(
+  "https://raw.githubusercontent.com/itsLuke/SampleTextures/main/earth_daymap.jpg"
+);
 const material = new THREE.MeshBasicMaterial({ map: texture });
 const earth = new THREE.Mesh(geometry, material);
 scene.add(earth);
