@@ -10,8 +10,23 @@ import { listenToPanOsSignals } from "./SignalBridge"
 
 useEffect(() => {
   listenToPanOsSignals((signal) => {
-    if (signal.type === "nodeUpdate" && signal.payload.sourceName === "NASA POWER") {
-      applyNasaOverlay(earthRef.current, signal.payload)
+    console.log("Planet received:", signal)
+
+    if (signal.type === "nodeUpdate") {
+      const src = signal.payload.sourceName
+
+      if (src === "NASA POWER") {
+        applyNasaOverlay(earthRef.current, signal.payload)
+      }
+
+      if (src === "NOAA") {
+        applyNoaaOverlay(earthRef.current, signal.payload)
+      }
+
+      // USGS, WHO, etc will go here later
+    }
+  })
+}, []))
     }
   })
 }, [])
