@@ -4,6 +4,15 @@ import { useRef, useEffect } from "react"
 import { useFrame } from "@react-three/fiber"
 import * as THREE from "three"
 import { listenToPanOsSignals } from "./SignalBridge"
+import { applyNasaOverlay } from "./overlays/NasaOverlay"
+
+useEffect(() => {
+  listenToPanOsSignals((signal) => {
+    if (signal.type === "nodeUpdate" && signal.payload.sourceName === "NASA POWER") {
+      applyNasaOverlay(earthRef.current, signal.payload)
+    }
+  })
+}, [])
 
 export default function EarthRenderer() {
   const earthRef = useRef<THREE.Mesh>(null)
