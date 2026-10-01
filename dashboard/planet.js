@@ -69,6 +69,7 @@ camera.position.z = 6;
 function animate() {
   requestAnimationFrame(animate);
   earth.rotation.y += 0.0015;
+  stars.rotation.y += 0.0005;
   renderer.render(scene, camera);
 }
 
