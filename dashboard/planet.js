@@ -19,14 +19,23 @@ const light = new THREE.DirectionalLight(0xfff6c0, 1.2); // metallic gold
 light.position.set(5, 3, 5);
 scene.add(light);
 
-// GOLD WIREFRAME EARTH
-const geometry = new THREE.SphereGeometry(2, 64, 64);
-const material = new THREE.MeshBasicMaterial({
-  color: 0xffd700, // metallic gold
-  wireframe: true
+const texture = new THREE.TextureLoader().load(
+  "https://eoimages.gsfc.nasa.gov/images/imagerecords/74000/74497/world.topo.bathy.200412.3x5400x2700.jpg"
+);
+
+const earthMaterial = new THREE.MeshPhongMaterial({
+  map: texture,
+  shininess: 80,
+  color: 0x001133, // deep metallic blue tint
 });
-const earth = new THREE.Mesh(geometry, material);
+
+const earth = new THREE.Mesh(
+  new THREE.SphereGeometry(2, 128, 128),
+  earthMaterial
+);
+
 scene.add(earth);
+
 
 camera.position.z = 6;
 
