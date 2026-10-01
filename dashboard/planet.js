@@ -35,6 +35,32 @@ const earth = new THREE.Mesh(
 );
 
 scene.add(earth);
+// GOLD MICRO-STARS BACKGROUND
+const starCount = 2000;
+const starPositions = [];
+
+for (let i = 0; i < starCount; i++) {
+  const r = 10 + Math.random() * 5; // distance from Earth
+  const phi = Math.random() * Math.PI * 2;
+  const theta = Math.random() * Math.PI;
+
+  starPositions.push(
+    r * Math.sin(theta) * Math.cos(phi),
+    r * Math.cos(theta),
+    r * Math.sin(theta) * Math.sin(phi)
+  );
+}
+
+const starGeom = new THREE.BufferGeometry();
+starGeom.setAttribute("position", new THREE.Float32BufferAttribute(starPositions, 3));
+
+const starMat = new THREE.PointsMaterial({
+  color: 0xffd700, // metallic gold
+  size: 0.02
+});
+
+const stars = new THREE.Points(starGeom, starMat);
+scene.add(stars);
 
 
 camera.position.z = 6;
