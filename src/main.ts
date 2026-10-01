@@ -1,4 +1,4 @@
-import { bootSystem } from "./src/boot.ts";
+import { bootSystem } from "./boot.ts";
 
 if (import.meta.main) {
   await bootSystem();
