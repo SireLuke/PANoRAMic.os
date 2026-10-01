@@ -47,3 +47,21 @@ function animate() {
 }
 
 animate();
+function updateHUD(packet) {
+  document.getElementById("hud-tick").innerText = `Tick ${packet.tick}`;
+  document.getElementById("hud-headline").innerText = packet.headline;
+  document.getElementById("hud-health").innerText = `Health: ${packet.overallHealth.toFixed(3)}`;
+
+  document.getElementById("rams-score").innerText = packet.rams.toFixed(3);
+  document.getElementById("rsdv-score").innerText = packet.rsdv.toFixed(3);
+  document.getElementById("par-cap").innerText = packet.parCap;
+  document.getElementById("dem-rate").innerText = packet.dem.toFixed(3);
+  document.getElementById("stag-index").innerText = packet.stag.toFixed(3);
+
+  document.getElementById("stability").innerText = packet.overallHealth.toFixed(3);
+  document.getElementById("scarcity").innerText = packet.scarcity.toFixed(3);
+  document.getElementById("recovery").innerText = packet.recovery.toFixed(3);
+  document.getElementById("coherence").innerText = packet.coherence.toFixed(3);
+
+  document.getElementById("par-flow").innerText = packet.parFlow.toFixed(3);
+}
