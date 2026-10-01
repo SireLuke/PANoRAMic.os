@@ -1,4 +1,3 @@
-// THREE IMPORT
 import * as THREE from "https://cdn.skypack.dev/three@0.152.2";
 
 // SCENE + CAMERA
