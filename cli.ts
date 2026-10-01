@@ -6,7 +6,7 @@ import {
     dashboardCommand,
     ramsCommand,
     signalsCommand,
-    searchCommand,
+    searchCommand
 } from "./cli/src";
 
 async function main() {
