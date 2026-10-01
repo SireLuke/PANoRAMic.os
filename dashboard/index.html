@@ -9,6 +9,80 @@
   </style>
 </head>
 <body>
-  <script type="module" src="./planet.js"></script>
+ <div id="hud-top" style="
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  color: gold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-family: sans-serif;
+  z-index: 999;
+">
+  <div id="hud-tick">Tick 0</div>
+  <div id="hud-headline">Booting...</div>
+  <div id="hud-health">Health: 1.00</div>
+</div>
+<div id="hud-left" style="
+  position: fixed;
+  top: 70px; left: 10px;
+  width: 180px;
+  color: gold;
+  font-family: sans-serif;
+  z-index: 999;
+">
+  <h3>Pillars</h3>
+  <div>RAMS: <span id="rams-score">0.82</span></div>
+  <div>RSDV: <span id="rsdv-score">0.843</span></div>
+  <div>PAR: <span id="par-cap">9099000000</span></div>
+  <div>DEM: <span id="dem-rate">0.00</span></div>
+  <div>STAG: <span id="stag-index">0.00</span></div>
+<div id="hud-right" style="
+  position: fixed;
+  top: 70px; right: 10px;
+  width: 200px;
+  color: gold;
+  font-family: sans-serif;
+  z-index: 999;
+">
+  <h3>Planet Health</h3>
+  <div>Stability: <span id="stability">0.82</span></div>
+  <div>Scarcity: <span id="scarcity">0.843</span></div>
+  <div>Recovery: <span id="recovery">0.55</span></div>
+  <div>Coherence: <span id="coherence">0.77</span></div>
+</div>
+</div>
+<div id="hud-bottom" style="
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 40px;
+  background: rgba(0,0,0,0.6);
+  color: gold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: sans-serif;
+  z-index: 999;
+">
+  PAR Flow: <span id="par-flow">0.00</span>
+</div>
+<div id="hud-wiki" style="
+  position: fixed;
+  bottom: 50px; right: 10px;
+  background: gold;
+  color: black;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: sans-serif;
+  z-index: 999;
+" onclick="window.location.href='./wiki.html'">
+  Wiki
+</div>
+<script type="module" src="./planet.js"></script>
 </body>
 </html>
