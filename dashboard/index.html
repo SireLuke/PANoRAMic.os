@@ -9,7 +9,9 @@
   </style>
 </head>
 <body>
- <div id="hud-top" style="
+
+<!-- HUD TOP -->
+<div id="hud-top" style="
   position: fixed;
   top: 0; left: 0; right: 0;
   height: 60px;
@@ -27,6 +29,8 @@
   <div id="hud-headline">Booting...</div>
   <div id="hud-health">Health: 1.00</div>
 </div>
+
+<!-- HUD LEFT -->
 <div id="hud-left" style="
   position: fixed;
   top: 70px; left: 10px;
@@ -41,6 +45,9 @@
   <div>PAR: <span id="par-cap">9099000000</span></div>
   <div>DEM: <span id="dem-rate">0.00</span></div>
   <div>STAG: <span id="stag-index">0.00</span></div>
+</div>
+
+<!-- HUD RIGHT -->
 <div id="hud-right" style="
   position: fixed;
   top: 70px; right: 10px;
@@ -55,7 +62,8 @@
   <div>Recovery: <span id="recovery">0.55</span></div>
   <div>Coherence: <span id="coherence">0.77</span></div>
 </div>
-</div>
+
+<!-- HUD BOTTOM -->
 <div id="hud-bottom" style="
   position: fixed;
   bottom: 0; left: 0; right: 0;
@@ -70,6 +78,8 @@
 ">
   PAR Flow: <span id="par-flow">0.00</span>
 </div>
+
+<!-- WIKI BUTTON -->
 <div id="hud-wiki" style="
   position: fixed;
   bottom: 50px; right: 10px;
@@ -83,6 +93,9 @@
 " onclick="window.location.href='./wiki.html'">
   Wiki
 </div>
+
+<!-- PLANET SCRIPT -->
 <script type="module" src="./planet.js"></script>
+
 </body>
 </html>
