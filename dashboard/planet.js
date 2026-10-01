@@ -11,7 +11,7 @@ const camera = new THREE.PerspectiveCamera(
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(0x000822); // deep royal blue
+renderer.setClearColor(0x000033); // deep metallic royal blue
 document.body.appendChild(renderer.domElement);
 
 // LIGHT
