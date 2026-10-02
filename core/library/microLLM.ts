@@ -5,20 +5,11 @@
 
 import { CultureEmbedding, NuanceParameters, MicroLLMEmbedding, RelationshipEdge } from "./types";
 
-/**
- * Micro LLM: 180+ learnable parameters optimized for culture + nuance awareness
- * This is NOT a full generative model, but a retrieval + embedding + relationship engine
- * Designed to fit in constrained environments while preserving knowledge nuance
- */
 export class MicroLLMEncoder {
   private parameterCount = 180;
-  private culturalDimensions = 8; // culture embedding dimensions
-  private nuanceDimensions = 11; // nuance parameter dimensions
+  private culturalDimensions = 8;
+  private nuanceDimensions = 11;
 
-  /**
-   * Encode a knowledge item into a micro LLM embedding space
-   * accounting for cultural context and nuance
-   */
   encodeKnowledge(
     content: string,
     culture: CultureEmbedding,
@@ -31,17 +22,14 @@ export class MicroLLMEncoder {
     return {
       parameterId: this.generateParameterId(),
       culturalContext: culturalVector,
-      nuanceVector: nuanceVector,
+      nuanceVector,
       semanticValue,
-      relationships: [], // populated by relationship engine
+      relationships: [],
     };
   }
 
-  /**
-   * Encode cultural parameters into a normalized vector (8 dimensions)
-   */
   private encodeCulture(culture: CultureEmbedding): number[] {
-    const timeOrientationMap: { [key: string]: number } = {
+    const timeOrientationMap = {
       past: 0.0,
       present: 0.33,
       future: 0.67,
@@ -56,15 +44,12 @@ export class MicroLLMEncoder {
       culture.powerDistance,
       culture.uncertaintyTolerance,
       culture.spiritualDimension ? 1.0 : 0.0,
-      culture.languages.length / 10, // normalize by typical language count
+      culture.languages.length / 10,
     ];
   }
 
-  /**
-   * Encode nuance parameters into a normalized vector (11 dimensions)
-   */
   private encodeNuance(nuance: NuanceParameters): number[] {
-    const temporalMap: { [key: string]: number } = {
+    const temporalMap = {
       immediate: 0.0,
       seasonal: 0.33,
       generational: 0.67,
@@ -77,30 +62,21 @@ export class MicroLLMEncoder {
       nuance.systemicDepth,
       nuance.uncertaintyMargin,
       nuance.applicabilityRadius,
-      nuance.ethicalDimension.length / 5, // normalize
-      nuance.counterExamples.length / 3, // normalize
-      nuance.relatedConcepts.length / 5, // normalize
+      nuance.ethicalDimension.length / 5,
+      nuance.counterExamples.length / 3,
+      nuance.relatedConcepts.length / 5,
       nuance.updateFrequency === "continuous" ? 1.0 : 0.5,
       nuance.relevanceToPAN,
       this.computeKnowledgeMaturity(nuance),
     ];
   }
 
-  /**
-   * Measure knowledge maturity based on verification and update patterns
-   */
   private computeKnowledgeMaturity(nuance: NuanceParameters): number {
-    // more context = more mature understanding
     const contextScore = (nuance.counterExamples.length + nuance.relatedConcepts.length) / 8;
     return Math.min(1.0, contextScore);
   }
 
-  /**
-   * Compute semantic relevance of content (simplified NLP score)
-   * In real implementation, use word2vec or similar embeddings
-   */
   private computeSemanticRelevance(content: string): number {
-    // Placeholder: count unique high-value tokens
     const keywordPatterns = [
       /planetary|global|system/gi,
       /regenerat|sustain|circle|cycle/gi,
@@ -117,36 +93,22 @@ export class MicroLLMEncoder {
     return Math.min(1.0, score);
   }
 
-  /**
-   * Compute cultural distance between two embeddings
-   * Lower = more culturally aligned
-   */
   computeCulturalDistance(vec1: number[], vec2: number[]): number {
     return this.cosineSimilarity(vec1, vec2);
   }
 
-  /**
-   * Compute nuance distance between two embeddings
-   */
   computeNuanceDistance(vec1: number[], vec2: number[]): number {
     return this.cosineSimilarity(vec1, vec2);
   }
 
-  /**
-   * Cosine similarity (0 = opposite, 1 = same)
-   */
   private cosineSimilarity(a: number[], b: number[]): number {
-    const dotProduct = a.reduce((sum, val, i) => sum + val * b[i], 0);
-    const magnitudeA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0));
-    const magnitudeB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0));
-
-    if (magnitudeA === 0 || magnitudeB === 0) return 0;
-    return dotProduct / (magnitudeA * magnitudeB);
+    const dot = a.reduce((sum, val, i) => sum + val * b[i], 0);
+    const magA = Math.sqrt(a.reduce((s, v) => s + v * v, 0));
+    const magB = Math.sqrt(b.reduce((s, v) => s + v * v, 0));
+    if (magA === 0 || magB === 0) return 0;
+    return dot / (magA * magB);
   }
 
-  /**
-   * Build relationship edge between two knowledge items
-   */
   buildRelationship(
     embedding1: MicroLLMEmbedding,
     embedding2: MicroLLMEmbedding,
@@ -176,9 +138,6 @@ export class MicroLLMEncoder {
     return `param_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  /**
-   * Get statistics about this model's parameter usage
-   */
   getStats() {
     return {
       totalParameters: this.parameterCount,
@@ -189,29 +148,3 @@ export class MicroLLMEncoder {
     };
   }
 }
-
-/**
- * Example usage of micro LLM encoder:
- *
- * const encoder = new MicroLLMEncoder();
- *
- * const cultureEmbedding: CultureEmbedding = {
- *   origin: "Indigenous Amazonian",
- *   languages: ["Portuguese", "Tupi", "Guarani"],
- *   contextuality: 0.9,
- *   indirectness: 0.7,
- *   collectivism: 0.85,
- *   timeOrientation: "cyclical",
- *   // ... more parameters
- * };
- *
- * const nuanceParams: NuanceParameters = {
- *   abstractionLevel: 0.4, // concrete observations
- *   temporalScope: "seasonal",
- *   systemicDepth: 0.7,
- *   applicabilityRadius: 0.6, // regionally specific
- *   // ... more parameters
- * };
- *
- * const embedding = encoder.encodeKnowledge(content, cultureEmbedding, nuanceParams);
- */
