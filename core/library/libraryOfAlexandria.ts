@@ -1,25 +1,27 @@
 /**
  * Library of Alexandria
  * Planetary Memory Layer with Micro LLM Integration
- *
- * Preserves and retrieves knowledge with cultural sensitivity and nuance awareness
  */
 
-import { LibraryNode, LibraryQuery, LibrarySearchResult, LibrarySnapshot, CultureEmbedding, NuanceParameters } from "./types";
+import {
+  LibraryNode,
+  LibraryQuery,
+  LibrarySearchResult,
+  LibrarySnapshot,
+  CultureEmbedding,
+  NuanceParameters,
+} from "./types";
 import { MicroLLMEncoder } from "./microLLM";
 
 export class LibraryOfAlexandria {
   private nodes: Map<string, LibraryNode> = new Map();
   private encoder: MicroLLMEncoder;
-  private indexedAt: number = 0;
+  private indexedAt = 0;
 
   constructor() {
     this.encoder = new MicroLLMEncoder();
   }
 
-  /**
-   * Add a knowledge node to the library
-   */
   addNode(
     id: string,
     category: LibraryNode["category"],
@@ -55,35 +57,27 @@ export class LibraryOfAlexandria {
     return node;
   }
 
-  /**
-   * Search the library for knowledge matching query + cultural/nuance preferences
-   */
   search(query: LibraryQuery): LibrarySearchResult[] {
     const results: LibrarySearchResult[] = [];
 
     for (const [nodeId, node] of this.nodes) {
-      // Filter by trust threshold
-      if (query.trustThreshold && node.trustWeight < query.trustThreshold) {
-        continue;
-      }
+      if (query.trustThreshold && node.trustWeight < query.trustThreshold) continue;
 
-      // Calculate relevance score based on keyword matching
       const relevanceScore = this.computeRelevance(query.query, node.content);
       if (relevanceScore < 0.1) continue;
 
-      // Calculate cultural alignment
-      let culturalAlignment = 0.5; // neutral default
+      let culturalAlignment = 0.5;
       if (query.culturalContext) {
         culturalAlignment = this.computeCulturalAlignment(query.culturalContext, node.cultureEmbedding);
       }
 
-      // Calculate nuance alignment
-      let nuanceAlignment = 0.5; // neutral default
+      let nuanceAlignment = 0.5;
       if (query.nuancePreferences) {
         nuanceAlignment = this.computeNuanceAlignment(query.nuancePreferences, node.nuanceParameters);
       }
 
-      const finalScore = relevanceScore * 0.5 + culturalAlignment * 0.25 + nuanceAlignment * 0.25;
+      const finalScore =
+        relevanceScore * 0.5 + culturalAlignment * 0.25 + nuanceAlignment * 0.25;
 
       results.push({
         nodeId,
@@ -100,69 +94,54 @@ export class LibraryOfAlexandria {
       });
     }
 
-    // Sort by final score descending
     return results.sort((a, b) => b.relevanceScore - a.relevanceScore);
   }
 
-  /**
-   * Compute keyword relevance (simplified)
-   */
   private computeRelevance(query: string, content: string): number {
-    const queryTerms = query.toLowerCase().split(/\s+/);
-    const contentLower = content.toLowerCase();
+    const terms = query.toLowerCase().split(/\s+/);
+    const lower = content.toLowerCase();
 
     let matches = 0;
-    queryTerms.forEach((term) => {
-      if (contentLower.includes(term)) matches++;
+    terms.forEach((t) => {
+      if (lower.includes(t)) matches++;
     });
 
-    return Math.min(1.0, matches / queryTerms.length);
+    return Math.min(1.0, matches / terms.length);
   }
 
-  /**
-   * Compute cultural alignment between query context and node culture
-   */
   private computeCulturalAlignment(context: string, culture: CultureEmbedding): number {
-    // Simplified: check if context matches origin or languages
-    if (culture.origin.toLowerCase().includes(context.toLowerCase())) {
-      return 0.9;
-    }
-    if (culture.languages.some((lang) => lang.toLowerCase().includes(context.toLowerCase()))) {
-      return 0.8;
-    }
-    return 0.5; // neutral
+    if (culture.origin.toLowerCase().includes(context.toLowerCase())) return 0.9;
+    if (culture.languages.some((l) => l.toLowerCase().includes(context.toLowerCase()))) return 0.8;
+    return 0.5;
   }
 
-  /**
-   * Compute nuance alignment between query preferences and node nuance parameters
-   */
-  private computeNuanceAlignment(prefs: Partial<NuanceParameters>, nuance: NuanceParameters): number {
-    let alignmentScore = 0;
-    let paramCount = 0;
+  private computeNuanceAlignment(
+    prefs: Partial<NuanceParameters>,
+    nuance: NuanceParameters
+  ): number {
+    let score = 0;
+    let count = 0;
 
     if (prefs.abstractionLevel !== undefined) {
-      alignmentScore += Math.max(0, 1 - Math.abs(prefs.abstractionLevel - nuance.abstractionLevel));
-      paramCount++;
+      score += Math.max(0, 1 - Math.abs(prefs.abstractionLevel - nuance.abstractionLevel));
+      count++;
     }
     if (prefs.systemicDepth !== undefined) {
-      alignmentScore += Math.max(0, 1 - Math.abs(prefs.systemicDepth - nuance.systemicDepth));
-      paramCount++;
+      score += Math.max(0, 1 - Math.abs(prefs.systemicDepth - nuance.systemicDepth));
+      count++;
     }
     if (prefs.applicabilityRadius !== undefined) {
-      alignmentScore += Math.max(0, 1 - Math.abs(prefs.applicabilityRadius - nuance.applicabilityRadius));
-      paramCount++;
+      score += Math.max(0, 1 - Math.abs(prefs.applicabilityRadius - nuance.applicabilityRadius));
+      count++;
     }
     if (prefs.relevanceToPAN !== undefined) {
-      alignmentScore += Math.max(0, 1 - Math.abs(prefs.relevanceToPAN - nuance.relevanceToPAN));
-      paramCount++;
+      score += Math.max(0, 1 - Math.abs(prefs.relevanceToPAN - nuance.relevanceToPAN));
+      count++;
     }
 
-    return paramCount > 0 ? alignmentScore / paramCount : 0.5;
+    return count > 0 ? score / count : 0.5;
   }
 
-  /**
-   * Get a snapshot of the library's current state
-   */
   getSnapshot(): LibrarySnapshot {
     const categories = new Set<string>();
     const cultures = new Set<string>();
@@ -172,10 +151,10 @@ export class LibraryOfAlexandria {
     for (const node of this.nodes.values()) {
       categories.add(node.category);
       cultures.add(node.cultureEmbedding.origin);
-      node.cultureEmbedding.languages.forEach((lang) => languages.add(lang));
+      node.cultureEmbedding.languages.forEach((l) => languages.add(l));
 
-      const trustBucket = Math.floor(node.trustWeight * 10) / 10;
-      trustWeights[trustBucket.toFixed(1)] = (trustWeights[trustBucket.toFixed(1)] || 0) + 1;
+      const bucket = Math.floor(node.trustWeight * 10) / 10;
+      trustWeights[bucket.toFixed(1)] = (trustWeights[bucket.toFixed(1)] || 0) + 1;
     }
 
     return {
@@ -188,18 +167,12 @@ export class LibraryOfAlexandria {
     };
   }
 
-  /**
-   * Get a specific node by ID
-   */
   getNode(id: string): LibraryNode | undefined {
     return this.nodes.get(id);
   }
 
-  /**
-   * List all nodes in a category
-   */
   getByCategory(category: LibraryNode["category"]): LibraryNode[] {
-    return Array.from(this.nodes.values()).filter((node) => node.category === category);
+    return Array.from(this.nodes.values()).filter((n) => n.category === category);
   }
 }
 
