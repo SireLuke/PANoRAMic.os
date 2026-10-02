@@ -3,11 +3,20 @@
 <head>
   <title>PAN Wiki</title>
   <style>
-    body { background: #001133; color: gold; font-family: sans-serif; padding: 20px; }
+    body { font-family: sans-serif; background: #111; color: gold; padding: 20px; }
+    input { width: 300px; padding: 8px; }
+    .node { margin-top: 20px; padding: 10px; border: 1px solid gold; }
   </style>
 </head>
 <body>
-  <h1>PANoRAMic.OS Wiki</h1>
-  <p>Welcome to the PAN knowledge base.</p>
+
+<h1>PAN Wiki</h1>
+
+<input id="searchBox" placeholder="Search knowledge..." />
+<button onclick="runSearch()">Search</button>
+
+<div id="results"></div>
+
+<script type="module" src="./wiki.js"></script>
 </body>
 </html>
