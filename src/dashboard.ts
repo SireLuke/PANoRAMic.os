@@ -43,5 +43,3 @@ export async function initDashboard() {
 
   await serverPromise;
 }
-
-}
