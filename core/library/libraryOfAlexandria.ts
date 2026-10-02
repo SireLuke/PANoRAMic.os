@@ -189,8 +189,3 @@ export class LibraryOfAlexandria {
 }
 
 export const libraryOfAlexandria = new LibraryOfAlexandria();
-
-  }
-}
-
-export const libraryOfAlexandria = new LibraryOfAlexandria();
