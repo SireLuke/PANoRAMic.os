@@ -1,5 +1,5 @@
 // src/api/library.ts
-import { libraryOfAlexandria } from "../core/library/libraryOfAlexandria";
+import { libraryOfAlexandria } from "../core/library/libraryOfAlexandria.ts";
 
 export function registerLibraryAPI(server: any) {
   // List all nodes
