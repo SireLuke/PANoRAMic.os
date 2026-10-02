@@ -1,0 +1,12 @@
+{
+  "earth_global": {
+    "type": "texture",
+    "path": "textures/earth_global.jpg",
+    "wrapS": "ClampToEdgeWrapping",
+    "wrapT": "ClampToEdgeWrapping",
+    "minFilter": "LinearFilter",
+    "magFilter": "LinearFilter",
+    "mapping": "EquirectangularReflectionMapping",
+    "usage": "albedo"
+  }
+}
