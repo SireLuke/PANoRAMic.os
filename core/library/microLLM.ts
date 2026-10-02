@@ -3,7 +3,7 @@
  * Designed to preserve and retrieve planetary knowledge with cultural sensitivity
  */
 
-import { CultureEmbedding, NuanceParameters, MicroLLMEmbedding, RelationshipEdge } from "./types";
+import { CultureEmbedding, NuanceParameters, MicroLLMEmbedding, RelationshipEdge } from "./types.ts";
 
 export class MicroLLMEncoder {
   private parameterCount = 180;
