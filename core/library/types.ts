@@ -17,29 +17,29 @@ export interface LibraryNode {
 }
 
 export interface CultureEmbedding {
-  origin: string; // geographic or cultural origin
-  languages: string[]; // multilingual support
-  contextuality: number; // 0-1: how context-dependent is this knowledge?
-  indirectness: number; // 0-1: directness vs. polite/indirect communication
-  collectivism: number; // 0-1: individual vs. group-oriented
+  origin: string;
+  languages: string[];
+  contextuality: number;
+  indirectness: number;
+  collectivism: number;
   timeOrientation: "past" | "present" | "future" | "cyclical";
-  powerDistance: number; // 0-1: acceptance of hierarchy
-  uncertaintyTolerance: number; // 0-1: tolerance for ambiguity
-  spiritualDimension: boolean; // sacred/spiritual knowledge included?
-  iconography: string[]; // symbolic representations
+  powerDistance: number;
+  uncertaintyTolerance: number;
+  spiritualDimension: boolean;
+  iconography: string[];
 }
 
 export interface NuanceParameters {
-  abstractionLevel: number; // 0-1: concrete vs. abstract
+  abstractionLevel: number;
   temporalScope: "immediate" | "seasonal" | "generational" | "civilizational";
-  systemicDepth: number; // 0-1: surface observation vs. deep systemic understanding
-  uncertaintyMargin: number; // 0-1: confidence in the knowledge
-  applicabilityRadius: number; // 0-1: universally applicable vs. locally specific
-  ethicalDimension: string[]; // ethical considerations
-  counterExamples: string[]; // when this knowledge breaks down
-  relatedConcepts: string[]; // cross-reference to other knowledge
+  systemicDepth: number;
+  uncertaintyMargin: number;
+  applicabilityRadius: number;
+  ethicalDimension: string[];
+  counterExamples: string[];
+  relatedConcepts: string[];
   updateFrequency: "static" | "seasonal" | "annual" | "continuous";
-  relevanceToPAN: number; // 0-1: importance to planetary operations
+  relevanceToPAN: number;
 }
 
 export interface ProvenanceRecord {
@@ -47,7 +47,7 @@ export interface ProvenanceRecord {
   verificationMethod: "academic" | "indigenous" | "field-tested" | "community" | "synthesis";
   dateAcquired: number;
   lastVerified: number;
-  verificationChain: string[]; // audit trail
+  verificationChain: string[];
   challengeCount: number;
 }
 
@@ -62,8 +62,8 @@ export interface MicroLLMEmbedding {
 export interface RelationshipEdge {
   targetNodeId: string;
   relationshipType: "contradicts" | "extends" | "supports" | "precedes" | "follows" | "culturalVariant";
-  strength: number; // 0-1
-  nuanceDiff: number; // how much the target nuance differs
+  strength: number;
+  nuanceDiff: number;
 }
 
 export interface LibraryQuery {
@@ -77,9 +77,9 @@ export interface LibraryQuery {
 export interface LibrarySearchResult {
   nodeId: string;
   title: string;
-  relevanceScore: number; // 0-1
-  culturalAlignment: number; // 0-1
-  nuanceAlignment: number; // 0-1
+  relevanceScore: number;
+  culturalAlignment: number;
+  nuanceAlignment: number;
   snippet: string;
   metadata: {
     category: string;
@@ -96,3 +96,4 @@ export interface LibrarySnapshot {
   lastIndexedAt: number;
   trustWeightDistribution: { [key: string]: number };
 }
+
