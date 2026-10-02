@@ -28,14 +28,21 @@ scene.add(ambient);
 // EARTH (NASA BLUE MARBLE 4K)
 // ===============================
 const texture = new THREE.TextureLoader().load(
-  "https://raw.githubusercontent.com/ajayns/earth/master/earthmap4k.jpg"
+  "./textures/earth_global_5400.jpg",
+  () => console.log("Earth texture loaded"),
+  undefined,
+  (err) => console.error("Texture failed to load", err)
 );
+
 
 const earthMaterial = new THREE.MeshPhongMaterial({
   map: texture,
-  shininess: 80,
-  color: 0x001133 // metallic blue tint
+  shininess: 40,
+  color: 0x3366ff,          // adds a bright blue tint
+  emissive: 0x111111,       // subtle self‑illumination
+  emissiveIntensity: 0.4,   // brighten the dark areas
 });
+
 
 const earth = new THREE.Mesh(
   new THREE.SphereGeometry(2, 128, 128),
@@ -109,4 +116,7 @@ export function updateHUD(packet) {
     packet.overallHealth.toFixed(3);
   document.getElementById("scarcity").innerText = packet.scarcity.toFixed(3);
   document.getElementById("recovery").innerText = packet.recovery.toFixed(3);
-  document.get
+  document.getElementById("coherence").innerText = packet.coherence.toFixed(3);
+
+  document.getElementById("par-flow").innerText = packet.parFlow.toFixed(3);
+}
