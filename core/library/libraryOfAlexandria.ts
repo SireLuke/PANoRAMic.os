@@ -14,6 +14,15 @@ import {
 
 import { MicroLLMEncoder } from "./microLLM.ts";
 
+export class LibraryOfAlexandria {
+  private nodes: Map<string, LibraryNode> = new Map();
+  private encoder: MicroLLMEncoder;
+  private indexedAt = 0;
+
+  constructor() {
+    this.encoder = new MicroLLMEncoder();
+  }
+
   addNode(
     id: string,
     category: LibraryNode["category"],
@@ -60,12 +69,18 @@ import { MicroLLMEncoder } from "./microLLM.ts";
 
       let culturalAlignment = 0.5;
       if (query.culturalContext) {
-        culturalAlignment = this.computeCulturalAlignment(query.culturalContext, node.cultureEmbedding);
+        culturalAlignment = this.computeCulturalAlignment(
+          query.culturalContext,
+          node.cultureEmbedding
+        );
       }
 
       let nuanceAlignment = 0.5;
       if (query.nuancePreferences) {
-        nuanceAlignment = this.computeNuanceAlignment(query.nuancePreferences, node.nuanceParameters);
+        nuanceAlignment = this.computeNuanceAlignment(
+          query.nuancePreferences,
+          node.nuanceParameters
+        );
       }
 
       const finalScore =
@@ -103,7 +118,8 @@ import { MicroLLMEncoder } from "./microLLM.ts";
 
   private computeCulturalAlignment(context: string, culture: CultureEmbedding): number {
     if (culture.origin.toLowerCase().includes(context.toLowerCase())) return 0.9;
-    if (culture.languages.some((l) => l.toLowerCase().includes(context.toLowerCase()))) return 0.8;
+    if (culture.languages.some((l) => l.toLowerCase().includes(context.toLowerCase())))
+      return 0.8;
     return 0.5;
   }
 
@@ -123,7 +139,10 @@ import { MicroLLMEncoder } from "./microLLM.ts";
       count++;
     }
     if (prefs.applicabilityRadius !== undefined) {
-      score += Math.max(0, 1 - Math.abs(prefs.applicabilityRadius - nuance.applicabilityRadius));
+      score += Math.max(
+        0,
+        1 - Math.abs(prefs.applicabilityRadius - nuance.applicabilityRadius)
+      );
       count++;
     }
     if (prefs.relevanceToPAN !== undefined) {
@@ -146,7 +165,8 @@ import { MicroLLMEncoder } from "./microLLM.ts";
       node.cultureEmbedding.languages.forEach((l) => languages.add(l));
 
       const bucket = Math.floor(node.trustWeight * 10) / 10;
-      trustWeights[bucket.toFixed(1)] = (trustWeights[bucket.toFixed(1)] || 0) + 1;
+      trustWeights[bucket.toFixed(1)] =
+        (trustWeights[bucket.toFixed(1)] || 0) + 1;
     }
 
     return {
@@ -165,6 +185,11 @@ import { MicroLLMEncoder } from "./microLLM.ts";
 
   getByCategory(category: LibraryNode["category"]): LibraryNode[] {
     return Array.from(this.nodes.values()).filter((n) => n.category === category);
+  }
+}
+
+export const libraryOfAlexandria = new LibraryOfAlexandria();
+
   }
 }
 
