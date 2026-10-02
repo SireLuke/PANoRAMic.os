@@ -10,17 +10,9 @@ import {
   LibrarySnapshot,
   CultureEmbedding,
   NuanceParameters,
-} from "./types";
-import { MicroLLMEncoder } from "./microLLM";
+} from "./types.ts";
 
-export class LibraryOfAlexandria {
-  private nodes: Map<string, LibraryNode> = new Map();
-  private encoder: MicroLLMEncoder;
-  private indexedAt = 0;
-
-  constructor() {
-    this.encoder = new MicroLLMEncoder();
-  }
+import { MicroLLMEncoder } from "./microLLM.ts";
 
   addNode(
     id: string,
