@@ -1,3 +1,31 @@
+<!-- 🌐 Auto‑Detect Language Routing -->
+<script>
+(function() {
+  // Map browser language codes to your translation files
+  const langMap = {
+    "zh": "translations/README.zh-CN.md",
+    "zh-CN": "translations/README.zh-CN.md",
+    "es": "translations/README.es.md",
+    "hi": "translations/README.hi.md",
+    "ar": "translations/README.ar.md",
+    "fr": "translations/README.fr.md",
+    "pt": "translations/README.pt.md",
+    "de": "translations/README.de.md"
+  };
+
+  // Detect browser language
+  const userLang = (navigator.language || navigator.userLanguage || "").toLowerCase();
+
+  // If we have a match, redirect once
+  if (langMap[userLang]) {
+    // Avoid infinite loops by checking if already on a translation page
+    if (!window.location.pathname.includes("translations")) {
+      window.location.href = langMap[userLang];
+    }
+  }
+})();
+</script>
+
 🌍 PANoRAMic.os
 
 Planetary Always‑On Resource Allocation & Management Operating System
@@ -14,6 +42,7 @@ Choose your language:
 [العربية](translations/README.ar.md) •  
 [Français](translations/README.fr.md) •  
 [Português](translations/README.pt.md) •
+[german](translations/README.de.md) •
 
 PANoRAMic.os is an open‑source, always‑active planetary coordination engine designed to stabilize ecological systems, infrastructure networks, markets, and human dignity through a unified global operating system.
 
