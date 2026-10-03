@@ -1,6 +1,19 @@
 🌍 PANoRAMic.os
 
 Planetary Always‑On Resource Allocation & Management Operating System
+# 🌍 PANoRAMic.os  
+Planetary Always‑On Resource Allocation & Management Operating System
+
+Multilingual Versions  
+Choose your language:
+ 
+[English](README.md) •  
+[简体中文](translations/README.zh-CN.md) •  
+[Español](translations/README.es.md) •  
+[हिन्दी](translations/README.hi.md) •  
+[العربية](translations/README.ar.md) •  
+[Français](translations/README.fr.md) •  
+[Português](translations/README.pt.md)
 
 PANoRAMic.os is an open‑source, always‑active planetary coordination engine designed to stabilize ecological systems, infrastructure networks, markets, and human dignity through a unified global operating system.
 
