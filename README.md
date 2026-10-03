@@ -118,8 +118,7 @@ PAR Core Components
 PAR has a hard ceiling on total supply:
 
 \[
-PAR_{\text{max}} = \text{Global Population} \times 1.35
-\]
+PAR_{{max}} = \{Global Pop} \times 1.35\]
 
 This ensures:
 
