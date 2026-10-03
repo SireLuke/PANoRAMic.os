@@ -13,7 +13,7 @@ Choose your language:
 [हिन्दी](translations/README.hi.md) •  
 [العربية](translations/README.ar.md) •  
 [Français](translations/README.fr.md) •  
-[Português](translations/README.pt.md)
+[Português](translations/README.pt.md) •
 
 PANoRAMic.os is an open‑source, always‑active planetary coordination engine designed to stabilize ecological systems, infrastructure networks, markets, and human dignity through a unified global operating system.
 
