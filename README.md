@@ -32,7 +32,7 @@
 Planetary Always‑On Resource Allocation & Management Operating System
 # 🌍 PANoRAMic.os  
 Planetary Always‑On Resource Allocation & Management Operating System
-
+<img width="8642" height="10027" alt="diagram" src="https://github.com/user-attachments/assets/2246afb0-6e7e-4690-ae5a-67e49a4d80d0" />
 Multilingual Versions  
 Choose your language:
  
@@ -239,6 +239,7 @@ This is an early‑stage alpha release.
 Modules may be incomplete, experimental, or under active development.
 
 Contributions, forks, and research collaborations are welcome.
+
 
 ---
 
