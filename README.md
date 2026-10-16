@@ -1,6 +1,49 @@
+<!-- 🌐 Auto‑Detect Language Routing -->
+<script>
+(function() {
+  // Map browser language codes to your translation files
+  const langMap = {
+    "zh": "translations/README.zh-CN.md",
+    "zh-CN": "translations/README.zh-CN.md",
+    "es": "translations/README.es.md",
+    "hi": "translations/README.hi.md",
+    "ar": "translations/README.ar.md",
+    "fr": "translations/README.fr.md",
+    "pt": "translations/README.pt.md",
+    "de": "translations/README.de.md"
+  };
+
+  // Detect browser language
+  const userLang = (navigator.language || navigator.userLanguage || "").toLowerCase();
+
+  // If we have a match, redirect once
+  if (langMap[userLang]) {
+    // Avoid infinite loops by checking if already on a translation page
+    if (!window.location.pathname.includes("translations")) {
+      window.location.href = langMap[userLang];
+    }
+  }
+})();
+</script>
+
+
 🌍 PANoRAMic.os
 
 Planetary Always‑On Resource Allocation & Management Operating System
+# 🌍 PANoRAMic.os  
+Planetary Always‑On Resource Allocation & Management Operating System
+<img width="8642" height="10027" alt="diagram" src="https://github.com/user-attachments/assets/2246afb0-6e7e-4690-ae5a-67e49a4d80d0" />
+Multilingual Versions  
+Choose your language:
+ 
+[English](README.md) •  
+[简体中文](translations/README.zh-CN.md) •  
+[Español](translations/README.es.md) •  
+[हिन्दी](translations/README.hi.md) •  
+[العربية](translations/README.ar.md) •  
+[Français](translations/README.fr.md) •  
+[Português](translations/README.pt.md) •
+[german](translations/README.de.md) •
 
 PANoRAMic.os is an open‑source, always‑active planetary coordination engine designed to stabilize ecological systems, infrastructure networks, markets, and human dignity through a unified global operating system.
 
@@ -118,8 +161,7 @@ PAR Core Components
 Boot-time PAR supply is capped by population, a 1.35 float multiplier, and the Resource Scarcity Dynamic Vector (RSDV, clamped 0.65–1.00):
 
 \[
-PAR_{\text{max}} = \text{Global Population} \times 1.35 \times RSDV
-\]
+PAR_{{max}} = \{Global Pop} \times 1.35 \times RSDV\]
 
 RAMS also enforces a resource-backed dynamic cap:
 
@@ -203,6 +245,7 @@ This is an early‑stage alpha release.
 Modules may be incomplete, experimental, or under active development.
 
 Contributions, forks, and research collaborations are welcome.
+
 
 ---
 
