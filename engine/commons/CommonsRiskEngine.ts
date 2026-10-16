@@ -1,6 +1,6 @@
 // engine/commons/CommonsRiskEngine.ts
 
-import { CommonsProfile } from "../../core/pillars/commons/CommonsProfile"
+import { CommonsProfile } from "../../pillars/commons/CommonsProfile"
 
 export function computeCommonsRisk(commons: CommonsProfile) {
   const extractionRisk = commons.extractionPressureIndex * 35

@@ -1,6 +1,6 @@
 // engine/dashboard/planetDashboard.ts
 
-import { SystemState } from "../../core/SystemState"
+import { SystemState } from "../../SystemState"
 import { computeDashboard } from "./dashboardEngine"
 
 export type PlanetDashboardView = {

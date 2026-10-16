@@ -1,9 +1,9 @@
-import { ParState } from "../../core/pillars/par/PAR_STATE";
+import { ParState } from "../../pillars/par/PAR_STATE";
 
 /**
  * PAR Audit
  *
- * Enforces PANoRAMic.os economic rules for the Planetary Autonomous Resource system:
+ * Enforces PANoRAMic.os economic rules for the Panitarian Asset Receipt system:
  * - non-negative supply / circulation checks
  * - cap compliance for PAR issuance
  * - MSRP cap: market price cannot exceed 15% of market value

@@ -3,7 +3,7 @@ Paste:
 ```ts
 // engine/governance/GovernanceRecoveryEngine.ts
 
-import { GovernanceProfile } from "../../core/pillars/governance/GovernanceProfile"
+import { GovernanceProfile } from "../../pillars/governance/GovernanceProfile"
 
 export function applyGovernanceRecovery(gov: GovernanceProfile) {
   const actions: string[] = []

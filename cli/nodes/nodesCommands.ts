@@ -1,4 +1,4 @@
-import { NodeState } from "../../core/pillars/nodes/NODES_STATE"
+import { NodeState } from "../../pillars/nodes/NODES_STATE"
 import { emitNodeSignals } from "../../signals/nodes/nodesSignals"
 
 export function showNode(state: NodeState) {

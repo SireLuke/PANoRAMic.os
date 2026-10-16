@@ -1,5 +1,5 @@
 import React from "react"
-import { DashboardPacket } from "../engine/world/dashboard.ts"
+import { DashboardPacket } from "../../engine/world/dashboard.ts"
 
 interface Props {
   packet: DashboardPacket

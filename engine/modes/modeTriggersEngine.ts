@@ -1,10 +1,10 @@
 // engine/modes/modeTriggersEngine.ts
 
-import { ModesState } from "../../core/pillars/modes/MODES_STATE"
-import { EcologyState } from "../../core/pillars/ecology/ECOLOGY_STATE"
-import { InfrastructureState } from "../../core/pillars/infrastructure/INFRASTRUCTURE_STATE"
-import { MarketsState } from "../../core/pillars/markets/MARKETS_STATE"
-import { ParState } from "../../core/pillars/par/PAR_STATE"
+import { ModesState } from "../../pillars/modes/MODES_STATE"
+import { EcologyState } from "../../pillars/ecology/ECOLOGY_STATE"
+import { InfrastructureState } from "../../pillars/infrastructure/INFRASTRUCTURE_STATE"
+import { MarketsState } from "../../pillars/markets/MARKETS_STATE"
+import { ParState } from "../../pillars/par/PAR_STATE"
 
 export function computeModeTriggers({
   modes,

@@ -1,6 +1,6 @@
 // engine/par/PARStabilityEngine.ts
 
-import { PARProfile } from "../../core/pillars/par/PARProfile"
+import { PARProfile } from "../../pillars/par/PARProfile"
 import { computePARRisk } from "./PARRiskEngine"
 
 export function computePARStability(par: PARProfile) {

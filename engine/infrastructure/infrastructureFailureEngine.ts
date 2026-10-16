@@ -1,6 +1,6 @@
 // engine/infrastructure/InfrastructureFailureEngine.ts
 
-import { InfrastructureProfile } from "../../core/pillars/infrastructure/InfrastructureProfile"
+import { InfrastructureProfile } from "../../pillars/infrastructure/InfrastructureProfile"
 
 export function applyInfrastructureFailure(infra: InfrastructureProfile) {
   const actions: string[] = []

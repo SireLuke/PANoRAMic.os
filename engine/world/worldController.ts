@@ -1,6 +1,6 @@
 // engine/world/worldController.ts
 
-import { NodeProfile } from "../../core/pillars/nodes/NodeProfile.ts"
+import { NodeProfile } from "../../pillars/nodes/NodeProfile.ts"
 import { WorldState } from "./worldState.ts"
 import { createWorld, step, stepMany, simulate } from "./worldAPI.ts"
 

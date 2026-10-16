@@ -1,6 +1,6 @@
 // engine/infrastructure/InfrastructureRiskEngine.ts
 
-import { InfrastructureProfile } from "../../core/pillars/infrastructure/InfrastructureProfile"
+import { InfrastructureProfile } from "../../pillars/infrastructure/InfrastructureProfile"
 
 export function computeInfrastructureRisk(infra: InfrastructureProfile) {
   // Risk factors

@@ -1,4 +1,4 @@
-import { WorkforceRotationState } from "../../core/pillars/workforce/WORKFORCE_ROTATION_STATE"
+import { WorkforceRotationState } from "../../pillars/workforce/WORKFORCE_ROTATION_STATE"
 import { emitWorkforceRotationSignals } from "../../signals/workforce/workforceRotationSignals"
 
 export function showWorkforceRotation(state: WorkforceRotationState) {

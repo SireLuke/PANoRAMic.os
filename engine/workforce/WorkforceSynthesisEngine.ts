@@ -1,6 +1,6 @@
 // engine/workforce/WorkforceSynthesisEngine.ts
 
-import { WorkforceProfile } from "../../core/pillars/workforce/WorkforceProfile"
+import { WorkforceProfile } from "../../pillars/workforce/WorkforceProfile"
 import { computeWorkforceRisk } from "./WorkforceRiskEngine"
 import { computeWorkforceStability } from "./WorkforceStabilityEngine"
 

@@ -1,6 +1,6 @@
 // engine/markets/MarketRiskEngine.ts
 
-import { MarketProfile } from "../../core/pillars/markets/MarketProfile"
+import { MarketProfile } from "../../pillars/markets/MarketProfile"
 
 export function computeMarketRisk(market: MarketProfile) {
   // Risk factors

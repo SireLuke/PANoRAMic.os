@@ -1,6 +1,6 @@
 // engine/commons/CommonsStabilityEngine.ts
 
-import { CommonsProfile } from "../../core/pillars/commons/CommonsProfile"
+import { CommonsProfile } from "../../pillars/commons/CommonsProfile"
 import { computeCommonsRisk } from "./CommonsRiskEngine"
 
 export function computeCommonsStability(commons: CommonsProfile) {

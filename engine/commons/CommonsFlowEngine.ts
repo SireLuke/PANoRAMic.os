@@ -1,6 +1,6 @@
 // engine/commons/CommonsFlowEngine.ts
 
-import { CommonsProfile } from "../../core/pillars/commons/CommonsProfile"
+import { CommonsProfile } from "../../pillars/commons/CommonsProfile"
 
 export function computeCommonsFlow(commons: CommonsProfile) {
   const actions: string[] = []

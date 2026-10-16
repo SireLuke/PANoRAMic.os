@@ -1,6 +1,6 @@
 // engine/workforce/WorkforceFlowEngine.ts
 
-import { WorkforceProfile } from "../../core/pillars/workforce/WorkforceProfile"
+import { WorkforceProfile } from "../../pillars/workforce/WorkforceProfile"
 
 export function computeWorkforceFlow(work: WorkforceProfile) {
   const actions: string[] = []

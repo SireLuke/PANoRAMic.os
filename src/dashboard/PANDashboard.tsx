@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react"
-import { buildDashboard } from "../engine/world/dashboard.ts"
-import { WorldState } from "../engine/world/worldState.ts"
-import { TickResult } from "../engine/world/tick.ts"
-import { createLiveStream } from "./liveStream.ts"
+import { buildDashboard } from "../../engine/world/dashboard.ts"
+import { WorldState } from "../../engine/world/worldState.ts"
+import { TickResult } from "../../engine/world/tick.ts"
 import PlanetView from "./PlanetView.tsx"
 import PlanetFlow from "./PlanetFlow.tsx"
-import PlanetSignals from "./PlanetSignals.tsx"
 import PlanetTimeline from "./PlanetTimeline.tsx"
-import PlanetHUD from "./PlanetHUD.tsx"
 
 interface Props {
   world: WorldState
-  onTick: () => TickResult
+  onTick?: () => TickResult
 }
 
 export default function PANDashboard({ world }: Props) {
@@ -19,23 +16,14 @@ export default function PANDashboard({ world }: Props) {
     buildDashboard({ world, signals: world.synthesis, tick: world.tick })
   )
 
-  const stream = createLiveStream("http://localhost:3000")
-
   useEffect(() => {
-    stream.connect()
-
-    stream.onPlanetUpdate(packet => {
-      setPacket(packet)
-    })
-
-    return () => stream.disconnect()
-  }, [])
+    setPacket(
+      buildDashboard({ world, signals: world.synthesis, tick: world.tick })
+    )
+  }, [world])
 
   return (
     <div style={styles.container}>
-      {/* HUD */}
-      <PlanetHUD packet={packet} />
-
       <h1 style={styles.header}>🌍 PANoRAMic.os — Planetary Dashboard</h1>
       <h2 style={styles.subheader}>{packet.headline}</h2>
 
@@ -55,21 +43,13 @@ export default function PANDashboard({ world }: Props) {
 
       <h3 style={styles.section}>Subsystem Summary</h3>
       <div style={styles.subsystemGrid}>
-        {Object.entries(packet.subsystem).map(([key, value]) => (
-          <Panel key={key} title={key} value={value} />
+        {Object.entries(packet.subsystem ?? {}).map(([key, value]) => (
+          <Panel key={key} title={key} value={value as number} />
         ))}
       </div>
 
-      {/* Planet Map */}
       <PlanetView packet={packet} />
-
-      {/* Planet Flow */}
       <PlanetFlow packet={packet} />
-
-      {/* Planet Signals */}
-      <PlanetSignals packet={packet} />
-
-      {/* Planet Timeline */}
       <PlanetTimeline packet={packet} />
     </div>
   )
@@ -86,7 +66,7 @@ function Panel({ title, value }: { title: string; value: number }) {
   )
 }
 
-const styles = {
+const styles: Record<string, React.CSSProperties> = {
   container: {
     padding: "20px",
     fontFamily: "Arial, sans-serif",
@@ -94,4 +74,32 @@ const styles = {
     backgroundColor: "#111",
     minHeight: "100vh",
   },
-  header
+  header: {
+    marginBottom: "0.25rem",
+  },
+  subheader: {
+    fontWeight: "normal",
+    color: "#aaa",
+  },
+  section: {
+    marginTop: "1.5rem",
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+    gap: "12px",
+  },
+  subsystemGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+    gap: "12px",
+  },
+  panel: {
+    background: "#1c1c1c",
+    padding: "12px",
+    borderRadius: "8px",
+  },
+  value: {
+    fontSize: "1.25rem",
+  },
+}

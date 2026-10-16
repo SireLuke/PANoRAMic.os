@@ -1,361 +1,231 @@
-# PANoRAMic.OS Multi-Platform Architecture
+# PANoRAMic.OS Architecture
 
 ## System Overview
 
-PANoRAMic.OS is a **multi-platform, always-on planetary coordination engine** designed to run continuously across different environments and interfaces.
+PANoRAMic.OS is an always-on planetary coordination engine. The repository currently mixes a Deno-style boot path (`src/boot.ts`) with Node/Express API code, CLI commands, engine loops, and several dashboard surfaces. Not every layer is wired together by `npm start`.
 
 ### Platform Tiers
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  Frontend Layer (React Web)                             │
-│  - Real-time planetary dashboard                        │
-│  - Interactive pillar management                        │
-│  - Live signal stream visualization                     │
-│  Location: /app (separate npm workspace)                │
+│  Frontend Layer                                         │
+│  - Vite/React app stub: /app                            │
+│  - Static dashboard: /dashboard                         │
+│  - Additional HTML dashboards: /core/dashboard          │
+│  - React planetary views: /src/dashboard                │
 └──────────────────┬──────────────────────────────────────┘
-                   │ HTTP + WebSocket (port 3000)
+                   │ HTTP (port 3000 when a server is started)
                    ▼
 ┌─────────────────────────────────────────────────────────┐
-│  API Layer (Express + WebSocket)                        │
-│  - REST endpoints (/state, /nodes, /signals, etc.)      │
-│  - Live stream broadcasting                             │
-│  - Pillar routes integration                            │
-│  Location: /api/integration/apiBootstrap.ts             │
+│  API Layer                                              │
+│  - Express/Socket.IO live stream: /api/server.ts        │
+│  - Bootstrap helper: /api/integration/apiBootstrap.ts   │
+│  Note: `npm start` does not launch this layer.          │
 └──────────────────┬──────────────────────────────────────┘
                    │
         ┌──────────┼──────────┐
         ▼          ▼          ▼
 ┌────────────┐ ┌─────────┐ ┌─────────────┐
 │CLI Layer   │ │Engine   │ │Dashboard    │
-│            │ │Loop     │ │Broadcasting │
-│Interactive │ │         │ │             │
-│Commands    │ │Planetary│ │Real-time    │
-│            │ │Tick     │ │State Stream │
-│Location:   │ │         │ │             │
-│/cli        │ │Location:│ │Location:    │
-│            │ │/engine  │ │/core        │
+│/cli        │ │/engine  │ │boot serves  │
+│commands    │ │tick/    │ │/dashboard   │
+│exist; not  │ │loops    │ │via Deno in  │
+│started by  │ │         │ │src/dashboard.ts
+│npm start   │ │         │ │             │
 └────────────┘ └─────────┘ └─────────────┘
-        │          │
-        └──────────┼──────────┘
                    ▼
 ┌─────────────────────────────────────────────────────────┐
-│  Core Runtime Layer (Node.js)                           │
-│                                                         │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │  System Loop Integration                         │   │
-│  │  - Nodes, Pillars, Modes, Audits                 │   │
-│  │  - Tick-by-tick state transitions                │   │
-│  │  Location: /engine/system/systemLoopIntegration.ts│  │
-│  └──────────────────────────────────────────────────┘   │
-│                                                         │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │  Planetary Systems                               │   │
-│  │  ├─ RAMS: Resource Audit & Management            │   │
-│  │  ├─ PAR: Planetary Autonomous Resource Economy   │   │
-│  │  ├─ Ecology: Biome & Regeneration                │   │
-│  │  ├─ Infrastructure: Networks & Grid              │   │
-│  │  ├─ Labor: Workforce & Rotation                  │   │
-│  │  ├─ Markets: Economic Circulation                │   │
-│  │  ├─ Rights: Human Dignity & Justice              │   │
-│  │  ├─ Commons: Shared Resources                    │   │
-│  │  ├─ Culture: Collective Knowledge                │   │
-│  │  └─ Governance: Decision Structures              │   │
-│  │  Location: /core/pillars, /engine                │   │
-│  └──────────────────────────────────────────────────┘   │
-│                                                         │
-│  ┌──────────────────────────────────────────────────┐   │
-│  │  Data Layer                                      │   │
-│  │  ├─ World State (global conditions)              │   │
-│  │  ├─ Event Log (all transactions)                 │   │
-│  │  ├─ Signals (system health indicators)           │   │
-│  │  ├─ Provenance (audit trail)                     │   │
-│  │  └─ Feeds (external data sources)                │   │
-│  │  Location: /core/data, /signals                  │   │
-│  └──────────────────────────────────────────────────┘   │
-│                                                         │
+│  Core Runtime                                           │
+│  - Canonical boot: src/boot.ts                          │
+│  - Models: /core (worldstate, pillars, audits, data)    │
+│  - RAMS: /rams                                          │
+│  - Signals: /signals                                    │
 └─────────────────────────────────────────────────────────┘
 ```
 
 ## Entry Points
 
-### Canonical Entry Point: `start.ts` (Root)
+### Canonical runtime: `src/boot.ts`
 
-The **primary entry point** that activates the entire multi-platform system:
+`src/boot.ts` is the boot sequence used by the compatibility shims. It:
+
+1. Initializes the kernel and feed layer  
+2. Runs a RAMS pre-audit  
+3. Computes RSDV  
+4. Initializes PAR, demurrage, and stagnation  
+5. Boots the node network  
+6. Serves `./dashboard` on port 3000 (Deno `serve` in `src/dashboard.ts`)
+
+### `npm start`
+
+Root `package.json` currently has a single script:
 
 ```bash
 npm start
 ```
 
-This initializes:
-1. **CLI Layer** — Interactive commands
-2. **API Server** — REST + WebSocket on port 3000
-3. **Engine Runtime** — Continuous planetary loop
-4. **Dashboard Broadcasting** — Live state stream
+That runs `ts-node cli/start.ts`, which re-exports `bootSystem` from `src/boot.ts`. Boot files use Deno-style `import.meta.main` and `.ts` imports, so Node/`ts-node` and Deno are not interchangeable without extra flags.
 
-**Output:**
-```
-🌍 PANoRAMic.OS: Initializing Planetary Operating System...
-📋 Architecture: Multi-Platform (Backend + API + CLI + Frontend)
-🔌 [1/4] Initializing CLI integration...
-🔌 [2/4] Initializing API server (port 3000)...
-🔌 [3/4] Initializing planetary engine...
-🔌 [4/4] Starting continuous planetary simulation...
-✅ PANoRAMic.OS: Fully operational
-📡 API: http://localhost:3000
-⌨️  CLI: Ready for commands
-🎨 Web Dashboard: http://localhost:3000/dashboard
-```
-
-### Platform-Specific Entry Points
-
-#### API Only
-```bash
-npm run api
-```
-Starts the Express server without CLI or engine loop. Useful for server-only deployments.
-
-#### Engine Only (CLI-Only Mode)
-```bash
-npm run cli
-```
-**Deprecated.** CLI-only mode with no API or dashboard. Use for debugging/testing in isolation.
-
-#### Frontend Development
-```bash
-npm run app:dev
-```
-Starts Vite dev server on port 5173 with hot reload. Connects to API on localhost:3000.
+Direct Deno invocation (as documented in `STARTUP.md`):
 
 ```bash
-npm run app:build
+deno run --allow-all src/boot.ts
 ```
-Production build of React frontend.
+
+### Compatibility shims (deprecated)
+
+These delegate to `src/boot.ts` and should not be treated as separate runtimes:
+
+- `boot.ts`
+- `start.ts`
+- `run.ts`
+- `main.ts`
+- `src/main.ts`
+- `cli/start.ts`
+- `cli/run.ts`
+
+### Scripts that are not defined at the repo root
+
+The root `package.json` does **not** define `api`, `cli`, `engine`, `build`, `app:dev`, or `app:build`.
+
+To run the React app workspace:
+
+```bash
+cd app
+npm install
+npm run dev      # Vite, typically http://localhost:5173
+npm run build
+```
+
+To run the Express live-stream server (separate from `src/boot.ts`):
+
+```bash
+# api/server.ts listens on http://localhost:3000
+```
+
+Do not run the Deno dashboard server and `api/server.ts` at the same time; both bind port 3000.
 
 ## Directory Structure
 
 ```
 PANoRAMic.os/
-├── start.ts                      # 🚀 Canonical entry point (multi-platform boot)
-├── run.ts                        # ⚠️  Deprecated (backward compat)
-├── package.json                  # Root workspace config
-├── tsconfig.json                 # Shared TypeScript config
+├── src/boot.ts                   # Canonical boot sequence
+├── start.ts / boot.ts / run.ts / main.ts / cli/start.ts  # Shims
+├── package.json                  # Root scripts (currently `start` only)
+├── tsconfig.json                 # CommonJS, no path aliases
 │
-├── api/                          # 📡 API Layer
+├── api/                          # HTTP/WebSocket layer
 │   ├── integration/
-│   │   ├── apiBootstrap.ts      # API server initialization
-│   │   ├── apiIntegration.ts    # Route binding
-│   │   └── liveStreamIntegration.ts
-│   ├── routes/
-│   │   └── planetRouter.ts
+│   │   ├── apiBootstrap.ts
+│   │   ├── apiIntegration.ts
+│   │   ├── liveStreamIntegration.ts
+│   │   └── pillarRoutesIntegration.ts
+│   ├── routes/planetRouter.ts
 │   ├── server.ts
 │   └── liveStream.ts
 │
-├── engine/                       # ⚙️  Planetary Runtime
+├── engine/                       # Planetary runtime
 │   ├── system/
-│   │   ├── systemLoopIntegration.ts   # Main loop
+│   │   ├── systemLoopIntegration.ts
 │   │   ├── systemTickIntegration.ts
 │   │   └── systemEngine.ts
-│   ├── run/
-│   │   └── runIntegration.js    # Deprecated
-│   ├── nodes/                   # Node engines
-│   ├── par/                     # PAR economy engines
-│   ├── ecology/                 # Ecology engines
-│   ├── infrastructure/          # Infrastructure engines
-│   ├── markets/                 # Market engines
-│   └── ... (other engines)
+│   ├── dashboard/
+│   ├── nodes/, par/, ecology/, infrastructure/, markets/, ...
 │
-├── cli/                         # ⌨️  CLI Layer
-│   ├── integration/
-│   │   └── cliIntegration.ts   # Command dispatch
-│   ├── start.ts                 # ⚠️  Deprecated
-│   ├── nodes/
-│   ├── par/
-│   ├── ecology/
-│   └── ... (domain-specific commands)
+├── cli/                          # Command modules
+│   ├── integration/cliIntegration.ts
+│   ├── src/commands/
+│   └── domain command folders (par, nodes, ecology, ...)
 │
-├── core/                        # 🧠 Planetary Systems
-│   ├── worldstate/              # Global state objects
-│   ├── pillars/                 # Pillar definitions
-│   ├── audits/                  # RAMS audit engines
-│   ├── data/                    # Data adapters & normalization
-│   └── ...
-│
-├── signals/                     # 📊 Signal Computation
-│   ├── globalSignals.ts
-│   └── (pillar-specific signals)
-│
-├── dashboard/                   # 🎨 Dashboard/Visualization
-│   ├── src/                     # TypeScript components
-│   ├── panels/                  # Pillar panels
-│   └── core/dashboard/          # Browser-based HTML/JS
-│
-├── app/                         # 🖥️  React Frontend
-│   ├── package.json
-│   ├── src/
-│   │   ├── App.tsx
-│   │   └── components/
-│   └── tsconfig.json
-│
-├── ARCHITECTURE.md              # This file
-└── README.md                    # Overview
+├── core/                         # Models, audits, worldstate, pillars
+├── rams/                         # Resource Audit & Management System
+├── signals/                      # Signal computation
+├── dashboard/                    # Static/HTML dashboard + panels
+├── app/                          # Vite + React frontend workspace
+├── ARCHITECTURE.md
+├── STARTUP.md
+└── README.md
 ```
 
 ## Module Resolution
 
-All modules use **ESM (ES Module)** syntax with proper path aliases:
+Root `tsconfig.json` uses **CommonJS** (`"module": "CommonJS"`) and does **not** define `@engine/*` (or similar) path aliases.
 
-```typescript
-// ✅ Correct (using path aliases)
-import { systemLoop } from "@engine/system/systemLoopIntegration"
-import { globalSignals } from "@signals/globalSignals"
-import { cliDispatch } from "@cli/integration/cliIntegration"
+The React app (`app/tsconfig.json`) defines:
 
-// ✅ Correct (relative with .js extension for ESM)
-import { bootstrapAPI } from "./api/integration/apiBootstrap.js"
+- `@engine/*` → `../engine/*`
+- `@dashboard/*` → `../src/dashboard/*`
 
-// ❌ Avoid (mixed patterns)
-import { runContinuous } from "../engine/run/runIntegration.js"  // Wrong path
-```
+Boot and several engine files still use Deno-style `.ts` specifiers and `import.meta.main`. Treat module style as mixed, not a uniform ESM+alias setup.
 
-**Path Aliases (tsconfig.json):**
-- `@api/*` → `api/*`
-- `@engine/*` → `engine/*`
-- `@cli/*` → `cli/*`
-- `@core/*` → `core/*`
-- `@rams/*` → `rams/*`
-- `@signals/*` → `signals/*`
-- `@dashboard/*` → `dashboard/*`
+## Deployment (current repo)
 
-## Deployment Scenarios
+### Boot the canonical sequence
 
-### Scenario 1: Full Platform (Recommended)
 ```bash
 npm install
 npm start
-cd app && npm run build
-# Access: http://localhost:3000
+# or: deno run --allow-all src/boot.ts
 ```
 
-### Scenario 2: Backend-Only (Headless Server)
+### Frontend workspace
+
 ```bash
-npm install
-npm run api
-# API available at http://localhost:3000
-# CLI disabled
-```
-
-### Scenario 3: Docker Deployment
-```dockerfile
-FROM node:20
-WORKDIR /app
-COPY . .
-RUN npm install
-RUN npm run build
-RUN npm run app:build
-CMD ["npm", "start"]
-EXPOSE 3000
-```
-
-### Scenario 4: Monorepo CI/CD
-```bash
-# Root backend build
-npm install && npm run build
-
-# App frontend build
 cd app
-npm install && npm run build
+npm install
+npm run dev
 ```
+
+Root Docker/`npm run build` examples are not backed by root scripts yet.
 
 ## Language Composition
 
 | Language   | Purpose                              | Path          |
 |-----------|--------------------------------------|---------------|
-| TypeScript | Core runtime, engine, API, CLI       | Root + /api, /engine, /cli, /core, /signals |
-| TypeScript | Frontend UI components               | /app/src      |
-| JavaScript | Compiled output (if using .js)       | /dist (generated) |
-| HTML/CSS   | Browser-based dashboards             | /core/dashboard, /dashboard |
+| TypeScript | Core runtime, engine, API, CLI       | Root + /api, /engine, /cli, /core, /signals, /src |
+| TypeScript | Frontend UI components               | /app/src, /src/dashboard, /dashboard/panels |
+| HTML/CSS/JS | Browser dashboards                 | /dashboard, /core/dashboard |
 | JSON       | Configuration, data                  | *.json        |
-
-**Expected Composition:**
-- **TypeScript: ~97%** (main runtime)
-- **JavaScript: ~2%** (legacy/output)
-- **Other: ~1%** (configs, HTML, etc.)
 
 ## Inter-Platform Communication
 
-### Backend ↔ Frontend
-**WebSocket (Real-time):**
-```typescript
-// Server: engine/system/systemLoopIntegration.ts
-broadcast({
-  tick: integration.tick,
-  global: integration.system.global,
-  signals: globalSignals,
-  dashboard: dashboardEngine.getState(),
-})
+### Backend live stream
 
-// Client: app/src/liveStream.ts
-ws.onmessage = (event) => {
-  const state = JSON.parse(event.data)
-  updateDashboard(state)
-}
-```
+`api/server.ts` ticks the world and emits `planet_update` over Socket.IO on port 3000.
 
-**REST (On-demand):**
-```typescript
-// GET /state
-// GET /nodes
-// GET /signals
-// GET /dashboard
-```
+`api/integration/apiBootstrap.ts` is written to listen on port 3000 and start the live-stream helper. It is not invoked by `npm start`.
 
 ### CLI ↔ Engine
-**Direct Function Calls:**
-```typescript
-// CLI: cli/integration/cliIntegration.ts
-cliDispatch("tick", integration)
-  → runOneTick(integration)
-  → updates shared state
-```
+
+CLI command modules live under `/cli`. `cli/integration/cliIntegration.ts` exists for dispatch, but there is no root `npm run cli` script.
 
 ## Debugging & Development
 
-### Enable Full Verbose Logging
 ```bash
-DEBUG=* npm start
+npm start
 ```
 
-### Run Engine Only (No API)
+API inspection only applies if `api/server.ts` (or `bootstrapAPI()`) is running:
+
 ```bash
-npm run engine
+curl http://localhost:3000/
 ```
 
-### Inspect API Responses
+Frontend hot reload (app workspace):
+
 ```bash
-curl http://localhost:3000/state
-curl http://localhost:3000/nodes
-curl http://localhost:3000/signals
+cd app && npm run dev
 ```
 
-### Frontend Dev with Hot Reload
-```bash
-npm run app:dev
-# Vite dev server: http://localhost:5173
-# Connects to backend: http://localhost:3000
-```
+## PAR naming and caps
 
-## Future Extensions
-
-This architecture supports:
-- **Mobile apps** (React Native via shared core modules)
-- **CLI tools** (Standalone binaries via pkg)
-- **Embedded systems** (IoT nodes via minimal engine)
-- **Distributed deployment** (Multiple engine nodes + central coordinator)
-- **Plugin system** (Custom pillars, audits, commands)
+- **PAR** = Panitarian Asset Receipt (see `docs/whitspaper.md` and `src/boot.ts`)
+- Boot cap in `src/par.ts`: `population * 1.35 * rsdv`
+- RAMS dynamic cap in `core/economy/src/dynamicFloat.ts`: `min(population * 1.35, resourceParValue * 0.90)`
 
 ---
 
-**Last Updated:** 2026-09-30  
-**Canonical Entry:** `start.ts`  
-**Platform:** Node.js 18+, React 18+, TypeScript 5.0+
+**Last Updated:** 2026-10-03  
+**Canonical boot:** `src/boot.ts`  
+**npm start:** `ts-node cli/start.ts` → `src/boot.ts`  
+**Platform mix:** Node.js (Express, ts-node) + Deno-style boot files + React 18 / TypeScript 5

@@ -1,6 +1,6 @@
 // engine/rights/RightsRecoveryEngine.ts
 
-import { RightsProfile } from "../../core/pillars/rights/RightsProfile"
+import { RightsProfile } from "../../pillars/rights/RightsProfile"
 
 export function applyRightsRecovery(rights: RightsProfile) {
   const actions: string[] = []

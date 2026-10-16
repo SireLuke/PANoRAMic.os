@@ -1,7 +1,7 @@
 {
   "name": "panoramic-os",
   "version": "1.0.0",
-  "description": "Planetary Always-On Network Operating System",
+  "description": "Planetary Always-On Resource Allocation & Management Operating System",
   "main": "cli/start.ts",
   "scripts": {
     "start": "ts-node cli/start.ts"

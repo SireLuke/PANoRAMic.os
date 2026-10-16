@@ -1,6 +1,6 @@
 // engine/rights/RightsCollapseEngine.ts
 
-import { RightsProfile } from "../../core/pillars/rights/RightsProfile"
+import { RightsProfile } from "../../pillars/rights/RightsProfile"
 
 export function applyRightsCollapse(rights: RightsProfile) {
   const actions: string[] = []

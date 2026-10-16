@@ -1,4 +1,4 @@
-import { RightsState } from "../../core/pillars/rights/RIGHTS_STATE"
+import { RightsState } from "../../pillars/rights/RIGHTS_STATE"
 
 export function auditRights(state: RightsState) {
   return {

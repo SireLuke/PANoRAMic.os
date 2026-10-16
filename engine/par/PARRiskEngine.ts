@@ -1,6 +1,6 @@
 // engine/par/PARRiskEngine.ts
 
-import { PARProfile } from "../../core/pillars/par/PARProfile"
+import { PARProfile } from "../../pillars/par/PARProfile"
 
 export function computePARRisk(par: PARProfile) {
   // Risk factors

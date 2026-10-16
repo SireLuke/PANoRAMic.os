@@ -1,6 +1,6 @@
 // nodeMap/updateNodeMap.ts
-import { NodeProfile } from "../core/pillars/nodes/NodeProfile"
-import { NodeState } from "../core/pillars/nodes/NODES_STATE"
+import { NodeProfile } from "../pillars/nodes/NodeProfile"
+import { NodeState } from "../pillars/nodes/NODES_STATE"
 import { stateToProfile, profileToState } from "./nodeAdapters"
 
 import { propagateStress } from "./nodeConnections"
@@ -13,7 +13,7 @@ import { computeNodeFlow } from "../engine/nodes/NodeFlowEngine"
 import { applyNodeRecovery } from "../engine/nodes/NodeRecoveryEngine"
 import { applyNodeCollapse } from "../engine/nodes/NodeCollapseEngine"
 import { computeNodeSynthesis } from "../engine/nodes/NodeSynthesisEngine"
-import { computeNodeHealth } from "../core/pillars/nodes/NODES_STATE"
+import { computeNodeHealth } from "../pillars/nodes/NODES_STATE"
 
 // nodes: Record<string, NodeState>
 export function updateNodeMap(nodes: Record<string, NodeState>): Record<string, NodeState> {

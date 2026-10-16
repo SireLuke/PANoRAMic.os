@@ -1,6 +1,6 @@
 // engine/ecology/EcologySynthesisEngine.ts
 
-import { BiomeProfile } from "../../core/pillars/ecology/BiomeProfile"
+import { BiomeProfile } from "../../pillars/ecology/BiomeProfile"
 import { computeEcologyRisk } from "./EcologyRiskEngine"
 import { computeEcologyStability } from "./EcologyStabilityEngine"
 

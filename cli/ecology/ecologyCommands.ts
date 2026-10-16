@@ -1,4 +1,4 @@
-import { EcologyState } from "../../core/pillars/ecology/ECOLOGY_STATE"
+import { EcologyState } from "../../pillars/ecology/ECOLOGY_STATE"
 import { emitEcologySignals } from "../../signals/ecology/ecologySignals"
 
 export function showEcology(state: EcologyState) {

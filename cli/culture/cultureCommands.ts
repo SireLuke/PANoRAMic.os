@@ -1,4 +1,4 @@
-import { CultureState } from "../../core/pillars/culture/CULTURE_STATE"
+import { CultureState } from "../../pillars/culture/CULTURE_STATE"
 import { emitCultureSignals } from "../../signals/culture/cultureSignals"
 
 export function showCulture(state: CultureState) {

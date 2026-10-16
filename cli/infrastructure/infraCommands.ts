@@ -1,4 +1,4 @@
-import { InfrastructureState } from "../../core/pillars/infrastructure/INFRA_STATE"
+import { InfrastructureState } from "../../pillars/infrastructure/INFRA_STATE"
 import { emitInfrastructureSignals } from "../../signals/infrastructure/infraSignals"
 
 export function showInfrastructure(state: InfrastructureState) {

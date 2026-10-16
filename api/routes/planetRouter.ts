@@ -1,7 +1,7 @@
 // api/routes/planetRouter.ts
 
 import { Router } from "express"
-import { SystemState } from "../../core/SystemState"
+import { SystemState } from "../../SystemState"
 import { computeSystem } from "../../engine/system/systemEngine"
 import { buildPlanetDashboard } from "../../engine/dashboard/planetDashboard"
 

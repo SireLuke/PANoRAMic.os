@@ -1,6 +1,6 @@
 // engine/rights/RightsStabilityEngine.ts
 
-import { RightsProfile } from "../../core/pillars/rights/RightsProfile"
+import { RightsProfile } from "../../pillars/rights/RightsProfile"
 import { computeRightsRisk } from "./RightsRiskEngine"
 
 export function computeRightsStability(rights: RightsProfile) {

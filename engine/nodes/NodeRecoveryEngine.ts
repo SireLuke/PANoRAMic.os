@@ -1,6 +1,6 @@
 // engine/nodes/NodeRecoveryEngine.ts
 
-import { NodeProfile } from "../../core/pillars/nodes/NodeProfile"
+import { NodeProfile } from "../../pillars/nodes/NodeProfile"
 
 export function applyNodeRecovery(node: NodeProfile) {
   const actions: string[] = []

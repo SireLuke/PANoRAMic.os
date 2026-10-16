@@ -1,4 +1,4 @@
-import { ModesState } from "../../core/pillars/modes/MODES_STATE"
+import { ModesState } from "../../pillars/modes/MODES_STATE"
 import { emitModesSignals } from "../../signals/modes/modesSignals"
 
 export function showModes(state: ModesState) {

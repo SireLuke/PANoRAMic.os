@@ -1,7 +1,7 @@
 // core/worldstate/createWorld.ts
 
 import { WorldState, createWorldState } from "./WorldState"
-import { NodeState } from "../pillars/nodes/NODES_STATE"
+import { NodeState } from "../../pillars/nodes/NODES_STATE"
 
 /**
  * createWorld:

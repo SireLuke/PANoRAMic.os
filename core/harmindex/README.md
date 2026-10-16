@@ -1,7 +1,7 @@
 # harmIndex — Panitarian Global Harm Scoring
 
 The **harmIndex** subsystem computes the global harm score for PAN♾RAMic.os.  
-It merges all 12 pillars of civilization into a single normalized value used by:
+It scores six aggregated harm domains derived from the 12 civilization pillars, then returns a total and `normalized = total / 100` used by:
 
 - audits
 - dashboard
@@ -29,8 +29,8 @@ Merges raw pillar values into a single structure:
 ### `score.ts`
 Calculates:
 
-- `total` — combined harm across all pillars  
-- `normalized` — scaled to 0–1 range (total / 100)
+- `total` — combined harm across the six scored domains  
+- `normalized` — `total / 100` (not clamped to 0–1)
 
 ### `flags.ts`
 Provides risk tiers:

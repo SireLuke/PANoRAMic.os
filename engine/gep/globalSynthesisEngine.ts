@@ -1,8 +1,8 @@
 // engine/gep/globalSynthesisEngine.ts
 
-import { NationProfile } from "../../core/pillars/gep/NationProfile"
-import { CurrencyProfile } from "../../core/pillars/gep/Currency"
-import { TradeFlow } from "../../core/pillars/gep/TradeFlows"
+import { NationProfile } from "../../pillars/gep/NationProfile"
+import { CurrencyProfile } from "../../pillars/gep/Currency"
+import { TradeFlow } from "../../pillars/gep/TradeFlows"
 import { computeGlobalEconomics } from "./globalEconomicsEngine"
 import { computeGlobalRisk } from "./globalRiskEngine"
 import { computeGlobalStability } from "./globalStabilityEngine"

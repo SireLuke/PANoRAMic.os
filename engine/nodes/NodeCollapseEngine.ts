@@ -1,6 +1,6 @@
 // engine/nodes/NodeCollapseEngine.ts
 
-import { NodeProfile } from "../../core/pillars/nodes/NodeProfile"
+import { NodeProfile } from "../../pillars/nodes/NodeProfile"
 
 export function applyNodeCollapse(node: NodeProfile) {
   const actions: string[] = []

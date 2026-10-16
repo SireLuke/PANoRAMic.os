@@ -1,6 +1,6 @@
 // src/PANBootKernel.ts
 
-import { evaluateNodeHealth } from "../core/pillars/nodes/NodeProfile"
+import { evaluateNodeHealth } from "../pillars/nodes/NodeProfile"
 import { computeWorkforceFlow } from "../engine/workforce/WorkforceFlowEngine"
 // ... import other engines as needed
 

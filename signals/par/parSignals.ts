@@ -1,4 +1,4 @@
-import { ParState } from "../../core/pillars/par/PAR_STATE"
+import { ParState } from "../../pillars/par/PAR_STATE"
 
 export function emitParSignals(state: ParState) {
   return {

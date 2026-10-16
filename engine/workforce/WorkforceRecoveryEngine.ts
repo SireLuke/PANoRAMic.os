@@ -1,6 +1,6 @@
 // engine/workforce/WorkforceRecoveryEngine.ts
 
-import { WorkforceProfile } from "../../core/pillars/workforce/WorkforceProfile"
+import { WorkforceProfile } from "../../pillars/workforce/WorkforceProfile"
 
 export function applyWorkforceRecovery(work: WorkforceProfile) {
   const actions: string[] = []

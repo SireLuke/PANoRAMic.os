@@ -1,4 +1,4 @@
-import { NodeState } from "../../core/pillars/nodes/NODES_STATE"
+import { NodeState } from "../../pillars/nodes/NODES_STATE"
 
 export function auditNode(state: NodeState) {
   return {

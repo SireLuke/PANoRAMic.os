@@ -1,6 +1,6 @@
 // engine/ecology/EcologyFlowEngine.ts
 
-import { BiomeProfile } from "../../core/pillars/ecology/BiomeProfile"
+import { BiomeProfile } from "../../pillars/ecology/BiomeProfile"
 
 export function computeEcologyFlow(biome: BiomeProfile) {
   const actions: string[] = []

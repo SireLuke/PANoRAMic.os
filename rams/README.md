@@ -4,6 +4,7 @@ This module governs the planet's audit layer and enforces the system's economic 
 
 Core RAMS parameters:
 - Market-value MSRP cap: 15% of market value
+- Boot-time PAR cap: population * 1.35 * RSDV (RSDV is 0.65–1.00)
 - PAR dynamic cap: min(population * 1.35, resourceParValue * 0.90)
 - Stability and scarcity signals are normalized to 0..1
 - Audit checks are designed to detect over-issuance, collapse pressure, and misallocation

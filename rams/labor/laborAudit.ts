@@ -1,4 +1,4 @@
-import { LaborState } from "../../core/pillars/labor/LABOR_STATE"
+import { LaborState } from "../../pillars/labor/LABOR_STATE"
 
 export function auditLabor(state: LaborState) {
   return {

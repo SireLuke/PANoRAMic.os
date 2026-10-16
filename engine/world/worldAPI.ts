@@ -1,6 +1,6 @@
 // engine/world/worldAPI.ts
 
-import { NodeProfile } from "../../core/pillars/nodes/NodeProfile.ts"
+import { NodeProfile } from "../../pillars/nodes/NodeProfile.ts"
 import { WorldState } from "./worldState.ts"
 import { initWorld } from "./initWorld.ts"
 import { tick } from "./tick.ts"

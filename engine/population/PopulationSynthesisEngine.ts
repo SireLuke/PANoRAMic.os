@@ -1,6 +1,6 @@
 // engine/population/PopulationSynthesisEngine.ts
 
-import { PopulationProfile } from "../../core/pillars/population/PopulationProfile"
+import { PopulationProfile } from "../../pillars/Population/PopulationProfile"
 import { computePopulationRisk } from "./PopulationRiskEngine"
 import { computePopulationStability } from "./PopulationStabilityEngine"
 

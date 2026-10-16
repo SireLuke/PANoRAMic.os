@@ -1,6 +1,6 @@
 // engine/ecology/EcologyDegradationEngine.ts
 
-import { BiomeProfile } from "../../core/pillars/ecology/BiomeProfile"
+import { BiomeProfile } from "../../pillars/ecology/BiomeProfile"
 
 export function applyEcologyDegradation(biome: BiomeProfile) {
   const actions: string[] = []

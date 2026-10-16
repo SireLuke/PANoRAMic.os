@@ -1,7 +1,7 @@
 // engine/system/systemEngine.ts
 // engine/system/systemEngine.ts
 
-import { SystemState } from "../../core/SystemState.js"
+import { SystemState } from "../../SystemState.js"
 
 import { computeWorkforceRotation } from "../workforce/workforceRotationEngine.js"
 import { computeMicroAi } from "../microAI/microAiEngine.js"

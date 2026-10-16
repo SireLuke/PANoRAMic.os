@@ -1,6 +1,6 @@
 // engine/governance/GovernanceRiskEngine.ts
 
-import { GovernanceProfile } from "../../core/pillars/governance/GovernanceProfile"
+import { GovernanceProfile } from "../../pillars/Governance/GovernanceProfile"
 
 export function computeGovernanceRisk(gov: GovernanceProfile) {
   // Risk factors

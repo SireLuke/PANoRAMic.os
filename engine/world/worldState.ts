@@ -1,6 +1,6 @@
 // engine/world/worldState.ts
 
-import { NodeState } from "../../core/pillars/nodes/NODES_STATE.ts"
+import { NodeState } from "../../pillars/nodes/NODES_STATE.ts"
 
 export interface WorldClassified {
   records: Record<string, number>

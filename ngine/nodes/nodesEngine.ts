@@ -1,6 +1,6 @@
 // engine/nodes/nodesEngine.ts
 
-import { NodeProfile } from "../../core/pillars/nodes/NodeProfile"
+import { NodeProfile } from "../../pillars/nodes/NodeProfile"
 
 /**
  * computeNode:

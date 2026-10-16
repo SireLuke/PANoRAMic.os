@@ -1,6 +1,6 @@
 // engine/governance/GovernanceStabilityEngine.ts
 
-import { GovernanceProfile } from "../../core/pillars/governance/GovernanceProfile"
+import { GovernanceProfile } from "../../pillars/Governance/GovernanceProfile"
 import { computeGovernanceRisk } from "./GovernanceRiskEngine"
 
 export function computeGovernanceStability(gov: GovernanceProfile) {

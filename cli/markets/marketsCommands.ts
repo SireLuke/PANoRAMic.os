@@ -1,4 +1,4 @@
-import { MarketsState } from "../../core/pillars/markets/MARKETS_STATE"
+import { MarketsState } from "../../pillars/markets/MARKETS_STATE"
 import { emitMarketsSignals } from "../../signals/markets/marketsSignals"
 
 export function showMarkets(state: MarketsState) {

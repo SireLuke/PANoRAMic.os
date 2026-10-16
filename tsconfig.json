@@ -17,5 +17,5 @@
     "cli/**/*",
     "src/**/*",
     "dashboard/**/*"
-  ]
+, "pillars/antigenocide", "pillars/commons", "pillars/commonsip", "pillars/corporatecapture", "pillars/crime", "pillars/cultural", "pillars/culture", "pillars/ecology", "pillars/economy", "pillars/education", "pillars/epistemic", "pillars/gep", "pillars/Governance", "pillars/harmindex", "pillars/health", "pillars/humanitarian", "pillars/infrastructure", "pillars/labor", "pillars/markets", "pillars/medical", "pillars/microAI", "pillars/migration", "pillars/modes", "pillars/nodes", "pillars/par", "pillars/planet", "pillars/Population", "pillars/quantum", "pillars/regulation", "pillars/repairability", "pillars/resources", "pillars/rights", "pillars/rightslabor", "pillars/timewealth", "pillars/trafficking", "pillars/transparency", "pillars/workforce", "pillars/WORKFORCE_STATE.ts", "pillars/WORKFORCE_METRICS.ts"  ]
 }

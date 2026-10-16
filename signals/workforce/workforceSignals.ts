@@ -1,4 +1,4 @@
-import { WorkforceState } from "../../core/pillars/workforce/WORKFORCE_STATE"
+import { WorkforceState } from "../../pillars/workforce/WORKFORCE_STATE"
 
 export function emitWorkforceSignals(state: WorkforceState) {
   return {

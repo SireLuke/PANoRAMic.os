@@ -1,6 +1,6 @@
 // core/worldstate/WorldState.ts
 
-import { NodeState } from "../pillars/nodes/NODES_STATE"
+import { NodeState } from "../../pillars/nodes/NODES_STATE"
 
 export interface WorldState {
   tick: number

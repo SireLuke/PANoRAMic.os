@@ -1,6 +1,6 @@
 // engine/population/PopulationFlowEngine.ts
 
-import { PopulationProfile } from "../../core/pillars/population/PopulationProfile"
+import { PopulationProfile } from "../../pillars/Population/PopulationProfile"
 
 export function computePopulationFlow(pop: PopulationProfile) {
   const actions: string[] = []

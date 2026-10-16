@@ -1,6 +1,6 @@
 // engine/markets/marketEnforcementEngine.ts
 
-import { MarketProfile } from "../../core/pillars/markets/MarketProfile"
+import { MarketProfile } from "../../pillars/markets/MarketProfile"
 import { computeMarketRisk } from "./marketRiskEngine"
 import { computeMarketStability } from "./marketStabilityEngine"
 

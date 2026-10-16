@@ -1,6 +1,6 @@
 // engine/par/PARFlowEngine.ts
 
-import { PARProfile } from "../../core/pillars/par/PARProfile"
+import { PARProfile } from "../../pillars/par/PARProfile"
 
 export function computePARFlow(par: PARProfile) {
   const actions: string[] = []

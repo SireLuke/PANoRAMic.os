@@ -1,6 +1,6 @@
 // engine/governance/GovernanceFlowEngine.ts
 
-import { GovernanceProfile } from "../../core/pillars/governance/GovernanceProfile"
+import { GovernanceProfile } from "../../pillars/Governance/GovernanceProfile"
 
 export function computeGovernanceFlow(gov: GovernanceProfile) {
   const actions: string[] = []

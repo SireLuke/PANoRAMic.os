@@ -1,6 +1,6 @@
 // engine/governance/GovernanceCollapseEngine.ts
 
-import { GovernanceProfile } from "../../core/pillars/governance/GovernanceProfile"
+import { GovernanceProfile } from "../../pillars/Governance/GovernanceProfile"
 
 export function applyGovernanceCollapse(gov: GovernanceProfile) {
   const actions: string[] = []

@@ -1,7 +1,7 @@
 // engine/world/initWorld.ts
 
 import { WorldState } from "./worldState.ts"
-import { NodeProfile } from "../../core/pillars/nodes/NodeProfile.ts"
+import { NodeProfile } from "../../pillars/nodes/NodeProfile.ts"
 import { createNodeMap } from "../../nodeMap/nodeMap.ts"
 
 // Initializers for subsystem slices

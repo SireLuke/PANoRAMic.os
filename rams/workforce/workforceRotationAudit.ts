@@ -1,4 +1,4 @@
-import { WorkforceRotationState } from "../../core/pillars/workforce/WORKFORCE_ROTATION_STATE"
+import { WorkforceRotationState } from "../../pillars/workforce/WORKFORCE_ROTATION_STATE"
 
 export function auditWorkforceRotation(state: WorkforceRotationState) {
   return {

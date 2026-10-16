@@ -1,6 +1,6 @@
 // engine/rights/RightsFlowEngine.ts
 
-import { RightsProfile } from "../../core/pillars/rights/RightsProfile"
+import { RightsProfile } from "../../pillars/rights/RightsProfile"
 
 export function computeRightsFlow(rights: RightsProfile) {
   const actions: string[] = []

@@ -15,7 +15,7 @@ PAN runs continuously — even when no user is connected — maintaining:
 - ecological regeneration  
 - infrastructure resilience  
 - cooperative market stability  
-- PAR (Planetary Autonomous Resource) economy  
+- PAR (Panitarian Asset Receipt) economy  
 - node network health  
 - planetary risk detection  
 - catastrophe probability  
@@ -96,7 +96,7 @@ RAMS is the diagnostic layer of PANoRAMic.os — the part that senses, evaluates
 
 ---
 
-💠 PAR — Planetary Autonomous Resource Economy
+💠 PAR — Panitarian Asset Receipt Economy
 
 PAR is the economic circulatory system of PANoRAMic.os.  
 It is a non‑extractive, dignity‑first resource economy designed to stabilize markets and ensure human well‑being.
@@ -113,23 +113,29 @@ PAR Core Components
 - Extraction Pressure  
 - Node Evolution Rewards  
 
-⭐ Soft‑Pegged PAR Supply Cap — 1.35× Global Population
+⭐ Soft‑Pegged PAR Supply Cap
 
-PAR has a hard ceiling on total supply:
+Boot-time PAR supply is capped by population, a 1.35 float multiplier, and the Resource Scarcity Dynamic Vector (RSDV, clamped 0.65–1.00):
 
 \[
-PAR_{\text{max}} = \text{Global Population} \times 1.35
+PAR_{\text{max}} = \text{Global Population} \times 1.35 \times RSDV
 \]
 
-This ensures:
+RAMS also enforces a resource-backed dynamic cap:
 
-- no runaway inflation  
-- no speculative bubbles  
-- no corporate hoarding  
-- no artificial scarcity  
-- no uncontrolled minting  
+\[
+\text{globalCap} = \min(\text{population} \times 1.35,\ \text{resourceParValue} \times 0.90)
+\]
 
-The soft‑peg ties PAR to humanity itself, not markets.
+Together these bounds are meant to limit:
+
+- runaway inflation  
+- speculative bubbles  
+- corporate hoarding  
+- artificial scarcity  
+- uncontrolled minting  
+
+The soft‑peg ties PAR to humanity and real resource conditions, not open-ended markets.
 
 ---
 

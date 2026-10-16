@@ -1,28 +1,40 @@
 import React, { useState, useEffect } from "react";
 
-import { Dashboard } from "@dashboard/Dashboard";
-import { buildDashboard } from "@engine/dashboard";
-import { reduceWorld } from "@engine/worldReducer";
-import { initialWorld } from "@engine/worldState";
+import { initWorld } from "@engine/world/initWorld";
+import { tick } from "@engine/world/tick";
+import { buildDashboard } from "@engine/world/dashboard";
 
 export default function App() {
-  const [world, setWorld] = useState(initialWorld);
-  const [dashboard, setDashboard] =
-const [parHistory, setParHistory] = useState([initialState.par.adoptionIndex]) useState(buildDashboard(initialWorld));
+  const [world, setWorld] = useState(() => initWorld([]));
+  const [dashboard, setDashboard] = useState(() => {
+    const initial = initWorld([]);
+    return buildDashboard({
+      world: initial,
+      signals: initial.synthesis,
+      tick: initial.tick,
+    });
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const next = reduceWorld(world);
-      setWorld(next);
-      setDashboard(buildDashboard(next));
-    }, 1000); // 1 tick per second
+      const result = tick(world);
+      setWorld(result.world);
+      setDashboard(
+        buildDashboard({
+          world: result.world,
+          signals: result.signals,
+          tick: result.tick,
+        })
+      );
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [world]);
 
   return (
     <div style={{ padding: "2rem" }}>
-      <Dashboard dashboard={dashboard} />
+      <h1>PANoRAMic.os</h1>
+      <pre>{JSON.stringify(dashboard, null, 2)}</pre>
     </div>
   );
 }

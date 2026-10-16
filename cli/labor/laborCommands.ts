@@ -1,4 +1,4 @@
-import { LaborState } from "../../core/pillars/labor/LABOR_STATE"
+import { LaborState } from "../../pillars/labor/LABOR_STATE"
 import { emitLaborSignals } from "../../signals/labor/laborSignals"
 
 export function showLabor(state: LaborState) {

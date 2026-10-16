@@ -1,6 +1,6 @@
 // engine/infrastructure/InfrastructureStabilityEngine.ts
 
-import { InfrastructureProfile } from "../../core/pillars/infrastructure/InfrastructureProfile"
+import { InfrastructureProfile } from "../../pillars/infrastructure/InfrastructureProfile"
 import { computeInfrastructureRisk } from "./InfrastructureRiskEngine"
 
 export function computeInfrastructureStability(infra: InfrastructureProfile) {

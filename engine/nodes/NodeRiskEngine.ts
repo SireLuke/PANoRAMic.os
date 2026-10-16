@@ -1,6 +1,6 @@
 // engine/nodes/NodeRiskEngine.ts
 
-import { NodeProfile } from "../../core/pillars/nodes/NodeProfile"
+import { NodeProfile } from "../../pillars/nodes/NodeProfile"
 
 export function computeNodeRisk(node: NodeProfile) {
   // Risk factors

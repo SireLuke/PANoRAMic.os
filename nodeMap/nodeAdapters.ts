@@ -1,6 +1,6 @@
 // nodeMap/nodeAdapters.ts
-import { NodeProfile } from "../core/pillars/nodes/NodeProfile"
-import { NodeState } from "../core/pillars/nodes/NODES_STATE"
+import { NodeProfile } from "../pillars/nodes/NodeProfile"
+import { NodeState } from "../pillars/nodes/NODES_STATE"
 
 // Convert NodeState -> NodeProfile
 export function stateToProfile(state: NodeState): NodeProfile {

@@ -1,6 +1,6 @@
 // engine/rights/RightsRiskEngine.ts
 
-import { RightsProfile } from "../../core/pillars/rights/RightsProfile"
+import { RightsProfile } from "../../pillars/rights/RightsProfile"
 
 export function computeRightsRisk(rights: RightsProfile) {
   // Risk factors

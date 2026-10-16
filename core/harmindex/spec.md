@@ -53,3 +53,28 @@ Returns a merged structure:
   governance: number,
   supplyChain: number
 }
+```
+
+`computeHarm()` currently passes these six domain totals through (defaulting missing values to `0`). It does not itself average the 12 leaf pillars listed in `core/civilization/spec.md`.
+
+### `scoreHarm(impact)`
+
+Sums the six domain totals and returns:
+
+```ts
+{
+  total: number,          // sum of the six domains
+  normalized: number      // total / 100
+}
+```
+
+`normalized` follows the implementation (`total / 100`). It is not hard-clamped to `0..1`; a full 100 on every domain yields `6`.
+
+### `harmFlags(score)`
+
+Risk tiers from `score.total`:
+
+- `severe` — total > 70  
+- `moderate` — 40 < total ≤ 70  
+- `low` — total ≤ 40
+

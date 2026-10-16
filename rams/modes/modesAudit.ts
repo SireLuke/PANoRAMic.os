@@ -1,4 +1,4 @@
-import { ModesState } from "../../core/pillars/modes/MODES_STATE"
+import { ModesState } from "../../pillars/modes/MODES_STATE"
 
 export function auditModes(state: ModesState) {
   return {

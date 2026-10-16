@@ -1,4 +1,4 @@
-import { CommonsState } from "../../core/pillars/commons/COMMONS_STATE.js"
+import { CommonsState } from "../../pillars/commons/COMMONS_STATE.js"
 
 export function emitCommonsSignals(state: CommonsState) {
   return {

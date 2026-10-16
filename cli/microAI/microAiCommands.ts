@@ -1,4 +1,4 @@
-import { MicroAiState } from "../../core/pillars/microAI/MICRO_AI_STATE"
+import { MicroAiState } from "../../pillars/microAI/MICRO_AI_STATE"
 import { emitMicroAiSignals } from "../../signals/microAI/microAiSignals"
 
 export function showMicroAi(state: MicroAiState) {

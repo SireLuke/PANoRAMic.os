@@ -1,6 +1,6 @@
 // signals/globalSignals.ts
 
-import { NodeState } from "../core/pillars/nodes/NODES_STATE.ts"
+import { NodeState } from "../pillars/nodes/NODES_STATE.ts"
 import { WorldState } from "../engine/world/worldState.ts"
 
 // Global signal shape

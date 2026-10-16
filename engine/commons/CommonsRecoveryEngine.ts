@@ -1,6 +1,6 @@
 // engine/commons/CommonsRecoveryEngine.ts
 
-import { CommonsProfile } from "../../core/pillars/commons/CommonsProfile"
+import { CommonsProfile } from "../../pillars/commons/CommonsProfile"
 
 export function applyCommonsRecovery(commons: CommonsProfile) {
   const actions: string[] = []

@@ -4,7 +4,7 @@
 
 ## Primary Entry Points
 
-- `npm start` → runs `src/boot.ts` via package.json
+- `npm start` → runs `ts-node cli/start.ts`, which delegates to `src/boot.ts`
 - `deno run --allow-all src/boot.ts` → direct TypeScript execution
 - `deno run --allow-all main.ts` → root-level canonical entry (delegates to src/boot.ts)
 - `deno run --allow-all src/main.ts` → src-level canonical entry (delegates to src/boot.ts)

@@ -1,7 +1,7 @@
 // core/worldstate/globalSignalsEngine.ts
 
 import { WorldState } from "./WorldState"
-import { NodeState } from "../pillars/nodes/NODES_STATE"
+import { NodeState } from "../../pillars/nodes/NODES_STATE"
 
 export function computeGlobalSignals(world: WorldState): WorldState {
   const nodes = Object.values(world.nodes || {})

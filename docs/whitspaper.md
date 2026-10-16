@@ -246,8 +246,7 @@ node evolution
 
 PAR supply is governed by:
 
-𝑃𝐴𝑅 max=
-(Global Population × 1.35)𝑅𝑆𝐷V
+𝑃𝐴𝑅 max = (Global Population × 1.35) × RSDV
 
 5.3 Correction Phase (Demurrage)
 Ensures circulation remains healthy.

@@ -1,9 +1,9 @@
 // engine/nodes/nodeEvolutionEngine.ts
 
-import { NodeState } from "../../core/pillars/nodes/NODES_STATE"
-import { EcologyState } from "../../core/pillars/ecology/ECOLOGY_STATE"
-import { InfrastructureState } from "../../core/pillars/infrastructure/INFRASTRUCTURE_STATE"
-import { MicroAiState } from "../../core/pillars/microAI/MICRO_AI_STATE"
+import { NodeState } from "../../pillars/nodes/NODES_STATE"
+import { EcologyState } from "../../pillars/ecology/ECOLOGY_STATE"
+import { InfrastructureState } from "../../pillars/infrastructure/INFRASTRUCTURE_STATE"
+import { MicroAiState } from "../../pillars/microAI/MICRO_AI_STATE"
 
 export function evolveNodes({
   nodes,

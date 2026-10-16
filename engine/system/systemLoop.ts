@@ -1,6 +1,6 @@
 // engine/system/systemLoop.ts
 
-import { SystemState } from "../../core/SystemState"
+import { SystemState } from "../../SystemState"
 import { computeSystem } from "./systemEngine"
 
 export function runSystemLoop(initialState: SystemState, cycles: number) {

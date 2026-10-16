@@ -1,10 +1,10 @@
 // engine/gep/globalRiskEngine.ts
 
-import { NationProfile } from "../../core/pillars/gep/NationProfile"
-import { CurrencyProfile } from "../../core/pillars/gep/Currency"
-import { TradeFlow } from "../../core/pillars/gep/TradeFlows"
-import { computeSovereignRisk } from "../../core/pillars/gep/SovereignRisk"
-import { computeNationTradeSummary } from "../../core/pillars/gep/TradeFlows"
+import { NationProfile } from "../../pillars/gep/NationProfile"
+import { CurrencyProfile } from "../../pillars/gep/Currency"
+import { TradeFlow } from "../../pillars/gep/TradeFlows"
+import { computeSovereignRisk } from "../../pillars/gep/SovereignRisk"
+import { computeNationTradeSummary } from "../../pillars/gep/TradeFlows"
 
 export function computeGlobalRisk({
   nations,

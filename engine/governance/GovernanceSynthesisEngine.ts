@@ -1,6 +1,6 @@
 // engine/governance/GovernanceSynthesisEngine.ts
 
-import { GovernanceProfile } from "../../core/pillars/governance/GovernanceProfile"
+import { GovernanceProfile } from "../../pillars/Governance/GovernanceProfile"
 import { computeGovernanceRisk } from "./GovernanceRiskEngine"
 import { computeGovernanceStability } from "./GovernanceStabilityEngine"
 

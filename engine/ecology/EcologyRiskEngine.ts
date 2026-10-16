@@ -1,6 +1,6 @@
 // engine/ecology/EcologyRiskEngine.ts
 
-import { BiomeProfile } from "../../core/pillars/ecology/BiomeProfile"
+import { BiomeProfile } from "../../pillars/ecology/BiomeProfile"
 
 export function computeEcologyRisk(biome: BiomeProfile) {
   // Risk factors

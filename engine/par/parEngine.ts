@@ -1,6 +1,6 @@
 // engine/par/parEngine.ts
 
-import { computeParCap } from "../../core/pillars/par/PAR_CAP"
+import { computeParCap } from "../../pillars/par/PAR_CAP"
 import { computeParSalary } from "./parSalaryEngine"
 import { enforceParRules } from "./parEnforcementEngine"
 

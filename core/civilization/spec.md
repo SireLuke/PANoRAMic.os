@@ -1,12 +1,6 @@
-
----
-
-# ⭐ STEP 5 — Create `core/civilization/spec.md`
-
-```md
 # Civilization Specification
 
-The **civilization** subsystem defines the 12 Pillars of Civilization for PAN♾RAMic.os.
+The **civilization** subsystem defines the 12 Pillars of Civilization for PANoRAMic.os.
 
 It is a foundational reference used by:
 

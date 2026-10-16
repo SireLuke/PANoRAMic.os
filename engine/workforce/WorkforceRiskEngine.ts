@@ -1,6 +1,6 @@
 // engine/workforce/WorkforceRiskEngine.ts
 
-import { WorkforceProfile } from "../../core/pillars/workforce/WorkforceProfile"
+import { WorkforceProfile } from "../../pillars/workforce/WorkforceProfile"
 
 export function computeWorkforceRisk(work: WorkforceProfile) {
   // Risk factors

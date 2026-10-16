@@ -1,4 +1,4 @@
-import { CommonsState } from "../../core/pillars/commons/COMMONS_STATE"
+import { CommonsState } from "../../pillars/commons/COMMONS_STATE"
 
 export function auditCommons(state: CommonsState) {
   return {

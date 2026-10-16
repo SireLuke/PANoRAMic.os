@@ -1,6 +1,6 @@
 // engine/nodes/NodeStabilityEngine.ts
 
-import { NodeProfile } from "../../core/pillars/nodes/NodeProfile"
+import { NodeProfile } from "../../pillars/nodes/NodeProfile"
 import { computeNodeRisk } from "./NodeRiskEngine"
 
 export function computeNodeStability(node: NodeProfile) {

@@ -1,7 +1,7 @@
 // nodeMap/nodeMap.ts
 
-import { NodeProfile } from "../core/pillars/nodes/NodeProfile.ts"
-import { NodeState, createNodeState, computeNodeHealth } from "../core/pillars/nodes/NODES_STATE.ts"
+import { NodeProfile } from "../pillars/nodes/NodeProfile.ts"
+import { NodeState, createNodeState, computeNodeHealth } from "../pillars/nodes/NODES_STATE.ts"
 
 import { computeNodeRisk } from "../engine/nodes/NodeRiskEngine.ts"
 import { computeNodeStability } from "../engine/nodes/NodeStabilityEngine.ts"

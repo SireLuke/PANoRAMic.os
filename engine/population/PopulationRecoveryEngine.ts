@@ -1,6 +1,6 @@
 // engine/population/PopulationRecoveryEngine.ts
 
-import { PopulationProfile } from "../../core/pillars/population/PopulationProfile"
+import { PopulationProfile } from "../../pillars/Population/PopulationProfile"
 
 export function applyPopulationRecovery(pop: PopulationProfile) {
   const actions: string[] = []

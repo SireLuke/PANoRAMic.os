@@ -1,6 +1,6 @@
 // engine/markets/MarketCollapseEngine.ts
 
-import { MarketProfile } from "../../core/pillars/markets/MarketProfile"
+import { MarketProfile } from "../../pillars/markets/MarketProfile"
 
 export function applyMarketCollapse(market: MarketProfile) {
   const actions: string[] = []

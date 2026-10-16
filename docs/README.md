@@ -4,6 +4,7 @@ This directory stores project-level design notes, architecture references, and o
 
 Current repo parameters reflected in the architecture:
 - PAR float multiplier: 1.35
+- boot-time PAR cap: population * 1.35 * RSDV (0.65–1.00)
 - resource multiplier: 0.90
 - MSRP cap: 15% of market value
 - global health and movement signals normalized to 0..1

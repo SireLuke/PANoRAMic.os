@@ -9,7 +9,7 @@
     "baseUrl": ".",
     "paths": {
       "@engine/*": ["../engine/*"],
-      "@dashboard/*": ["../dashboard/src/*"]
+      "@dashboard/*": ["../src/dashboard/*"]
     }
   },
   "include": ["src"]

@@ -1,6 +1,6 @@
 // engine/infrastructure/InfrastructureFlowEngine.ts
 
-import { InfrastructureProfile } from "../../core/pillars/infrastructure/InfrastructureProfile"
+import { InfrastructureProfile } from "../../pillars/infrastructure/InfrastructureProfile"
 
 export function computeInfrastructureFlow(infra: InfrastructureProfile) {
   const actions: string[] = []

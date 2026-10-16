@@ -1,4 +1,4 @@
-import { RightsState } from "../../core/pillars/rights/RIGHTS_STATE"
+import { RightsState } from "../../pillars/rights/RIGHTS_STATE"
 import { emitRightsSignals } from "../../signals/rights/rightsSignals"
 
 export function showRights(state: RightsState) {

@@ -1,6 +1,6 @@
 // engine/population/PopulationRiskEngine.ts
 
-import { PopulationProfile } from "../../core/pillars/population/PopulationProfile"
+import { PopulationProfile } from "../../pillars/Population/PopulationProfile"
 
 export function computePopulationRisk(pop: PopulationProfile) {
   // Risk factors
