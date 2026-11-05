@@ -32,5 +32,3 @@ export function bindPillarRoutes() {
   // Modes
   server.get("/modes", (req, res) => res.json(globalSignals.modes))
 }
-
-}
