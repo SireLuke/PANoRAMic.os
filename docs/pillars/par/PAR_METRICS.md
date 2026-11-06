@@ -45,3 +45,19 @@ and independent review.
 
 The Stewardship Fund reports dignity-floor backing and UBE service coverage
 separately. A large balance alone does not establish delivery of a guarantee.
+
+## Small/medium-account demurrage protection metrics
+- qualifyingSmallMediumAccountCount
+- protectedAccountCount
+- noticeIssuedCount
+- noticeDeliveryConfirmedCount
+- noticeGraceAccountCount
+- qualifyingActivityAccountCount
+- demurrageEligibleAfterGraceCount
+- appealedEligibilityDecisionCount
+- correctedEligibilityDecisionCount
+
+The canonical transition is five years of protection followed by one full year
+of notice/grace. No demurrage is eligible before the sixth account anniversary.
+Qualifying activity under the published rule maintains protection thereafter.
+Track notices and appeal outcomes without exposing personal identity data.
