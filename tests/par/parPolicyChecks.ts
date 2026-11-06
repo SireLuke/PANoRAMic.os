@@ -1,6 +1,8 @@
 import { runParFeeAllocationEngine } from "../../engine/par/parFeeAllocationEngine"
 import { runParDemurrageEngine } from "../../engine/par/demurrageEngine"
+import { runPoolClaimsAllocationEngine } from "../../engine/par/poolClaimAllocationEngine"
 import { validateCoverage, UbeCoverage } from "../../pillars/par/PAR_POLICY"
+import { runCitizenTaxAllocationEngine } from "../../fiscal/cta/citizenTaxAllocationEngine"
 
 function assert(ok: boolean, message: string): void {
   if (!ok) throw new Error("PAR policy check failed: " + message)
@@ -33,10 +35,62 @@ const finalCycle = runParDemurrageEngine({
   openingBalance: 1000, cyclesElapsed: 100, initialRatePerCycle: 0.1,
   compoundingFactor: 0.5, shares,
 })
-assert(finalCycle.fullyReverted, "100% cumulative cap is reached")
+assert(finalCycle.fullyReverted, "100% eligible-balance cap is reached")
 close(finalCycle.cumulativeDemurrageRate, 1, "demurrage rate cap")
-close(finalCycle.retainedBalance, 0, "full reversion leaves zero balance")
-close(finalCycle.totalDemurrageToDate, 1000, "full opening balance routed")
+close(finalCycle.retainedBalance, 0, "no-floor legacy case can reach zero")
+close(finalCycle.totalDemurrageToDate, 1000, "full eligible opening balance routed")
+
+const floorProtected = runParDemurrageEngine({
+  openingBalance: 1000, protectedBalanceFloor: 700, cyclesElapsed: 100,
+  initialRatePerCycle: 0.1, compoundingFactor: 0.5, shares,
+})
+close(floorProtected.eligibleOpeningBalance, 300, "only balance above BSDM is eligible")
+close(floorProtected.totalDemurrageToDate, 300, "demurrage cannot exceed eligible excess")
+close(floorProtected.retainedBalance, 700, "BSDM floor remains after full eligible reversion")
+assert(floorProtected.fullyReverted, "eligible excess can be fully reverted without touching BSDM")
+const atFloor = runParDemurrageEngine({
+  openingBalance: 700, protectedBalanceFloor: 700, cyclesElapsed: 100,
+  initialRatePerCycle: 0.1, compoundingFactor: 0.5, shares,
+})
+close(atFloor.demurrageThisCycle, 0, "no demurrage at or below BSDM")
+close(atFloor.retainedBalance, 700, "balance at BSDM remains intact")
+
+const cta = runCitizenTaxAllocationEngine({
+  collectedCitizenTaxRevenue: 500, shares,
+})
+close(cta.humanitarianAllocation, 300, "CTA humanitarian allocation")
+close(cta.stewardshipAllocation, 200, "CTA stewardship allocation")
+close(cta.allocatedTotal, 500, "CTA allocation conservation")
+let ctaRejected = false
+try {
+  runCitizenTaxAllocationEngine({
+    collectedCitizenTaxRevenue: 100,
+    shares: { humanitarianShare: 0.7, stewardshipShare: 0.4 },
+  })
+} catch { ctaRejected = true }
+assert(ctaRejected, "invalid CTA pool split rejected")
+
+const claims = runPoolClaimsAllocationEngine(100, [
+  { claimId: "person-a", baselineRequested: 40, contributionRequested: 30 },
+  { claimId: "person-b", baselineRequested: 40, contributionRequested: 30 },
+])
+close(claims.baselinePaidTotal, 80, "baseline claims paid first")
+close(claims.contributionPaidTotal, 20, "contribution awards use remaining balance")
+close(claims.totalPaid, 100, "pool claims never exceed available balance")
+close(claims.closingPoolBalance, 0, "pool may reach zero after valid claims")
+close(claims.allocations[0].baselinePaid, 40, "first baseline claim fully paid")
+close(claims.allocations[0].contributionPaid, 10, "contribution claims pro rata")
+close(claims.allocations[1].contributionPaid, 10, "contribution claims treated equally")
+
+const baselineShortfall = runPoolClaimsAllocationEngine(50, [
+  { claimId: "a", baselineRequested: 40, contributionRequested: 10 },
+  { claimId: "b", baselineRequested: 60, contributionRequested: 10 },
+])
+close(baselineShortfall.baselinePaidTotal, 50, "available funds prioritize baseline")
+close(baselineShortfall.contributionPaidTotal, 0, "contribution awards wait when baseline underfunded")
+close(baselineShortfall.allocations[0].baselinePaid, 20, "baseline shortfall pro rata a")
+close(baselineShortfall.allocations[1].baselinePaid, 30, "baseline shortfall pro rata b")
+close(baselineShortfall.closingPoolBalance, 0, "baseline allocation conserves pool funds")
 
 const coverage: UbeCoverage = {
   healthcare: 0.8, housing: 0.7, nutrition: 0.9, water_sanitation: 0.95,
@@ -52,7 +106,6 @@ assert(rejected, "invalid pool split rejected")
 rejected = false
 try { validateCoverage({ ...coverage, healthcare: 1.1 }) } catch { rejected = true }
 assert(rejected, "out-of-range UBE coverage rejected")
-console.log("PAR policy checks passed.")
 
 import {
   evaluateParDemurrageEligibility,
@@ -101,3 +154,4 @@ try {
   })
 } catch { invalidAgeRejected = true }
 assert(invalidAgeRejected, "negative account age rejected")
+console.log("PAR policy checks passed.")
