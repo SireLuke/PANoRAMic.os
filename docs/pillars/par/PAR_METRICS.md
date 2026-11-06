@@ -26,6 +26,20 @@
 Keep transaction-fee, demurrage, CTA, grant, and donation inflows separately
 identified. Never count the same funds twice.
 
+## PAR valuation and conversion
+- parReferenceValuation
+- parReferenceSnapshotId
+- parReferenceSnapshotTimestamp
+- conversionObservationCount
+- conversionSettlementCount
+- conversionSourceQuality
+- conversionOutlierCount
+- conversionDisputeCount
+
+Keep reference valuation, continuously observed market conversion data, and
+settlement conversion as distinct records. Every settlement must retain the
+snapshot/version and rule used.
+
 ## Transaction fee
 The default PAR transaction fee is 0.0002 (0.02%) of eligible transaction
 value. The fee engine routes the full collected fee across the two pools and
