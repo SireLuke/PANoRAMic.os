@@ -35,6 +35,27 @@ Do not merge source totals or double-count an allocation. CTA is not a PAR
 transaction fee and does not itself mint PAR. CTA calculates allocations;
 PAR records and settles pool credits through its accounting boundary.
 
+## PAR reference valuation and conversion snapshots
+
+RAMS supplies versioned resource/scarcity observations and audit evidence to
+PAR. PAR's valuation policy consumes accepted inputs; RAMS does not directly
+set exchange rates or rewrite settled transactions.
+
+The valuation and conversion design has three separate records:
+1. Reference valuation: the governed PAR reference index derived from
+   population/resource constraints and approved inputs.
+2. Observed conversion: continuously observed market conversion information,
+   with source, timestamp, quality, and confidence metadata.
+3. Settlement conversion: the rate actually applied to a transaction under
+   a published settlement window and rounding policy.
+
+The proposed operating model is continuous observation with periodic,
+auditable reference snapshots. A transaction records the snapshot/version and
+settlement rule used, so historical conversions can be reconstructed.
+Snapshot cadence, market-source weighting, outlier handling, liquidity
+controls, rounding, and dispute rules remain governance decisions. Market
+quotes are not automatically authoritative PAR valuations.
+
 ## Transaction micro-levy
 
 For eligible transaction value T:
