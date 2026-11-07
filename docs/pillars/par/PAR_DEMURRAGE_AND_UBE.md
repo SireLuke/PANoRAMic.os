@@ -68,3 +68,32 @@ baselines, outcomes, provenance, and maintenance obligations.
 - Provide notice, correction, hardship, dispute, and appeal mechanisms.
 - Keep UBE access independent of an individual's PAR balance or labor status.
 - Do not treat modelled impact indices as verified real-world outcomes.
+
+## Small/medium-account protection: five years plus one-year notice
+
+Qualifying small and medium accounts receive five full years of demurrage
+protection. At the fifth anniversary, the account holder receives notice that
+continued protection from inactivity-based demurrage requires qualifying
+account activity. The notice must explain the activity rule, the consequences
+of inactivity, the effective date, and available correction and appeal routes.
+
+A full one-year grace interval follows notice. No demurrage may be charged
+during that interval. The earliest demurrage eligibility date is therefore the
+sixth account anniversary (five years of protection + one year of notice).
+At or after that date, an account that remains inactive under the published
+qualifying-activity rule may enter the existing demurrage schedule. Qualifying
+activity maintains the protection while the account continues to meet the rule.
+
+This is an eligibility transition, not an account freeze or loss of UBE.
+Account operation and access to UBE must not be disabled because of inactivity
+or PAR balance. UBE remains independent of an individual's PAR balance and
+labor status.
+
+The eligibility evaluator is separate from the compounding demurrage calculator.
+The five-year and one-year durations are canonical policy constants; account
+size bands, qualifying transaction thresholds, account-age origin, identity
+verification, wallet aggregation, notice delivery, hardship, and appeal
+workflows must be defined and audited by governance before production use.
+Protection must attach to the verified beneficial account holder across
+wallets, rather than reset when funds move between wallets. Use privacy-
+preserving identity controls and a fair process for disputed classifications.
