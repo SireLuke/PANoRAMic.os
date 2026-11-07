@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://panoramic-os.example/schemas/governance-decision.schema.json",
+  "title": "PAN Governance Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decisionId", "policyId", "policyVersion", "scope", "rationale",
+    "evidenceRefs", "proposerId", "authorizerId", "implementerId",
+    "verifierId", "conflictsDeclared", "authorizationBasis",
+    "proposedAt", "authorizedAt", "effectiveAt", "reviewAt", "privacyClass"
+  ],
+  "properties": {
+    "decisionId": { "type": "string", "minLength": 1 },
+    "policyId": { "type": "string", "minLength": 1 },
+    "policyVersion": { "type": "string", "minLength": 1 },
+    "scope": { "type": "string", "minLength": 1 },
+    "rationale": { "type": "string", "minLength": 1 },
+    "evidenceRefs": { "type": "array", "items": { "type": "string" } },
+    "proposerId": { "type": "string", "minLength": 1 },
+    "authorizerId": { "type": "string", "minLength": 1 },
+    "implementerId": { "type": "string", "minLength": 1 },
+    "verifierId": { "type": "string", "minLength": 1 },
+    "conflictsDeclared": { "type": "boolean", "const": true },
+    "authorizationBasis": { "type": "string", "minLength": 1 },
+    "proposedAt": { "type": "string", "format": "date-time" },
+    "authorizedAt": { "type": "string", "format": "date-time" },
+    "effectiveAt": { "type": "string", "format": "date-time" },
+    "reviewAt": { "type": "string", "format": "date-time" },
+    "privacyClass": { "enum": ["public", "restricted", "sensitive"] }
+  }
+}
