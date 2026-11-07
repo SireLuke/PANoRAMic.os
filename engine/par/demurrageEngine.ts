@@ -4,6 +4,7 @@ export interface ParDemurrageInput {
   openingBalance: number
   /** Completed cycles; zero means no demurrage cycle has elapsed. */
   cyclesElapsed: number
+  /** Initial fraction of openingBalance reverted in cycle one. */
   /** Initial fraction of the eligible opening balance reverted in cycle one. */
   initialRatePerCycle: number
   /** Compounding growth applied to the cumulative percentage each cycle. */
@@ -32,6 +33,15 @@ export interface ParDemurrageResult {
 }
 
 /**
+ * Cumulative percentage compounds against the original opening balance:
+ * R(n)=min(1, initialRate*(1+factor)^(n-1)); R(0)=0.
+ * Charge only the incremental difference R(n)-R(n-1), preventing duplicates.
+ * The 100% cap ensures total reversion never exceeds the opening balance.
+ */
+export function runParDemurrageEngine(input: ParDemurrageInput): ParDemurrageResult {
+  const { openingBalance, cyclesElapsed, initialRatePerCycle, compoundingFactor, shares } = input
+  if (!Number.isFinite(openingBalance) || openingBalance < 0)
+    throw new RangeError("openingBalance must be finite and non-negative.")
  * Cumulative percentage compounds against the eligible opening balance:
  * E=max(0, openingBalance-protectedBalanceFloor)
  * R(n)=min(1, initialRate*(1+factor)^(n-1)); R(0)=0.
@@ -61,6 +71,17 @@ export function runParDemurrageEngine(input: ParDemurrageInput): ParDemurrageRes
     Math.min(1, initialRatePerCycle * Math.pow(1 + compoundingFactor, cycle - 1))
   const cumulativeDemurrageRate = rateAt(cyclesElapsed)
   const previousCumulativeDemurrageRate = rateAt(cyclesElapsed - 1)
+  const demurrageThisCycle = openingBalance *
+    Math.max(0, cumulativeDemurrageRate - previousCumulativeDemurrageRate)
+  const totalDemurrageToDate = openingBalance * cumulativeDemurrageRate
+  const retainedBalance = Math.max(0, openingBalance - totalDemurrageToDate)
+  const humanitarianAllocation = demurrageThisCycle * shares.humanitarianShare
+  const stewardshipAllocation = demurrageThisCycle * shares.stewardshipShare
+  return {
+    cumulativeDemurrageRate, previousCumulativeDemurrageRate, demurrageThisCycle,
+    totalDemurrageToDate, retainedBalance, humanitarianAllocation, stewardshipAllocation,
+    totalPoolAllocation: humanitarianAllocation + stewardshipAllocation,
+    fullyReverted: cumulativeDemurrageRate >= 1,
   const demurrageThisCycle = eligibleOpeningBalance *
     Math.max(0, cumulativeDemurrageRate - previousCumulativeDemurrageRate)
   const totalDemurrageToDate = eligibleOpeningBalance * cumulativeDemurrageRate

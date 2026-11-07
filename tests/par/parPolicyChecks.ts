@@ -1,5 +1,6 @@
 import { runParFeeAllocationEngine } from "../../engine/par/parFeeAllocationEngine"
 import { runParDemurrageEngine } from "../../engine/par/demurrageEngine"
+import { validateCoverage, UbeCoverage } from "../../pillars/par/PAR_POLICY"
 import { runPoolClaimsAllocationEngine } from "../../engine/par/poolClaimAllocationEngine"
 import { validateCoverage, UbeCoverage } from "../../pillars/par/PAR_POLICY"
 import { runCitizenTaxAllocationEngine } from "../../fiscal/cta/citizenTaxAllocationEngine"
@@ -35,6 +36,10 @@ const finalCycle = runParDemurrageEngine({
   openingBalance: 1000, cyclesElapsed: 100, initialRatePerCycle: 0.1,
   compoundingFactor: 0.5, shares,
 })
+assert(finalCycle.fullyReverted, "100% cumulative cap is reached")
+close(finalCycle.cumulativeDemurrageRate, 1, "demurrage rate cap")
+close(finalCycle.retainedBalance, 0, "full reversion leaves zero balance")
+close(finalCycle.totalDemurrageToDate, 1000, "full opening balance routed")
 assert(finalCycle.fullyReverted, "100% eligible-balance cap is reached")
 close(finalCycle.cumulativeDemurrageRate, 1, "demurrage rate cap")
 close(finalCycle.retainedBalance, 0, "no-floor legacy case can reach zero")
