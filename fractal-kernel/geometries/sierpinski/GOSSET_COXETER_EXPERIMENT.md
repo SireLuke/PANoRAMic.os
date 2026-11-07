@@ -103,13 +103,13 @@ The eight projected ring radii, and the eight distinct projected side lengths
 of the equilateral projected-face subset, agree numerically:
 
 - 0.238235404529
-- 0.385472982? (see precision note below)
-- 0.47386065
-- 0.5729245
-- 0.70429418
-- 0.76672264
-- 0.92701132
-- 1.13957193
+- 0.385472981851
+- 0.473860652112
+- 0.572924503648
+- 0.704294183228
+- 0.766722641048
+- 0.927011319890
+- 1.139571926542
 
 The full-precision values depend on the chosen eigenvector phase and numerical
 normalization; the checked-in projection matrix is the reproducible preset.
