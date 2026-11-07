@@ -229,3 +229,21 @@ cd app && npm run dev
 **Canonical boot:** `src/boot.ts`  
 **npm start:** `ts-node cli/start.ts` → `src/boot.ts`  
 **Platform mix:** Node.js (Express, ts-node) + Deno-style boot files + React 18 / TypeScript 5
+
+
+## Governance and NAHT modules (proposed foundation)
+
+The repository's existing quantitative Governance pillar remains in place. The new `/governance` layer defines the constitutional/procedural architecture, policy lifecycle, decision records, oversight, and domain interfaces. See:
+
+- `governance/PAN_GOVERNANCE_CHARTER.md`
+- `governance/PAN_GOVERNANCE_ARCHITECTURE.md`
+- `governance/NAHT_GOVERNANCE_AND_INTEGRATION.md`
+
+NAHT has one core and two deployment modes:
+
+- `modules/naht`: standalone, dependency-light transport/topology package with no PAN imports.
+- `integrations/pan/naht`: PAN-native adapter that explicitly projects V8 `(h,R,u,d,tau,chi,s,f)` into NAHT `(q_r,q_e,q_p)`. No projection is declared canonical; callers must supply and version one.
+
+The canonical boot sequence reports the native adapter registration as read-only. It does not activate a V8 projection, mutate canonical records, or execute host actions. Standalone NAHT remains independently usable.
+
+The initial module includes ordered history transport, a unit-quaternion/SU(2) backend, graph topology validation, provenance records, and explicit norm-change accounting for optional coupling. SU(3), Chronos, Gosset, Janus Hydra, and additional host adapters remain pluggable extensions rather than core dependencies.

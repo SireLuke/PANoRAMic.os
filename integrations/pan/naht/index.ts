@@ -19,8 +19,8 @@ export interface PanNahtRegistration {
 export const PAN_NAHT_REGISTRATION: PanNahtRegistration = Object.freeze({
   id: PAN_NAHT_INTEGRATION_ID,
   mode: "read-only",
-  sourceAxes: ["h", "R", "u", "d", "tau", "chi", "s", "f"],
-  targetChannels: ["q_r", "q_e", "q_p"],
+  sourceAxes: ["h", "R", "u", "d", "tau", "chi", "s", "f"] as const,
+  targetChannels: ["q_r", "q_e", "q_p"] as const,
   requiresExplicitProjection: true,
   mayMutateCanonicalRecords: false,
 });
