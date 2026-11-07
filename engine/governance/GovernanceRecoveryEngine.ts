@@ -1,6 +1,3 @@
-Paste:
-
-```ts
 // engine/governance/GovernanceRecoveryEngine.ts
 
 import { GovernanceProfile } from "../../pillars/governance/GovernanceProfile"

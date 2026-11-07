@@ -6,3 +6,4 @@ export function global() {
         onboarding: "pending-api",
         governance: "pending-api"
     };
+}
