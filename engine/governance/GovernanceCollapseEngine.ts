@@ -120,6 +120,4 @@ export function applyGovernanceCollapse(gov: GovernanceProfile) {
     collapseRiskIndex,
     collapseEventTrigger,
   }
-, consensus strengthening, dignity reinforcement.
-
-Create:
+}

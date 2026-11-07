@@ -4,3 +4,4 @@ export function stability() {
         score: "pending-api",
         factors: "pending-api"
     };
+}
