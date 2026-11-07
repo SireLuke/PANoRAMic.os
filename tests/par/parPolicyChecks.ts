@@ -1,5 +1,6 @@
 import { runParFeeAllocationEngine } from "../../engine/par/parFeeAllocationEngine"
 import { runParDemurrageEngine } from "../../engine/par/demurrageEngine"
+import { runPoolClaimsAllocationEngine } from "../../engine/par/poolClaimAllocationEngine"
 import { validateCoverage, UbeCoverage } from "../../pillars/par/PAR_POLICY"
 import { runPoolClaimsAllocationEngine } from "../../engine/par/poolClaimAllocationEngine"
 import { validateCoverage, UbeCoverage } from "../../pillars/par/PAR_POLICY"
@@ -36,7 +37,7 @@ const finalCycle = runParDemurrageEngine({
   openingBalance: 1000, cyclesElapsed: 100, initialRatePerCycle: 0.1,
   compoundingFactor: 0.5, shares,
 })
-assert(finalCycle.fullyReverted, "100% cumulative cap is reached")
+assert(finalCycle.fullyReverted, "100% eligible-balance cap is reached")
 close(finalCycle.cumulativeDemurrageRate, 1, "demurrage rate cap")
 close(finalCycle.retainedBalance, 0, "full reversion leaves zero balance")
 close(finalCycle.totalDemurrageToDate, 1000, "full opening balance routed")
@@ -208,3 +209,4 @@ try {
   })
 } catch { invalidAgeRejected = true }
 assert(invalidAgeRejected, "negative account age rejected")
+console.log("PAR policy checks passed.")

@@ -9,12 +9,36 @@
 - parVelocity
 - parBurnRate
 - parMintRate
-- transactionFeesCollected (cumulative fee ledger total)
-- demurrageCollected (cumulative demurrage ledger total)
+- transactionFeesCollected
+- demurrageCollected
+- ctaRevenueCollected
+- ctaHumanitarianAllocation
+- ctaStewardshipAllocation
+- poolBaselineClaimsRequested
+- poolBaselineClaimsPaid
+- poolContributionClaimsRequested
+- poolContributionClaimsPaid
+- poolUnpaidClaims
+- poolClosingBalance
+- bsdmProtectedBalanceTotal
+- demurrageEligibleExcessBalance
 
-The Humanitarian Pool and Stewardship Fund are distinct accounting destinations.
-Their allocation shares are explicit policy inputs, finite, non-negative, and
-must sum to 1. Do not silently hard-code an unapproved split.
+Keep transaction-fee, demurrage, CTA, grant, and donation inflows separately
+identified. Never count the same funds twice.
+
+## PAR valuation and conversion
+- parReferenceValuation
+- parReferenceSnapshotId
+- parReferenceSnapshotTimestamp
+- conversionObservationCount
+- conversionSettlementCount
+- conversionSourceQuality
+- conversionOutlierCount
+- conversionDisputeCount
+
+Keep reference valuation, continuously observed market conversion data, and
+settlement conversion as distinct records. Every settlement must retain the
+snapshot/version and rule used.
 
 ## Transaction fee
 The default PAR transaction fee is 0.0002 (0.02%) of eligible transaction
@@ -80,21 +104,6 @@ infrastructure resilience, and commons regeneration. Record baseline, target,
 measured result, geography, time window, provenance, maintenance liability,
 and independent review.
 
-The Stewardship Fund reports dignity-floor backing and UBE service coverage
-separately. A large balance alone does not establish delivery of a guarantee.
-
-## Small/medium-account demurrage protection metrics
-- qualifyingSmallMediumAccountCount
-- protectedAccountCount
-- noticeIssuedCount
-- noticeDeliveryConfirmedCount
-- noticeGraceAccountCount
-- qualifyingActivityAccountCount
-- demurrageEligibleAfterGraceCount
-- appealedEligibilityDecisionCount
-- correctedEligibilityDecisionCount
-
-The canonical transition is five years of protection followed by one full year
-of notice/grace. No demurrage is eligible before the sixth account anniversary.
-Qualifying activity under the published rule maintains protection thereafter.
-Track notices and appeal outcomes without exposing personal identity data.
+The Stewardship / Dignity Fund reports dignity-floor backing and UBE service
+coverage separately. A large balance alone does not establish delivery of a
+guarantee.
