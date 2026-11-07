@@ -73,10 +73,10 @@ E8_COXETER_PLANE_PROJECTION_V1 in gossetCoxeterPlane.ts. Its rows are:
 
 \[
 \begin{pmatrix}
-0 & -0.096899068700 & -0.119117702264 & -0.463505659945 &
--0.192736490926 & -0.236930326056 & -0.217638871657 & 0\\
--0.192736490926 & 0.236930326056 & -0.119117702264 & 0.463505659945 &
-0 & 0.669823572348 & -0.921933054885 & 0
+0 & -0.119117702264 & -0.192736490926 & -0.217638871657 &
+-0.192736490926 & -0.119117702264 & 0 & -0.921933054885\\
+-0.096899068700 & -0.463505659945 & -0.236930326056 & 0 &
+0.236930326056 & 0.463505659945 & 0.669823572348 & 0
 \end{pmatrix}.
 \]
 
@@ -111,10 +111,9 @@ of the equilateral projected-face subset, agree numerically:
 - 0.927011319890
 - 1.139571926542
 
-The full-precision values depend on the chosen eigenvector phase and numerical
-normalization; the checked-in projection matrix is the reproducible preset.
-The key result is the combinatorial count 2,160 under the stated projection
-and tolerance, not the rounded radii.
+The displayed values are rounded to 12 decimal places. The checked-in matrix
+is the reproducible preset; the key combinatorial result is the count 2,160
+under this projection and the stated tolerance.
 
 ## Interpretation for Sierpiński
 
