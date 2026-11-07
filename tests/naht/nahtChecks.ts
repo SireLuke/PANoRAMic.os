@@ -36,7 +36,7 @@ export function runNahtChecks(): void {
     initial,
     [step],
     new QuaternionSU2Backend(),
-    (state) => [state.channels[0] * 2, state.channels[1], state.channels[2]],
+    (state) => [state.channels[0], state.channels[1] * 2, state.channels[2]],
   );
   assert(!close(coupled.history[0].normAfterCoupling,
     coupled.history[0].normAfterTransport), "coupling norm change must be recorded");
