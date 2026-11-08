@@ -1,55 +1,33 @@
-import { travel } from "../core/travel/src/index.js";
-import { poi } from "../core/travel/src/poi.js";
-import { onboardingIncentive } from "./incentive.js";
+// engine/run.ts
+//
+// Compatibility facade for the canonical world lifecycle.
+// The previous file mixed two unrelated initializers, referenced removed
+// travel/incentive modules, and contained malformed object/function boundaries.
+// Keep this entry point small and delegate state construction and advancement
+// to the canonical engine/world implementation.
 
-export function run(world, subsystems) {
+import { initWorld } from "./world/initWorld.ts";
+import { tick } from "./world/tick.ts";
+import type { WorldState } from "./world/worldState.ts";
 
-    // Travel subsystem
-    world.travel = travel();
+/**
+ * Advance the canonical PAN world by one deterministic engine tick.
+ *
+ * `subsystems` is retained as an optional compatibility argument for older
+ * callers. Subsystem orchestration is owned by the canonical world tick path.
+ * The returned value is the new WorldState; the input state is not mutated here.
+ */
+export function run(
+  world: WorldState,
+  _subsystems?: unknown,
+): WorldState {
+  return tick(world).world;
+}
 
-    // POI subsystem
-    world.poi = poi();
-
-    // PAR onboarding incentive
-    world.incentive = onboardingIncentive(
-        world.population,
-        world.projectFraction
-    );
-import { WorldState } from "./worldState";
-
+/**
+ * Construct the canonical initial world state with no preloaded node profiles.
+ * Call initWorld(profiles) directly when a caller has node profiles to seed.
+ */
 export function createInitialWorldState(): WorldState {
-    return {
-        time: 0,
-        population: {
-            total: 0,
-            byRegion: {}
-        },
-        resources: {
-            parSupply: 0,
-            parCap: 0,
-            renewables: 0,
-            nonRenewables: 0
-        },
-        economy: {
-            parSupply: 0,
-            parCap: 0,
-            stewardshipFund: 0,
-            humanitarianPool: 0,
-            taxLoad: 0
-        },
-        education: {},
-        governance: {},
-        humanitarian: {},
-        stability: {},
-        catastrophe: {},
-        migration: {},
-        trafficking: {},
-        harmindex: {},
-        travel: {}
-        icc: {},
-
-    };
-}classified: { records: [] },
-
-    return world;
+  return initWorld([]);
 }
