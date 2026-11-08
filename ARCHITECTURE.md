@@ -242,7 +242,7 @@ The repository's existing quantitative Governance pillar remains in place. The n
 NAHT has one core and two deployment modes:
 
 - `modules/naht`: standalone, dependency-light transport/topology package with no PAN imports.
-- `integrations/pan/naht`: PAN-native adapter that explicitly projects V8 `(h,R,u,d,tau,chi,s,f)` into NAHT `(q_r,q_e,q_p)`. No projection is declared canonical; callers must supply and version one.
+- `integrations/pan/naht`: PAN-native adapter that provides explicit, versioned projections from V8 `(h,R,u,d,tau,chi,s,f)` or V9 `(h,R,u,d,tau,chi,s,f,xi)` into NAHT `(q_r,q_e,q_p)`. V9 requires declared `xi` semantics and units. An optional SU(9) route requires explicit V9-to-C^9 encoding and a separate C^9-to-NAHT projection. No mapping is declared canonical; callers must supply and version each one.
 
 The canonical boot sequence reports the native adapter registration as read-only. It does not activate a V8 projection, mutate canonical records, or execute host actions. Standalone NAHT remains independently usable.
 
