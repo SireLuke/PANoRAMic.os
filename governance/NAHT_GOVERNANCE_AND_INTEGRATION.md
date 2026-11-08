@@ -39,11 +39,13 @@ PAN validation / Janus Hydra / authorized consumers
 
 This is a software architecture, not a claim that the three-channel NAHT state is a physical gauge field or that its output proves a new physical theory.
 
-## 3. V8 projection is explicit
+## 3. V8 and V9 projections are explicit
 
-V8 remains `(h, R, u, d, tau, chi, s, f)`. The PAN adapter must not silently guess how eight V8 coordinates become the three NAHT channels `(q_r, q_e, q_p)`.
+V8 remains `(h, R, u, d, tau, chi, s, f)`. Its adapter requires a caller-supplied, named, versioned projection to NAHT's three channels `(q_r, q_e, q_p)`.
 
-A caller supplies a named projection function, version, units/normalization assumptions, and provenance. The adapter validates the eight input coordinates and the three projected channels. Projection is an adapter choice, not a canonical change to V8.
+V9 extends those eight real axes with `xi`, a finite caller-defined scale, phase, or evolution coordinate. V9 projections declare `xi` semantics and units and explicitly project all nine axes to the three NAHT channels. The adapter records the projection metadata and does not update `xi` automatically.
+
+SU(9) acts on `C^9`, so a V9-to-SU(9)-to-NAHT route requires a versioned encoder from V9 to nine complex amplitudes and a separate versioned projection back to NAHT's real three-channel state. Matrices are checked for unitarity and determinant one. The route is read-only and does not imply a physical gauge-field interpretation.
 
 ## 4. Governance and permissions
 
