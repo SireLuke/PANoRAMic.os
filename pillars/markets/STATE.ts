@@ -1,4 +1,4 @@
-import { MarketsState } from "../../worldstate/MarketsState"
+import { MarketsState } from "../../core/worldstate/MarketsState"
 export const Markets_STATE: MarketsState = {
   integrity: 0,
   fairness: 0,
