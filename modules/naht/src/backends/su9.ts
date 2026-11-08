@@ -96,9 +96,11 @@ export function validateSU9Matrix(
   if (!Number.isFinite(tolerance) || tolerance <= 0) {
     throw new RangeError("tolerance must be finite and positive");
   }
-  matrix.forEach((row, i) => row.forEach((value, j) =>
-    assertComplex(value, "matrix[" + i + "][" + j + "]")
-  ));
+  for (let i = 0; i < DIMENSION; i += 1) {
+    for (let j = 0; j < DIMENSION; j += 1) {
+      assertComplex(matrix[i][j], "matrix[" + i + "][" + j + "]");
+    }
+  }
 
   for (let i = 0; i < DIMENSION; i += 1) {
     for (let j = 0; j < DIMENSION; j += 1) {
