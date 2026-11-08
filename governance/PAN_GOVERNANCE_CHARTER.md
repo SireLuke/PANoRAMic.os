@@ -89,7 +89,7 @@ UBE and the Stewardship/Dignity baseline remain unconditional under the existing
 - V8 supplies state-vector representations; it does not determine public policy.
 - Gosset 4_21 is a geometric architecture, not a governing authority.
 - Janus Hydra translates semantic structures; it does not authorize decisions and is not UHFE or UDFE.
-- UHFE and UDFE remain paired formation/dissolution representations.
+- UHFE and UDFE remain paired formation/decoherence representations.
 - NAHT provides history transport and topology capabilities; it does not grant host permissions or decide policy.
 - Chronos provides temporal bookkeeping within its declared contract.
 - RAMS measures and reports resource conditions within its authorization.
