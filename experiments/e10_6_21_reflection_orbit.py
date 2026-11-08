@@ -54,7 +54,9 @@ def root_orbit(max_depth=12):
         reflected = [reflect(v, node, gram) for v in basis]
         for i in range(n):
             for j in range(n):
-                assert bilinear(reflected[i], reflected[j], gram) == gram[i][j]
+                assert bilinear(reflected[i], reflected[j], gram) == bilinear(
+                    basis[i], basis[j], gram
+                )
 
     for _ in range(max_depth):
         next_frontier = set()
