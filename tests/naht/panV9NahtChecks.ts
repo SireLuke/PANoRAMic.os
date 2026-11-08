@@ -80,6 +80,8 @@ export function runPanV9NahtChecks(): void {
     id: "test-real-coordinate-encoding",
     version: "1",
     meaning: "test-only embedding of each real V9 coordinate as a real C9 amplitude",
+    xiSemantics: "normalized evolution parameter",
+    xiUnits: "1",
     encode: (v) => [v.h, v.R, v.u, v.d, v.tau, v.chi, v.s, v.f, v.xi]
       .map((re) => ({ re, im: 0 })),
   };
