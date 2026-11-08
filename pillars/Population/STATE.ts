@@ -1,4 +1,4 @@
-import { PopulationState } from "../../worldstate/PopulationState"
+import { PopulationState } from "../../core/worldstate/PopulationState"
 export const Population_STATE: PopulationState = {
   total: 0,
   births: 0,
