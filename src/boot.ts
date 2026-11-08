@@ -7,16 +7,16 @@ import { initDemurrage } from "./demurrage.ts";
 import { initStagnation } from "./stagnation.ts";
 import { initNodes } from "./nodes.ts";
 import { initDashboard } from "./dashboard.ts";
-import { PAN_NAHT_REGISTRATION } from "../integrations/pan/naht/index.ts";
+import { PAN_NAHT_REGISTRATIONS } from "../integrations/pan/naht/index.ts";
 
 export async function bootSystem() {
   console.log("[BOOT] Initializing PAN Kernel...");
   await initKernel();
 
   console.log(
-    "[NAHT] Native adapter contract available:",
-    PAN_NAHT_REGISTRATION.id,
-    "(read-only; explicit V8 projection required)",
+    "[NAHT] Native adapter contracts available:",
+    PAN_NAHT_REGISTRATIONS.map((registration) => registration.id).join(", "),
+    "(read-only; projections and complex encodings are explicit)",
   );
 
   console.log("[BOOT] Initializing feed integration layer...");
