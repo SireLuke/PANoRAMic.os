@@ -15,6 +15,8 @@ export interface V9ComplexEncoder {
   readonly id: string;
   readonly version: string;
   readonly meaning: string;
+  readonly xiSemantics: string;
+  readonly xiUnits: string;
   encode(vector: V9Vector): Complex9Vector;
 }
 
@@ -31,10 +33,11 @@ export interface AdaptedV9SU9State {
   readonly provenance: ProvenanceRecord;
 }
 
-function requireDescriptor(value: { id: string; version: string; meaning: string }, label: string): void {
+function requireDescriptor(value: { id: string; version: string; meaning: string; xiSemantics?: string; xiUnits?: string }, label: string): void {
   if (!value || typeof value.id !== "string" || !value.id.trim() ||
       typeof value.version !== "string" || !value.version.trim() ||
-      typeof value.meaning !== "string" || !value.meaning.trim()) {
+      typeof value.meaning !== "string" || !value.meaning.trim() ||
+      (label === "V9 complex encoder" && (typeof value.xiSemantics !== "string" || !value.xiSemantics.trim() || typeof value.xiUnits !== "string" || !value.xiUnits.trim()))) {
     throw new TypeError(label + " requires an id, version, and meaning");
   }
 }
@@ -79,7 +82,8 @@ export function adaptV9ThroughSU9ToNAHT(
       axisCount: 9,
       complexAmplitudeCount: 9,
       channelCount: 3,
-      xiSemantics: "caller-defined by PAN-V9 encoder",
+      xiSemantics: encoder.xiSemantics,
+      xiUnits: encoder.xiUnits,
       encodingMeaning: encoder.meaning,
       outputProjectionMeaning: projection.meaning,
       group: "SU(9)",
