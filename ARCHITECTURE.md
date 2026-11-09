@@ -219,7 +219,7 @@ cd app && npm run dev
 
 ## PAR naming and caps
 
-- **PAR** = Panitarian Asset Receipt (see `docs/whitspaper.md` and `src/boot.ts`)
+- **PAR** = Panitarian Asset Receipt (see `docs/pillars/par/PAR_INTEGRATION.md` and `src/boot.ts`)
 - Boot cap in `src/par.ts`: `population * 1.35 * rsdv`
 - RAMS dynamic cap in `core/economy/src/dynamicFloat.ts`: `min(population * 1.35, resourceParValue * 0.90)`
 
