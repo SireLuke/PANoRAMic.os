@@ -1,0 +1,14 @@
+# No empirical data bundled in STRATA-002 v0.1.
+# Add one record per dataset before use:
+# - dataset_id:
+#   domain:
+#   source_url:
+#   source_version_or_release:
+#   license:
+#   retrieved_utc:
+#   checksum_sha256:
+#   inclusion_criteria:
+#   exclusions:
+#   preprocessing_version:
+#   train_test_split_policy:
+datasets: []
