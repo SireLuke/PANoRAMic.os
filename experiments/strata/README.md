@@ -20,3 +20,16 @@ The current fixtures are synthetic. They verify that the test machinery executes
 ## Next empirical milestone
 
 Add sourced datasets only after recording license, source URL/identifier, retrieval date, checksum, preprocessing, inclusion criteria, and domain-specific baseline. Keep each domain adapter independently testable. Do not tune on blind data.
+
+
+## Evidence record and validation
+
+The STRATA run record schema is `strata-run.schema.json`. The checked-in audit at `runs/STRATA-002-GEOMETRY-AUDIT-2026-11-09.json` records the current synthetic STRATA-002 smoke run and the bounded Gosset/E8, Sierpinski, and E10/E9 checks.
+
+Validate the record with the dependency-free structural validator:
+
+```bash
+python experiments/strata/validate_run.py
+```
+
+The run record marks the other catalogue geometries and 11D parameter sweep as `not_tested`: the repository currently has no runnable implementations for those items. A valid record verifies structure and provenance fields, not the scientific interpretation.
