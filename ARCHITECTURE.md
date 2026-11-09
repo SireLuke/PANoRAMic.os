@@ -247,3 +247,21 @@ NAHT has one core and two deployment modes:
 The canonical boot sequence reports the native adapter registration as read-only. It does not activate a V8 projection, mutate canonical records, or execute host actions. Standalone NAHT remains independently usable.
 
 The initial module includes ordered history transport, a unit-quaternion/SU(2) backend, graph topology validation, provenance records, and explicit norm-change accounting for optional coupling. SU(3), Chronos, Gosset, Janus Hydra, and additional host adapters remain pluggable extensions rather than core dependencies.
+
+## STRATA — Scale-Transition Research and Analysis
+
+STRATA is the platform's independent research and validation layer. It evaluates whether proposed patterns survive declared changes in scale, domain, representation, and observer/implementation, using preregistered baselines and randomized or structure-preserving controls.
+
+STRATA is intentionally outside the canonical runtime boot path. It is non-authoritative: it reports evidence and failure states but cannot promote claims into PAN canon or mutate canonical records.
+
+Architectural boundaries:
+
+- V8 remains the canonical eight-coordinate state vector `(h, R, u, d, τ, χ, s, f)`.
+- Janus Hydra may translate features/geometries but does not validate its own outputs.
+- UHFE/UDFE remain distinct paired formation/dissolution representations.
+- Gosset `4_21` / E8 remains the primary geometry target where applicable; other geometries are comparison controls.
+- Empirical claims require provenance, held-out evaluation, independent domains, uncertainty, and published negative/null results.
+
+Specification: [docs/STRATA_LAYER.md](docs/STRATA_LAYER.md).
+
+The first experimental implementation is maintained separately on `research/strata-002`; no experiment code is wired into production boot or merged into the canonical branch.
