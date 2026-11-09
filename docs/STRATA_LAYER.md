@@ -87,6 +87,10 @@ STRATA-002 is a cross-domain representation benchmark. Its first milestone is de
 
 The Gosset/E8 adapter is tested against the repository's existing construction and exact mathematical checks. It is a geometry benchmark, not a substitute for empirical domains.
 
+## Reference implementation and records
+
+The dependency-free STRATA-002 smoke implementation lives in [`experiments/strata/`](../experiments/strata/README.md). Its evidence record shape is defined by [`strata-run.schema.json`](../experiments/strata/strata-run.schema.json), and the latest bounded geometry audit is [`STRATA-002-GEOMETRY-AUDIT-2026-11-09.json`](../experiments/strata/runs/STRATA-002-GEOMETRY-AUDIT-2026-11-09.json). Run `python experiments/strata/validate_run.py` from the repository root to validate the record structure.
+
 ## Non-goals
 
 STRATA does not assume that one representation is universal, that V8 is a physical law, that a geometric analogy implies causal identity, or that every domain must map cleanly into the same coordinates. Its job is to make such claims testable and falsifiable.
