@@ -1,0 +1,355 @@
+{
+  "schema_version": "strata-run-v0.1",
+  "protocol": "STRATA-0.1",
+  "run_id": "STRATA-002-GEOMETRY-AUDIT-2026-11-09",
+  "run_date": "2026-11-09",
+  "source": {
+    "repository": "SireLuke/PANoRAMic.os",
+    "ref": "main",
+    "commit": "d9f0bf9eb9a86bcbb5a6f639bb1ee14efa457763",
+    "evidence_repository": "SireLuke/pan-fractal-kernel",
+    "evidence_commit": "d2ef702383e346671949ea1cc7faf91df9449de7",
+    "additional_control_commit": "f197cb7b22fcc2dadc3933f1c2b3d7cc4a04efa5"
+  },
+  "environment": {
+    "python": "3.14.7",
+    "deno": "2.9.7",
+    "external_python_dependencies": false
+  },
+  "source_files": [
+    {
+      "path": "experiments/strata/STRATA_PROTOCOL_v0.1.md",
+      "blob_sha": "9a813bc3ed88c3542b87d9789814e584cacac6ca"
+    },
+    {
+      "path": "experiments/strata/run_strata_002.py",
+      "blob_sha": "c2f6b8ddb77a034136dd229ed78c77f5ae1d2290"
+    },
+    {
+      "path": "experiments/strata/strata_core.py",
+      "blob_sha": "72d4bfbe0bd210ff024e70b6ed1775e1b1f5bd99"
+    },
+    {
+      "path": "experiments/strata/e8_adapter.py",
+      "blob_sha": "fc0c4b672c4ddccbf761647fa496949ebd1fcd32"
+    },
+    {
+      "path": "experiments/strata/tests/test_strata.py",
+      "blob_sha": "5ebbdf450418f1408d1017ba2978a9543cf88d07"
+    },
+    {
+      "path": "experiments/gosset_sierpinski_experiment.py",
+      "blob_sha": "8b17f9317dc46b3d1f6b7bcaee921a28b3df2f19"
+    },
+    {
+      "path": "experiments/e10_6_21_coxeter_diagnostic.py",
+      "blob_sha": "7143ba71c94169e113ca5654ad813157f961e582"
+    },
+    {
+      "path": "experiments/e10_6_21_reflection_orbit.py",
+      "blob_sha": "d831aebb425d8e8767001ccb1116b89765f3789e"
+    },
+    {
+      "path": "experiments/e10_6_21_six_experiment_suite.py",
+      "blob_sha": "f47390b2423e9e69e00b670e3da949829b0b0115"
+    },
+    {
+      "path": "tests/fractalKernel/gossetSierpinskiExperimentChecks.ts",
+      "blob_sha": "d8043bcfacb38e60374d560f97ee90aeb21dc7ca"
+    },
+    {
+      "path": "tests/fractalKernel/sierpinskiChecks.ts",
+      "blob_sha": "68aced7ba13a3686d3d4b85260efc9f5bb69d312"
+    },
+    {
+      "path": "experiments/strata/e8_projection_control.py",
+      "blob_sha": "521935c77ccc46c7ca28a889028e9eb637e44fe5"
+    }
+  ],
+  "commands": [
+    "python -m unittest discover -s experiments/strata/tests -v",
+    "python experiments/strata/run_strata_002.py",
+    "python experiments/strata/e8_projection_control.py --seed 20261109 --replicates 5 --tolerance 1e-8",
+    "python experiments/gosset_sierpinski_experiment.py",
+    "python experiments/e10_6_21_coxeter_diagnostic.py",
+    "python experiments/e10_6_21_reflection_orbit.py --depth 12",
+    "python experiments/e10_6_21_six_experiment_suite.py",
+    "deno run tests/fractalKernel/gossetSierpinskiExperimentChecks.ts",
+    "deno run tests/fractalKernel/sierpinskiChecks.ts"
+  ],
+  "verification": {
+    "python_strata_tests": {
+      "status": "pass",
+      "run": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    "standalone_experiments": {
+      "status": "pass",
+      "run": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    "deno_geometry_checks": {
+      "status": "pass",
+      "run": 2,
+      "passed": 2,
+      "failed": 0
+    },
+    "full_repository_suite": {
+      "status": "not_tested"
+    }
+  },
+  "strata_runner_output": {
+    "e8": {
+      "degree_max": 56,
+      "degree_min": 56,
+      "edges_inner_product_1": 6720,
+      "regular_degree_56": true,
+      "roots": 240
+    },
+    "report": {
+      "claim_id": "STRATA-002-SYNTHETIC-SMOKE",
+      "dimensions": [
+        {
+          "detail": "{'roots': 240, 'edges_inner_product_1': 6720, 'degree_min': 56, 'degree_max': 56, 'regular_degree_56': True}",
+          "dimension": "E8 root construction",
+          "status": "pass"
+        },
+        {
+          "detail": "Jaccard retention=[1.0, 0.75, 0.6]",
+          "dimension": "three-scale fixture",
+          "status": "pass"
+        },
+        {
+          "detail": "seeded permutation=[0, 0, 1, 0, 1, 1, 0, 1]",
+          "dimension": "randomized control generation",
+          "status": "pass"
+        },
+        {
+          "detail": "No empirical datasets are bundled in this scaffold.",
+          "dimension": "independent empirical domains",
+          "status": "not_tested"
+        },
+        {
+          "detail": "No predictive transfer claim is made.",
+          "dimension": "held-out cross-domain prediction",
+          "status": "not_tested"
+        }
+      ],
+      "evidence_level": "software-smoke-test",
+      "hypothesis": "The harness records scale retention and controls without promoting synthetic fixtures to empirical evidence.",
+      "limitations": [
+        "All non-E8 scale fixtures are synthetic.",
+        "E8 checks validate root-system construction and adjacency regularity only.",
+        "No biological, ecological, transport, or physical dataset has been evaluated.",
+        "No STRATA invariant or scientific law is established by this run."
+      ],
+      "protocol": "STRATA-0.1",
+      "seed": 20261109
+    }
+  },
+  "geometry_runs": [
+    {
+      "id": "gosset-4-21-coxeter-plane",
+      "status": "pass",
+      "results": {
+        "e8_roots": 240,
+        "edges": 6720,
+        "face_count_8d": 60480,
+        "weyl_face_orbit": 60480,
+        "face_stabilizer_order": 11520,
+        "projected_equilateral_faces": 2160,
+        "coxeter_orbits": 72,
+        "orbit_size": 30
+      },
+      "scope": "Finite root-system/projection geometry; not physical evidence."
+    },
+    {
+      "id": "randomized-projection-control",
+      "status": "pass",
+      "results": {
+        "control": "random_orthonormal_2d_projection",
+        "seed": 20261109,
+        "replicates": 5,
+        "face_count": 60480,
+        "relative_side_spread_tolerance": 1e-8,
+        "equilateral_face_counts": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "scope": "Finite randomized control sample; not a theorem for every plane."
+    },
+    {
+      "id": "sierpinski-simplex-typescript-checks",
+      "status": "pass",
+      "results": {
+        "runtime": "Deno 2.9.7",
+        "checks": [
+          "recursion counts",
+          "similarity dimension",
+          "retained measure",
+          "symmetry",
+          "projection seed",
+          "input validation"
+        ]
+      }
+    },
+    {
+      "id": "e10-6-21-exact-coxeter-diagnostic",
+      "status": "pass",
+      "results": {
+        "rank": 10,
+        "gram_inertia": [
+          9,
+          1
+        ],
+        "gram_determinant": "-1/1024"
+      },
+      "scope": "Exact Gram diagnostic only; no complete honeycomb."
+    },
+    {
+      "id": "e10-reflection-orbit-depth-12",
+      "status": "pass",
+      "results": {
+        "depth_bound": 12,
+        "cumulative_distinct_real_roots": 246,
+        "counts_by_depth": [
+          10,
+          29,
+          47,
+          65,
+          83,
+          101,
+          120,
+          140,
+          160,
+          180,
+          201,
+          223,
+          246
+        ]
+      },
+      "scope": "Finite bounded orbit only."
+    },
+    {
+      "id": "e8-e9-e10-six-experiment-suite",
+      "status": "pass",
+      "results": {
+        "root_depth": 12,
+        "root_counts": [
+          10,
+          29,
+          47,
+          65,
+          83,
+          101,
+          120,
+          140,
+          160,
+          180,
+          201,
+          223,
+          246
+        ],
+        "chamber_depth": 3,
+        "chamber_counts": [
+          1,
+          11,
+          65,
+          275
+        ],
+        "directed_chamber_edges": 2750,
+        "boundary_edges": 1650,
+        "subdiagram_signatures": {
+          "E8": [
+            8,
+            0,
+            0,
+            "1/256"
+          ],
+          "E9": [
+            8,
+            0,
+            1,
+            "0"
+          ],
+          "E10": [
+            9,
+            1,
+            0,
+            "-1/1024"
+          ]
+        },
+        "sierpinski_level": 4,
+        "corner_pieces_8d": 6561,
+        "corner_pieces_9d": 10000
+      },
+      "scope": "Bounded exact arithmetic/recursion counts; not a complete 6_21 tiling."
+    }
+  ],
+  "geometry_catalogue": {
+    "status": "not_tested",
+    "items": [
+      {
+        "name": "Möbius strip",
+        "status": "not_tested"
+      },
+      {
+        "name": "Reuleaux triangle",
+        "status": "not_tested"
+      },
+      {
+        "name": "Gömböc",
+        "status": "not_tested"
+      },
+      {
+        "name": "Hyperbolic pair of pants",
+        "status": "not_tested"
+      },
+      {
+        "name": "Mu cube / mucube",
+        "status": "not_tested"
+      },
+      {
+        "name": "Oloid",
+        "status": "not_tested"
+      },
+      {
+        "name": "Lemniscate",
+        "status": "not_tested"
+      },
+      {
+        "name": "Aperiodic / Penrose tilings",
+        "status": "not_tested"
+      }
+    ],
+    "reason": "These are research leads in issue 23. The current tree has executable Gosset/E8, Sierpinski, and E10 diagnostics but no runnable implementations for these catalogue entries."
+  },
+  "eleven_d_parameters": {
+    "status": "not_tested",
+    "reason": "No executable 11D parameter model or sweep appears in the inspected PANoRAMic.os or pan-fractal-kernel trees; the 11D/M-theory material is documentation, not an executable model.",
+    "required_to_define_a_run": [
+      "metric signature and coordinate convention",
+      "compactification topology and geometry, if any",
+      "reduction ansatz and retained fields",
+      "parameter ranges, units, and normalization",
+      "mapping to E8/Gosset data",
+      "uncertainty and provenance"
+    ]
+  },
+  "limitations": [
+    "STRATA-002 fixtures are synthetic and validate harness plumbing, not empirical transfer.",
+    "E8/Gosset checks cover finite mathematical/software invariants only.",
+    "The random-plane control has five seeded replicates.",
+    "E10 enumeration is bounded; no full 6_21 honeycomb or cell-incidence construction was produced.",
+    "The catalogue geometries above and 11D parameters remain untested.",
+    "No cross-domain data or held-out predictive task was used."
+  ],
+  "evidence_level": "software-smoke-test plus bounded mathematical geometry checks",
+  "interpretation": "The passing checks establish only the listed reproducible software and mathematical results. They do not establish cross-domain invariance, a physical mechanism, 11D compactification, or a scientific law."
+}
