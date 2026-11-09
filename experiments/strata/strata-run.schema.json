@@ -1,0 +1,415 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "STRATA run evidence record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "protocol",
+    "run_id",
+    "run_date",
+    "source",
+    "environment",
+    "source_files",
+    "commands",
+    "verification",
+    "strata_runner_output",
+    "geometry_runs",
+    "geometry_catalogue",
+    "eleven_d_parameters",
+    "limitations",
+    "evidence_level",
+    "interpretation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "strata-run-v0.1"
+    },
+    "protocol": {
+      "const": "STRATA-0.1"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "repository",
+        "ref",
+        "commit",
+        "evidence_repository",
+        "evidence_commit"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "evidence_repository": {
+          "type": "string"
+        },
+        "evidence_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "additional_control_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "environment": {
+      "type": "object",
+      "required": [
+        "python",
+        "deno",
+        "external_python_dependencies"
+      ],
+      "properties": {
+        "python": {
+          "type": "string"
+        },
+        "deno": {
+          "type": "string"
+        },
+        "external_python_dependencies": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "blob_sha"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "blob_sha": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "python_strata_tests",
+        "standalone_experiments",
+        "deno_geometry_checks",
+        "full_repository_suite"
+      ],
+      "properties": {
+        "python_strata_tests": {
+          "$ref": "#/$defs/countResult"
+        },
+        "standalone_experiments": {
+          "$ref": "#/$defs/countResult"
+        },
+        "deno_geometry_checks": {
+          "$ref": "#/$defs/countResult"
+        },
+        "full_repository_suite": {
+          "type": "object",
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pass",
+                "fail",
+                "inconclusive",
+                "not_tested"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "strata_runner_output": {
+      "type": "object",
+      "required": [
+        "e8",
+        "report"
+      ],
+      "properties": {
+        "e8": {
+          "type": "object",
+          "required": [
+            "roots",
+            "edges_inner_product_1",
+            "degree_min",
+            "degree_max",
+            "regular_degree_56"
+          ],
+          "properties": {
+            "roots": {
+              "const": 240
+            },
+            "edges_inner_product_1": {
+              "const": 6720
+            },
+            "degree_min": {
+              "const": 56
+            },
+            "degree_max": {
+              "const": 56
+            },
+            "regular_degree_56": {
+              "const": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "report": {
+          "type": "object",
+          "required": [
+            "protocol",
+            "claim_id",
+            "hypothesis",
+            "evidence_level",
+            "seed",
+            "dimensions",
+            "limitations"
+          ],
+          "properties": {
+            "protocol": {
+              "const": "STRATA-0.1"
+            },
+            "claim_id": {
+              "type": "string"
+            },
+            "hypothesis": {
+              "type": "string"
+            },
+            "evidence_level": {
+              "type": "string"
+            },
+            "seed": {
+              "type": "integer"
+            },
+            "dimensions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "dimension",
+                  "status",
+                  "detail"
+                ],
+                "properties": {
+                  "dimension": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "pass",
+                      "fail",
+                      "inconclusive",
+                      "not_tested"
+                    ]
+                  },
+                  "detail": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "limitations": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "geometry_runs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "results"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "pass",
+              "fail",
+              "inconclusive",
+              "not_tested"
+            ]
+          },
+          "results": {
+            "type": "object"
+          },
+          "scope": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "geometry_catalogue": {
+      "type": "object",
+      "required": [
+        "status",
+        "items",
+        "reason"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pass",
+            "fail",
+            "inconclusive",
+            "not_tested"
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "status"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "status": {
+                "enum": [
+                  "pass",
+                  "fail",
+                  "inconclusive",
+                  "not_tested"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "eleven_d_parameters": {
+      "type": "object",
+      "required": [
+        "status",
+        "reason",
+        "required_to_define_a_run"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pass",
+            "fail",
+            "inconclusive",
+            "not_tested"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "required_to_define_a_run": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "evidence_level": {
+      "type": "string"
+    },
+    "interpretation": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "countResult": {
+      "type": "object",
+      "required": [
+        "status",
+        "run",
+        "passed",
+        "failed"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "pass",
+            "fail",
+            "inconclusive",
+            "not_tested"
+          ]
+        },
+        "run": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
