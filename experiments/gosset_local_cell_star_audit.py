@@ -146,8 +146,10 @@ def run_audit():
 
     zero = (Q(0),) * 8
     simplex_face_incidence = Counter()
+    cell_star = set()
     for facet in simplex_facets:
         cell = (zero,) + tuple(roots[i] for i in sorted(facet))
+        cell_star.add(tuple(sorted(cell)))
         assert len(cell) == 9
         assert all(squared_distance(a, b) == 2
                    for a, b in combinations(cell, 2))
@@ -172,6 +174,7 @@ def run_audit():
         opposite_vertices.add(opposite)
 
         cell = (zero,) + tuple(facet_vertices) + (opposite,)
+        cell_star.add(tuple(sorted(cell)))
         distances = Counter(
             squared_distance(a, b) for a, b in combinations(cell, 2)
         )
@@ -211,6 +214,34 @@ def run_audit():
     norm4 = norm_four_shell()
     assert len(opposite_vertices) == len(norm4) == 2160
     assert opposite_vertices == norm4
+
+    # Re-root closure: for every cell C in the origin star and every
+    # non-origin vertex v of C, translate C by -v. The translated cell
+    # must also occur in the origin star. This checks that overlapping
+    # neighboring vertex stars agree on every cell they share.
+    reroot_checks = 0
+    reroot_failures = []
+    neighbor_vertices = set()
+    for cell_key in cell_star:
+        for vertex in cell_key:
+            if vertex == zero:
+                continue
+            neighbor_vertices.add(vertex)
+            translated = tuple(sorted(
+                tuple(point[k] - vertex[k] for k in range(8))
+                for point in cell_key
+            ))
+            reroot_checks += 1
+            if translated not in cell_star:
+                if len(reroot_failures) < 5:
+                    reroot_failures.append({
+                        "vertex": [str(x) for x in vertex],
+                        "cell": [[str(x) for x in point] for point in cell_key],
+                    })
+    assert not reroot_failures
+    assert len(neighbor_vertices) == 240 + 2160
+    neighbor_norms = Counter(sum(x * x for x in v) for v in neighbor_vertices)
+    assert neighbor_norms == Counter({Q(2): 240, Q(4): 2160})
 
     combined = simplex_face_incidence + orthoplex_face_incidence
     multiplicities = Counter(combined.values())
@@ -254,6 +285,13 @@ def run_audit():
             "orthoplex_opposite_squared_distance": 4,
             "orthoplex_common_center_and_unit_circumradius": True,
             "all_eight_opposite_pairs_share_center": True,
+        },
+        "neighboring_star_reroot_closure": {
+            "distinct_neighbor_vertices": len(neighbor_vertices),
+            "neighbor_norm_counts": {str(k): v for k, v in neighbor_norms.items()},
+            "cell_re_root_checks": reroot_checks,
+            "failed_re_root_checks": len(reroot_failures),
+            "all_shared_cells_agree": not reroot_failures,
         },
         "origin_containing_facet_incidence": {
             "simplex_facets_with_origin": sum(simplex_face_incidence.values()),
