@@ -10,6 +10,8 @@ class GossetLocalCellStarAuditTests(unittest.TestCase):
         self.assertEqual(result["incident_cells"]["8_simplex"], 17280)
         self.assertEqual(result["incident_cells"]["8_orthoplex"], 2160)
         self.assertTrue(result["opposite_vertex_shell"]["exact_set_equality"])
+        self.assertTrue(result["cell_metric_checks"]["orthoplex_common_center_and_unit_circumradius"])
+        self.assertTrue(result["cell_metric_checks"]["all_eight_opposite_pairs_share_center"])
         incidence = result["origin_containing_facet_incidence"]
         self.assertEqual(incidence["unique_facets"], 207360)
         self.assertEqual(incidence["multiplicity_counts"], {2: 207360})
