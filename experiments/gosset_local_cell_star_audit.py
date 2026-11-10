@@ -628,6 +628,11 @@ def run_audit():
     assert adjacency_audit["cell_count"] == 19440
     assert adjacency_audit["origin_containing_facets"]["all_paired"]
 
+    boundary_facet_closure = audit_boundary_facet_closure(cell_star)
+    assert boundary_facet_closure["unpaired"] == 0
+    periodic_volume_balance = audit_periodic_volume_balance(cell_star)
+    assert periodic_volume_balance["exact_volume_balance"]
+
     # Re-root closure: for every cell C in the origin star and every
     # non-origin vertex v of C, translate C by -v. The translated cell
     # must also occur in the origin star. This checks that overlapping
@@ -713,6 +718,8 @@ def run_audit():
             "all_eight_opposite_pairs_share_center": True,
         },
         "cell_adjacency_audit": adjacency_audit,
+        "boundary_facet_closure": boundary_facet_closure,
+        "periodic_volume_balance": periodic_volume_balance,
         "neighboring_star_reroot_closure": {
             "distinct_neighbor_vertices": len(neighbor_vertices),
             "neighbor_norm_counts": {str(k): v for k, v in neighbor_norms.items()},
