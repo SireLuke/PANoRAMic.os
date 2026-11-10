@@ -112,6 +112,119 @@ def norm_four_shell():
     return shell
 
 
+
+def build_cell_adjacency(cell_star):
+    """Build exact codimension-one adjacency for the finite origin star.
+
+    Cells are represented by exact E8 coordinates. Every cell facet is
+    keyed by its sorted global vertex IDs, so equality is exact and
+    independent of traversal order.
+    """
+    cells = sorted(cell_star)
+    all_vertices = sorted({vertex for cell in cells for vertex in cell})
+    vertex_id = {vertex: index for index, vertex in enumerate(all_vertices)}
+    cell_vertex_ids = [
+        frozenset(vertex_id[vertex] for vertex in cell) for cell in cells
+    ]
+    cell_types = ["simplex" if len(cell) == 9 else "orthoplex" for cell in cells]
+    facet_to_cells = {}
+    facet_type_counts = Counter()
+
+    for cell_id, cell in enumerate(cells):
+        facets = []
+        if len(cell) == 9:
+            for omitted in range(9):
+                facets.append(tuple(cell[j] for j in range(9) if j != omitted))
+        elif len(cell) == 16:
+            remaining = set(cell)
+            opposite_pairs = []
+            while remaining:
+                first = min(remaining)
+                matches = [
+                    candidate for candidate in remaining
+                    if candidate != first
+                    and squared_distance(first, candidate) == 4
+                ]
+                assert len(matches) == 1
+                second = matches[0]
+                opposite_pairs.append((first, second))
+                remaining.remove(first)
+                remaining.remove(second)
+            assert len(opposite_pairs) == 8
+            for choices in product((0, 1), repeat=8):
+                facets.append(tuple(
+                    opposite_pairs[k][choices[k]] for k in range(8)
+                ))
+        else:
+            raise AssertionError(f"Unexpected cell vertex count: {len(cell)}")
+
+        expected_facets = 9 if len(cell) == 9 else 256
+        assert len(facets) == expected_facets
+        for facet in facets:
+            assert len(facet) == 8
+            assert all(
+                squared_distance(a, b) == 2
+                for a, b in combinations(facet, 2)
+            )
+            key = tuple(sorted(vertex_id[vertex] for vertex in facet))
+            facet_to_cells.setdefault(key, []).append(cell_id)
+            facet_type_counts[cell_types[cell_id]] += 1
+
+    multiplicities = Counter(len(owners) for owners in facet_to_cells.values())
+    assert all(multiplicity in (1, 2) for multiplicity in multiplicities)
+    adjacency = {}
+    pair_facet_counts = Counter()
+    origin_vertex_id = vertex_id[(Q(0),) * 8]
+    origin_facet_counts = Counter()
+    nonorigin_facet_counts = Counter()
+    shared_by_cell_type = Counter()
+
+    for facet, owners in facet_to_cells.items():
+        if origin_vertex_id in facet:
+            origin_facet_counts[len(owners)] += 1
+        else:
+            nonorigin_facet_counts[len(owners)] += 1
+        if len(owners) == 2:
+            a, b = sorted(owners)
+            pair = (a, b)
+            pair_facet_counts[pair] += 1
+            shared_vertices = cell_vertex_ids[a].intersection(cell_vertex_ids[b])
+            assert shared_vertices == frozenset(facet)
+            shared_by_cell_type[tuple(sorted((cell_types[a], cell_types[b])))] += 1
+            adjacency.setdefault(a, set()).add(b)
+            adjacency.setdefault(b, set()).add(a)
+
+    assert all(count == 2 for count in origin_facet_counts)
+    assert max(pair_facet_counts.values(), default=0) == 1
+    degree_counts = Counter(len(adjacency.get(cell_id, ())) for cell_id in range(len(cells)))
+    return {
+        "cell_count": len(cells),
+        "vertex_count": len(all_vertices),
+        "facet_incidence_count": sum(facet_type_counts.values()),
+        "distinct_facets": len(facet_to_cells),
+        "facet_multiplicity_counts": dict(sorted(multiplicities.items())),
+        "origin_containing_facets": {
+            "multiplicity_counts": dict(sorted(origin_facet_counts.items())),
+            "all_paired": all(count == 2 for count in origin_facet_counts),
+        },
+        "facets_not_containing_origin": {
+            "multiplicity_counts": dict(sorted(nonorigin_facet_counts.items())),
+        },
+        "shared_facet_adjacencies": sum(len(v) for v in adjacency.values()) // 2,
+        "shared_facet_pairings_by_cell_type": {
+            "+".join(k): v for k, v in sorted(shared_by_cell_type.items())
+        },
+        "cell_adjacency_degree_distribution": dict(sorted(degree_counts.items())),
+        "maximum_facets_shared_by_cell_pair": max(pair_facet_counts.values(), default=0),
+        "every_shared_facet_is_exact_cell_intersection": True,
+        "scope": (
+            "Exact codimension-one adjacency among cells in the finite origin star. "
+            "Singleton facets are boundary facets relative to this finite star; "
+            "they may be paired by cells outside the star."
+        ),
+    }
+
+
 def run_audit():
     roots = build_e8_roots()
     simple = simple_roots()
@@ -215,6 +328,11 @@ def run_audit():
     assert len(opposite_vertices) == len(norm4) == 2160
     assert opposite_vertices == norm4
 
+    # Build the complete codimension-one adjacency graph of this finite star.
+    adjacency_audit = build_cell_adjacency(cell_star)
+    assert adjacency_audit["cell_count"] == 19440
+    assert adjacency_audit["origin_containing_facets"]["all_paired"]
+
     # Re-root closure: for every cell C in the origin star and every
     # non-origin vertex v of C, translate C by -v. The translated cell
     # must also occur in the origin star. This checks that overlapping
@@ -299,6 +417,7 @@ def run_audit():
             "orthoplex_common_center_and_unit_circumradius": True,
             "all_eight_opposite_pairs_share_center": True,
         },
+        "cell_adjacency_audit": adjacency_audit,
         "neighboring_star_reroot_closure": {
             "distinct_neighbor_vertices": len(neighbor_vertices),
             "neighbor_norm_counts": {str(k): v for k, v in neighbor_norms.items()},
