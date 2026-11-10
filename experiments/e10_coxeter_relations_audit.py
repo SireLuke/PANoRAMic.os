@@ -72,6 +72,29 @@ def ldl_diagonal(matrix):
     return diagonal
 
 
+def inverse(matrix):
+    n = len(matrix)
+    work = [
+        list(map(Q, row)) + [Q(int(i == j)) for j in range(n)]
+        for i, row in enumerate(matrix)
+    ]
+    for col in range(n):
+        pivot_row = next(row for row in range(col, n)
+                         if work[row][col] != 0)
+        work[col], work[pivot_row] = work[pivot_row], work[col]
+        pivot = work[col][col]
+        work[col] = [value / pivot for value in work[col]]
+        for row in range(n):
+            if row == col:
+                continue
+            factor = work[row][col]
+            work[row] = [
+                value - factor * pivot_value
+                for value, pivot_value in zip(work[row], work[col])
+            ]
+    return [row[n:] for row in work]
+
+
 def transpose(matrix):
     return [list(row) for row in zip(*matrix)]
 
@@ -125,6 +148,14 @@ def run_audit():
     gram_det = determinant(gram)
     assert inertia == (9, 1, 0)
     assert gram_det == Q(-1, 1024)
+
+    # Dual-basis fundamental vectors have Gram matrix G^{-1}. Their norms
+    # classify simplex vertices: negative = finite, zero = ideal.
+    dual_gram = inverse(gram)
+    dual_norms = [dual_gram[i][i] for i in range(n)]
+    assert sum(value < 0 for value in dual_norms) == 9
+    assert sum(value == 0 for value in dual_norms) == 1
+    assert all(value <= 0 for value in dual_norms)
 
     generators = reflection_generators(gram)
     unit = identity(n)
@@ -186,6 +217,10 @@ def run_audit():
             "total": 55,
         },
         "generator_gram_preservation_checks": relations["gram_preservation"],
+        "dual_vertex_norms": [str(value) for value in dual_norms],
+        "finite_vertex_count": sum(value < 0 for value in dual_norms),
+        "ideal_vertex_count": sum(value == 0 for value in dual_norms),
+        "ideal_vertex_node": dual_norms.index(Q(0)),
         "rank_nine_vertex_links": rank_nine,
         "affine_E9_principal_minor_counts": dict(minors),
         "scope": (
