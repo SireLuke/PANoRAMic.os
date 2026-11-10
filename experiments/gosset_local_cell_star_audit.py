@@ -264,6 +264,262 @@ def build_cell_adjacency(cell_star):
     }
 
 
+
+def determinant_exact(matrix):
+    """Exact determinant using rational Gaussian elimination."""
+    work = [list(map(Q, row)) for row in matrix]
+    n = len(work)
+    determinant = Q(1)
+    for col in range(n):
+        pivot_row = next(
+            (row for row in range(col, n) if work[row][col] != 0), None
+        )
+        if pivot_row is None:
+            return Q(0)
+        if pivot_row != col:
+            work[col], work[pivot_row] = work[pivot_row], work[col]
+            determinant = -determinant
+        pivot = work[col][col]
+        determinant *= pivot
+        for row in range(col + 1, n):
+            if work[row][col] == 0:
+                continue
+            factor = work[row][col] / pivot
+            for j in range(col + 1, n):
+                work[row][j] -= factor * work[col][j]
+            work[row][col] = Q(0)
+    return determinant
+
+
+def cell_facets(cell):
+    """Enumerate all codimension-one vertex facets of a regular 8-cell."""
+    if len(cell) == 9:
+        return [
+            tuple(cell[j] for j in range(9) if j != omitted)
+            for omitted in range(9)
+        ]
+    if len(cell) != 16:
+        raise AssertionError(f"Unexpected cell vertex count: {len(cell)}")
+    remaining = set(cell)
+    opposite_pairs = []
+    while remaining:
+        first = min(remaining)
+        matches = [
+            candidate for candidate in remaining
+            if candidate != first and squared_distance(first, candidate) == 4
+        ]
+        assert len(matches) == 1
+        second = matches[0]
+        opposite_pairs.append((first, second))
+        remaining.remove(first)
+        remaining.remove(second)
+    assert len(opposite_pairs) == 8
+    return [
+        tuple(opposite_pairs[k][choices[k]] for k in range(8))
+        for choices in product((0, 1), repeat=8)
+    ]
+
+
+def is_cell_facet(facet, cell):
+    """Exact combinatorial test that an 8-vertex set is a facet of cell."""
+    facet_set, cell_set = set(facet), set(cell)
+    if not facet_set.issubset(cell_set) or len(facet_set) != 8:
+        return False
+    if len(cell) == 9:
+        return True
+    remaining = set(cell)
+    while remaining:
+        first = min(remaining)
+        matches = [
+            candidate for candidate in remaining
+            if candidate != first and squared_distance(first, candidate) == 4
+        ]
+        if len(matches) != 1:
+            return False
+        second = matches[0]
+        if first in facet_set and second in facet_set:
+            return False
+        if (first in facet_set) == (second in facet_set):
+            return False
+        remaining.remove(first)
+        remaining.remove(second)
+    return True
+
+
+def facet_outward_normal(cell, facet):
+    """Return exact outward normal for a regular simplex/orthoplex facet."""
+    facet_centroid = tuple(
+        sum((point[k] for point in facet), Q(0)) / 8 for k in range(8)
+    )
+    cell_centroid = tuple(
+        sum((point[k] for point in cell), Q(0)) / len(cell)
+        for k in range(8)
+    )
+    outward = tuple(
+        facet_centroid[k] - cell_centroid[k] for k in range(8)
+    )
+    assert dot(outward, outward) > 0
+    assert all(
+        dot(outward, tuple(point[k] - facet_centroid[k] for k in range(8))) == 0
+        for point in facet
+    )
+    assert all(
+        dot(outward, tuple(vertex[k] - facet_centroid[k] for k in range(8))) < 0
+        for vertex in cell if vertex not in set(facet)
+    )
+    return outward
+
+
+def audit_boundary_facet_closure(cell_star):
+    """Pair every finite-star singleton facet using a translated neighboring star.
+
+    A candidate cell across facet F is found by anchoring one F vertex p and
+    searching the origin star for cells containing every translated vertex
+    q-p. Translating such a cell by p independently regenerates a cell in
+    the p-centered star. Exact facet and opposite-halfspace checks follow.
+    """
+    zero = (Q(0),) * 8
+    cells = sorted(cell_star)
+    vertex_to_cells = {}
+    facet_owners = {}
+    for cell_id, cell in enumerate(cells):
+        for vertex in cell:
+            vertex_to_cells.setdefault(vertex, set()).add(cell_id)
+        for facet in cell_facets(cell):
+            facet_owners.setdefault(tuple(sorted(facet)), []).append(cell_id)
+
+    singleton_facets = [
+        (facet, owners[0])
+        for facet, owners in facet_owners.items()
+        if len(owners) == 1 and zero not in facet
+    ]
+    assert all(len(owners) in (1, 2) for owners in facet_owners.values())
+    paired = 0
+    candidate_count_distribution = Counter()
+    boundary_cell_types = Counter()
+    for facet_key, owner_id in singleton_facets:
+        facet = tuple(facet_key)
+        anchor = facet[0]
+        relative_facet = tuple(
+            tuple(point[k] - anchor[k] for k in range(8))
+            for point in facet
+        )
+        index_sets = [vertex_to_cells.get(point, set()) for point in relative_facet]
+        if not index_sets or any(not values for values in index_sets):
+            candidates = set()
+        else:
+            ordered = sorted(index_sets, key=len)
+            candidates = set(ordered[0])
+            for values in ordered[1:]:
+                candidates.intersection_update(values)
+                if not candidates:
+                    break
+
+        valid = []
+        for candidate_id in candidates:
+            relative_cell = cells[candidate_id]
+            if not all(point in relative_cell for point in relative_facet):
+                continue
+            if not is_cell_facet(relative_facet, relative_cell):
+                continue
+            translated_cell = tuple(sorted(
+                tuple(point[k] + anchor[k] for k in range(8))
+                for point in relative_cell
+            ))
+            if translated_cell == cells[owner_id]:
+                continue
+            valid.append(translated_cell)
+
+        candidate_count_distribution[len(valid)] += 1
+        assert len(valid) == 1, (
+            "Boundary facet must have exactly one translated-star partner; "
+            f"found {len(valid)} for facet {facet_key}"
+        )
+        partner = valid[0]
+        assert set(facet).issubset(partner)
+        assert is_cell_facet(facet, partner)
+        owner = cells[owner_id]
+        normal_a = facet_outward_normal(owner, facet)
+        normal_b = facet_outward_normal(partner, facet)
+        assert dot(normal_a, normal_b) < 0
+        paired += 1
+        boundary_cell_types["simplex" if len(owner) == 9 else "orthoplex"] += 1
+
+    return {
+        "finite_star_singleton_facets_not_containing_origin": len(singleton_facets),
+        "paired_by_translated_neighbor_star": paired,
+        "unpaired": len(singleton_facets) - paired,
+        "partner_candidate_count_distribution": dict(sorted(candidate_count_distribution.items())),
+        "origin_owner_cell_type_counts": dict(sorted(boundary_cell_types.items())),
+        "all_boundary_facets_have_unique_partner": paired == len(singleton_facets),
+        "all_partner_cells_on_opposite_exact_halfspaces": paired == len(singleton_facets),
+        "scope": (
+            "Every singleton facet of the finite origin star away from the origin "
+            "is paired by a cell in the translated star centered at a facet vertex. "
+            "This is a local periodic-closure check, not by itself a global "
+            "non-overlap or coverage proof."
+        ),
+    }
+
+
+def audit_periodic_volume_balance(cell_star):
+    """Exact orbit-volume balance against the covolume of the E8 lattice."""
+    simplex_cells = sum(len(cell) == 9 for cell in cell_star)
+    orthoplex_cells = sum(len(cell) == 16 for cell in cell_star)
+    assert simplex_cells == 17280
+    assert orthoplex_cells == 2160
+
+    simple = simple_roots()
+    lattice_basis_determinant = abs(determinant_exact(simple))
+    assert lattice_basis_determinant == 1
+
+    simplex = next(cell for cell in cell_star if len(cell) == 9)
+    anchor = simplex[0]
+    edges = [
+        tuple(vertex[k] - anchor[k] for k in range(8))
+        for vertex in simplex[1:]
+    ]
+    gram = [[dot(a, b) for b in edges] for a in edges]
+    gram_det = determinant_exact(gram)
+    assert gram_det == 9
+    simplex_volume = Q(3, 40320)
+
+    orthoplex_volume = Q(2**8, 40320)
+    simplex_orbits = Q(simplex_cells, 9)
+    orthoplex_orbits = Q(orthoplex_cells, 16)
+    simplex_contribution = simplex_orbits * simplex_volume
+    orthoplex_contribution = orthoplex_orbits * orthoplex_volume
+    total = simplex_contribution + orthoplex_contribution
+    assert total == lattice_basis_determinant
+
+    return {
+        "e8_lattice_covolume": str(lattice_basis_determinant),
+        "simplex": {
+            "incident_cells": simplex_cells,
+            "vertices_per_cell": 9,
+            "translation_orbits_per_fundamental_volume": str(simplex_orbits),
+            "exact_volume": str(simplex_volume),
+            "volume_contribution": str(simplex_contribution),
+            "edge_gram_determinant": str(gram_det),
+        },
+        "orthoplex": {
+            "incident_cells": orthoplex_cells,
+            "vertices_per_cell": 16,
+            "translation_orbits_per_fundamental_volume": str(orthoplex_orbits),
+            "exact_volume": str(orthoplex_volume),
+            "volume_contribution": str(orthoplex_contribution),
+        },
+        "total_cell_volume_per_e8_fundamental_volume": str(total),
+        "exact_volume_balance": total == lattice_basis_determinant,
+        "coverage_conclusion": (
+            "Conditional: if the translated cells form a locally finite "
+            "face-to-face complex with pairwise disjoint interiors, exact "
+            "volume balance forces complete Euclidean coverage. The balance "
+            "alone does not establish those hypotheses."
+        ),
+    }
+
+
 def run_audit():
     roots = build_e8_roots()
     simple = simple_roots()
