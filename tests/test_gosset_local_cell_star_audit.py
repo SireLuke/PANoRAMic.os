@@ -40,6 +40,16 @@ class GossetLocalCellStarAuditTests(unittest.TestCase):
         self.assertEqual(sum(
             degree * count for degree, count in adjacency["cell_adjacency_degree_distribution"].items()
         ), 2 * adjacency["shared_facet_adjacencies"])
+        boundary = result["boundary_facet_closure"]
+        self.assertEqual(boundary["unpaired"], 0)
+        self.assertTrue(boundary["all_boundary_facets_have_unique_partner"])
+        self.assertTrue(boundary["all_partner_cells_on_opposite_exact_halfspaces"])
+        volume = result["periodic_volume_balance"]
+        self.assertEqual(volume["e8_lattice_covolume"], "1")
+        self.assertEqual(volume["simplex"]["volume_contribution"], "1/7")
+        self.assertEqual(volume["orthoplex"]["volume_contribution"], "6/7")
+        self.assertEqual(volume["total_cell_volume_per_e8_fundamental_volume"], "1")
+        self.assertTrue(volume["exact_volume_balance"])
 
 
 if __name__ == "__main__":
