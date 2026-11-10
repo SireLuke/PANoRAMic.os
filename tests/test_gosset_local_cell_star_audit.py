@@ -34,7 +34,9 @@ class GossetLocalCellStarAuditTests(unittest.TestCase):
         self.assertEqual(adjacency["origin_containing_facets"]["multiplicity_counts"], {2: 207360})
         self.assertTrue(adjacency["origin_containing_facets"]["all_paired"])
         self.assertEqual(adjacency["maximum_facets_shared_by_cell_pair"], 1)
-        self.assertTrue(adjacency["every_shared_facet_is_exact_cell_intersection"])
+        self.assertTrue(adjacency["shared_facet_vertex_sets_equal_cell_common_vertices"])
+        self.assertTrue(adjacency["adjacent_cells_occupy_opposite_facet_halfspaces"])
+        self.assertTrue(adjacency["facet_adjacent_convex_intersection_is_exactly_shared_facet"])
         self.assertEqual(sum(
             degree * count for degree, count in adjacency["cell_adjacency_degree_distribution"].items()
         ), 2 * adjacency["shared_facet_adjacencies"])
