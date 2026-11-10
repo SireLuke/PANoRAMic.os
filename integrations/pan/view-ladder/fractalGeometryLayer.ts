@@ -3,7 +3,7 @@ import {
   iterateSimplex,
   simplexHausdorffDimension,
   type Simplex,
-} from "../../fractal-kernel/geometries/sierpinski/index.ts";
+} from "../../../fractal-kernel/geometries/sierpinski/index.ts";
 
 /** Cross-level lens; it does not create a new geographic/abstraction rung. */
 export type ViewLadderLevel = "L0" | "L1" | "L2" | "L3" | "L4" | "L5" | "L6" | "L7" | "L8";
