@@ -114,32 +114,6 @@ def norm_four_shell():
 
 
 
-def determinant_exact(matrix):
-    """Exact determinant by fraction-preserving Gaussian elimination."""
-    work = [list(map(Q, row)) for row in matrix]
-    n = len(work)
-    determinant = Q(1)
-    for col in range(n):
-        pivot_row = next(
-            (row for row in range(col, n) if work[row][col] != 0), None
-        )
-        if pivot_row is None:
-            return Q(0)
-        if pivot_row != col:
-            work[col], work[pivot_row] = work[pivot_row], work[col]
-            determinant = -determinant
-        pivot = work[col][col]
-        determinant *= pivot
-        for row in range(col + 1, n):
-            if work[row][col] == 0:
-                continue
-            factor = work[row][col] / pivot
-            for j in range(col + 1, n):
-                work[row][j] -= factor * work[col][j]
-            work[row][col] = Q(0)
-    return determinant
-
-
 def build_cell_adjacency(cell_star):
     """Build exact codimension-one adjacency for the finite origin star.
 
@@ -155,7 +129,7 @@ def build_cell_adjacency(cell_star):
     ]
     cell_types = ["simplex" if len(cell) == 9 else "orthoplex" for cell in cells]
     facet_to_cells = {}
-    facet_side_signs = {}
+    facet_outward_normals = {}
     facet_type_counts = Counter()
 
     for cell_id, cell in enumerate(cells):
@@ -198,25 +172,34 @@ def build_cell_adjacency(cell_star):
             facet_to_cells.setdefault(key, []).append(cell_id)
             facet_type_counts[cell_types[cell_id]] += 1
 
-            # Determine the exact side of the facet hyperplane occupied by
-            # this cell. The seven facet-edge rows plus an off-facet vertex
-            # form an 8x8 determinant. All off-facet vertices of a convex
-            # cell must have the same nonzero sign.
+            # Exact supporting hyperplane: for these regular simplex and
+            # orthoplex cells, the vector from cell centroid to facet
+            # centroid is perpendicular to the facet. Verify every facet
+            # vertex lies in that hyperplane and every omitted cell vertex
+            # lies strictly on the interior side.
             facet_points = [all_vertices[index] for index in key]
-            anchor = facet_points[0]
-            facet_rows = [
-                tuple(point[k] - anchor[k] for k in range(8))
-                for point in facet_points[1:]
-            ]
+            facet_centroid = tuple(
+                sum((point[k] for point in facet_points), Q(0)) / 8
+                for k in range(8)
+            )
+            cell_centroid = tuple(
+                sum((point[k] for point in cell), Q(0)) / len(cell)
+                for k in range(8)
+            )
+            outward = tuple(
+                facet_centroid[k] - cell_centroid[k] for k in range(8)
+            )
+            assert dot(outward, outward) > 0
+            assert all(
+                dot(outward, tuple(point[k] - facet_centroid[k] for k in range(8))) == 0
+                for point in facet_points
+            )
             off_facet = [vertex for vertex in cell if vertex not in set(facet)]
-            signs = set()
-            for vertex in off_facet:
-                last_row = tuple(vertex[k] - anchor[k] for k in range(8))
-                signed_volume = determinant_exact(facet_rows + [last_row])
-                assert signed_volume != 0
-                signs.add(1 if signed_volume > 0 else -1)
-            assert len(signs) == 1
-            facet_side_signs.setdefault(key, {})[cell_id] = signs.pop()
+            assert all(
+                dot(outward, tuple(vertex[k] - facet_centroid[k] for k in range(8))) < 0
+                for vertex in off_facet
+            )
+            facet_outward_normals.setdefault(key, {})[cell_id] = outward
 
     multiplicities = Counter(len(owners) for owners in facet_to_cells.values())
     assert all(multiplicity in (1, 2) for multiplicity in multiplicities)
@@ -238,7 +221,12 @@ def build_cell_adjacency(cell_star):
             pair_facet_counts[pair] += 1
             shared_vertices = cell_vertex_ids[a].intersection(cell_vertex_ids[b])
             assert shared_vertices == frozenset(facet)
-            assert facet_side_signs[facet][a] == -facet_side_signs[facet][b]
+            normal_a = facet_outward_normals[facet][a]
+            normal_b = facet_outward_normals[facet][b]
+            # Both vectors are normals to the same facet; a negative exact
+            # dot product proves the incident cell interiors lie on opposite
+            # sides of its supporting hyperplane.
+            assert dot(normal_a, normal_b) < 0
             shared_by_cell_type[tuple(sorted((cell_types[a], cell_types[b])))] += 1
             adjacency.setdefault(a, set()).add(b)
             adjacency.setdefault(b, set()).add(a)
