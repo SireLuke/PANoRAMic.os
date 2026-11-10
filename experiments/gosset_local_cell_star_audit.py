@@ -190,6 +190,12 @@ def run_audit():
             remaining.remove(first)
             remaining.remove(second)
         assert len(opposite_pairs) == 7
+        center = tuple(x / 2 for x in opposite)
+        assert all(squared_distance(vertex, center) == 1 for vertex in cell)
+        assert all(
+            tuple((a[k] + b[k]) / 2 for k in range(8)) == center
+            for a, b in opposite_pairs
+        )
 
         # An 8-orthoplex facet containing the origin chooses one vertex
         # from each of the seven other opposite pairs.
@@ -235,6 +241,8 @@ def run_audit():
             "orthoplex_edge_squared_distance": 2,
             "orthoplex_opposite_pairs_per_cell": 8,
             "orthoplex_opposite_squared_distance": 4,
+            "orthoplex_common_center_and_unit_circumradius": True,
+            "all_eight_opposite_pairs_share_center": True,
         },
         "origin_containing_facet_incidence": {
             "simplex_facets_with_origin": sum(simplex_face_incidence.values()),
