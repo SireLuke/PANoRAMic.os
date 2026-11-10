@@ -133,3 +133,14 @@ This is a finite-star adjacency certificate. It does not classify every lower-di
 
 
 The supporting-hyperplane side test is exact and uses rational centroid coordinates. The cell-centroid-to-facet-centroid vector is checked to be orthogonal to all facet vertices relative to the facet centroid; every off-facet vertex must have a strictly negative dot product with this outward vector. For the two cells incident to a facet, the outward normals must have a strictly negative dot product. Since the common facet is affinely independent and its normal space is one-dimensional, this establishes opposite supporting halfspaces. The two convex cells therefore intersect exactly in their shared facet. This strengthens the certificate from combinatorial adjacency to geometric face-to-face adjacency for every shared facet within the finite star.
+
+
+## H. Translated boundary closure and volume balance
+
+The next extension audits every singleton facet of the finite origin star that does not contain the origin. For each such facet, it anchors at a facet vertex, translates the facet to the origin, and searches the independently indexed origin star for cells containing the translated facet. The candidate must have that facet as one of its own codimension-one faces. Translating the candidate back gives a cell in the neighboring vertex star. The partner must be unique and its exact outward normal must point to the opposite side of the shared facet.
+
+This checks boundary closure through the translation symmetry of the E8 lattice and the previously verified neighboring-star re-root closure. It is still a local periodic-extension test: it does not enumerate an unbounded global complex or classify every lower-dimensional intersection between arbitrary nonadjacent cells.
+
+An exact volume balance is also calculated. The E8 simple-root basis has determinant/covolume 1. The regular 8-simplex cell has volume 3/8!, and the regular 8-orthoplex cell has volume 2^8/8!. Dividing the origin-star cell counts by their vertex counts gives 1,920 simplex translation-orbit representatives and 135 orthoplex representatives per E8 fundamental volume. Their volume contributions are respectively 1/7 and 6/7, totaling exactly one E8 fundamental volume.
+
+The volume identity is a strong consistency check. It does not by itself prove coverage: the conclusion that the cells tile all of Euclidean space follows only after establishing that the translated cells form a locally finite face-to-face complex with pairwise disjoint interiors. The report keeps those hypotheses explicit rather than treating volume balance as a standalone tiling proof.
