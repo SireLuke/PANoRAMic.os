@@ -34,6 +34,14 @@ For every reconstructed cell incident to the origin, enumerate every 7-dimension
 
 The orthoplex-side facet incidence has 138,240 facets occurring once in the orthoplex list (the other incidence comes from a simplex cell) and 69,120 facets occurring twice in the orthoplex list. This makes the local pairing pattern explicit: 138,240 simplex/orthoplex pairs and 69,120 orthoplex/orthoplex pairs.
 
+### Neighboring-star re-root closure
+
+The audit now also re-roots each origin-star cell at each of its non-origin vertices. Every translated cell is required to match an existing cell in the original star. This is a strong overlap-consistency check: any cell shared by the origin star and one of these neighboring stars has the same translated vertex set from both descriptions.
+
+The unique non-origin vertices encountered are exactly 2,400: 240 norm-two roots and 2,160 norm-four vectors. All cell re-root checks pass with zero failures.
+
+This establishes closure for all cells incident to the origin and every vertex in those cells. It is not yet an independent construction of every cell incident to each neighboring vertex: it verifies the shared cells by translation, while a full neighboring-star comparison must independently regenerate each neighboring star from its own vertex figure and compare the complete cell sets.
+
 This is an exact local incidence check around one vertex. It is stronger than merely reconstructing the cell star, but it is not a proof of global space-filling, completeness, or absence of nonlocal overlaps. A global proof still requires propagating the cell/facet construction across neighboring vertices and proving the resulting incidence complex is complete and locally finite.
 
 ## B. Hyperbolic E10 / 6_21 Coxeter diagnostics
@@ -77,6 +85,8 @@ The path depth follows the file's actual directory: integrations/pan/view-ladder
 - tests/test_e10_coxeter_relations_audit.py
 - .github/workflows/gosset-e10-research-audit.yml
 - isolated View Ladder import correction
+
+The neighboring-star re-root closure is implemented in the Gosset experiment and included in its focused unit test.
 
 Run locally:
 
