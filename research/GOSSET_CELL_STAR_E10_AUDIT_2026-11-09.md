@@ -144,3 +144,18 @@ This checks boundary closure through the translation symmetry of the E8 lattice 
 An exact volume balance is also calculated. The E8 simple-root basis has determinant/covolume 1. The regular 8-simplex cell has volume 3/8!, and the regular 8-orthoplex cell has volume 2^8/8!. Dividing the origin-star cell counts by their vertex counts gives 1,920 simplex translation-orbit representatives and 135 orthoplex representatives per E8 fundamental volume. Their volume contributions are respectively 1/7 and 6/7, totaling exactly one E8 fundamental volume.
 
 The volume identity is a strong consistency check. It does not by itself prove coverage: the conclusion that the cells tile all of Euclidean space follows only after establishing that the translated cells form a locally finite face-to-face complex with pairwise disjoint interiors. The report keeps those hypotheses explicit rather than treating volume balance as a standalone tiling proof.
+
+
+## I. E8 Delaunay empty-sphere certificate
+
+The global non-overlap and coverage strategy now uses the lattice Delaunay decomposition rather than an unbounded all-pairs cell-intersection search.
+
+For one representative from each of the two Weyl cell orbits, the exact circumcenter c has squared norm 1 and every cell vertex has squared distance 1 from c. The E8 lattice is even, so any nonzero lattice point has norm at least sqrt(2). If a lattice point x has norm at least 2, the reverse triangle inequality gives ||x-c|| >= ||x||-||c|| >= 1. Therefore a lattice point strictly inside the unit circumsphere would have to be one of the 240 norm-two roots. The script checks every root exactly and verifies that none is inside; exactly the cell's root vertices lie on the sphere.
+
+For a norm-four lattice point, equality at distance 1 is possible only when x=2c. For the orthoplex representative, 2c is its unique norm-four opposite vertex. For the simplex representative, 2c is not in E8. Thus the complete set of lattice points on each empty circumsphere is exactly the cell's vertex set.
+
+The Weyl group preserves the E8 lattice and Euclidean metric and acts transitively on each of the two cell orbits. The empty-sphere proof therefore applies to all 17,280 simplex cells and all 2,160 orthoplex cells in the origin star, and by E8 translation to the entire periodic family.
+
+Consequently every generated cell is a full-dimensional E8 Delaunay cell. Distinct Delaunay cells have disjoint interiors and meet face-to-face; the Delaunay decomposition of a lattice covers Euclidean space. The exact volume balance above shows that the generated periodic family already accounts for one complete E8 fundamental volume: 1/7 from simplex cells and 6/7 from orthoplex cells. Therefore there is no room, modulo the lattice, for any additional full-dimensional Delaunay cells. This establishes that the generated family exhausts the E8 Delaunay tessellation and hence covers Euclidean 8-space without interior overlaps or gaps.
+
+This is the strongest global argument in the current research record. Its assumptions are explicit: the E8 even-lattice characterization, the two Weyl orbit constructions, exact representative empty-sphere checks, translation closure, and the exact orbit-volume count. The script checks the finite arithmetic; the Delaunay decomposition theorem supplies the global tiling implication.
