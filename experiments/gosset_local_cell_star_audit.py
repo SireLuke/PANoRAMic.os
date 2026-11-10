@@ -462,6 +462,81 @@ def audit_boundary_facet_closure(cell_star):
     }
 
 
+
+def audit_delaunay_empty_spheres(cell_star, roots):
+    """Prove both Weyl cell orbits are full-dimensional E8 Delaunay cells.
+
+    For each orbit representative, the circumcenter c has ||c||=1.
+    Any lattice point x with ||x||>=2 obeys ||x-c||>=1 by reverse
+    triangle inequality. E8 is even, so the only possible nonzero
+    lattice points with ||x||<2 are its 240 roots. Check those exactly.
+    The norm-four boundary case can only attain distance 1 at x=2c.
+    """
+    zero = (Q(0),) * 8
+    representatives = {
+        "simplex": next(cell for cell in cell_star if len(cell) == 9),
+        "orthoplex": next(cell for cell in cell_star if len(cell) == 16),
+    }
+    results = {}
+    for cell_type, cell in representatives.items():
+        center = tuple(
+            sum((vertex[k] for vertex in cell), Q(0)) / len(cell)
+            for k in range(8)
+        )
+        assert dot(center, center) == 1
+        assert all(squared_distance(vertex, center) == 1 for vertex in cell)
+
+        root_distances = Counter(squared_distance(root, center) for root in roots)
+        assert min(root_distances) >= 1
+        boundary_roots = {
+            root for root in roots if squared_distance(root, center) == 1
+        }
+        expected_roots = set(cell).intersection(roots)
+        assert boundary_roots == expected_roots
+
+        twice_center = tuple(2 * x for x in center)
+        twice_center_is_lattice = is_e8_lattice_vector(twice_center)
+        if cell_type == "orthoplex":
+            assert twice_center_is_lattice
+            assert twice_center in cell
+        else:
+            assert not twice_center_is_lattice
+
+        results[cell_type] = {
+            "orbit_size": 17280 if cell_type == "simplex" else 2160,
+            "circumradius_squared": "1",
+            "circumcenter_norm_squared": "1",
+            "root_distance_squared_counts": {
+                str(k): v for k, v in sorted(root_distances.items())
+            },
+            "roots_on_circumsphere": len(boundary_roots),
+            "all_root_lattice_points_outside_or_on_sphere": True,
+            "norm_four_boundary_point": (
+                "opposite vertex" if twice_center_is_lattice
+                else "none; 2*c is not in E8"
+            ),
+            "empty_open_circumsphere_proved": True,
+        }
+
+    return {
+        "lattice": "even E8 lattice",
+        "representative_orbits_checked": 2,
+        "all_cells_in_each_orbit_are_weyl_isometric": True,
+        "orbits": results,
+        "delaunay_cell_certificate": True,
+        "proof": (
+            "For each representative, ||c||=1. Any E8 lattice point with "
+            "norm >=2 has distance >=1 from c by reverse triangle inequality. "
+            "The only nonzero E8 points with norm <2 are the 240 norm-squared-2 "
+            "roots, all checked exactly. The norm-squared-4 equality case can "
+            "lie on the sphere only at x=2c, which is exactly the orthoplex "
+            "opposite vertex and is not an E8 point for the simplex. Weyl "
+            "invariance extends the empty-sphere property to both complete "
+            "cell orbits."
+        ),
+    }
+
+
 def audit_periodic_volume_balance(cell_star):
     """Exact orbit-volume balance against the covolume of the E8 lattice."""
     simplex_cells = sum(len(cell) == 9 for cell in cell_star)
@@ -632,6 +707,8 @@ def run_audit():
     assert boundary_facet_closure["unpaired"] == 0
     periodic_volume_balance = audit_periodic_volume_balance(cell_star)
     assert periodic_volume_balance["exact_volume_balance"]
+    delaunay_certificate = audit_delaunay_empty_spheres(cell_star, roots)
+    assert delaunay_certificate["delaunay_cell_certificate"]
 
     # Re-root closure: for every cell C in the origin star and every
     # non-origin vertex v of C, translate C by -v. The translated cell
@@ -720,6 +797,7 @@ def run_audit():
         "cell_adjacency_audit": adjacency_audit,
         "boundary_facet_closure": boundary_facet_closure,
         "periodic_volume_balance": periodic_volume_balance,
+        "delaunay_empty_sphere_certificate": delaunay_certificate,
         "neighboring_star_reroot_closure": {
             "distinct_neighbor_vertices": len(neighbor_vertices),
             "neighbor_norm_counts": {str(k): v for k, v in neighbor_norms.items()},
