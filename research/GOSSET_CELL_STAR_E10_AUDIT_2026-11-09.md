@@ -38,7 +38,7 @@ The orthoplex-side facet incidence has 138,240 facets occurring once in the orth
 
 A facet-indexed adjacency pass now enumerates every codimension-one facet of every cell in the 19,440-cell origin star. Simplex cells contribute 9 facets each; orthoplex cells contribute 256 facets each, for 708,480 total cell-facet incidences.
 
-Each facet is keyed by its exact sorted E8 vertex coordinates. The audit records one- or two-cell ownership, builds the shared-facet adjacency graph, and verifies that each adjacent cell pair intersects in exactly the eight vertices of its shared facet. It also checks that no cell pair shares more than one facet and that every origin-containing facet is paired inside the origin star.
+Each facet is keyed by its exact sorted E8 vertex coordinates. The audit records one- or two-cell ownership and builds the shared-facet adjacency graph. For each facet, exact 8x8 determinants establish the side of its supporting hyperplane occupied by each incident cell. All off-facet vertices of a cell must lie strictly on one side; the two cells incident to a shared facet must occupy opposite sides. Together with the exact common-vertex-set check, this proves that the convex intersection of each facet-adjacent cell pair is exactly that shared facet. It also checks that no cell pair shares more than one facet and that every origin-containing facet is paired inside the origin star.
 
 Singleton facets not containing the origin are boundary facets only relative to this finite star; they may be paired by cells outside it. This is why the audit does not yet assert global completeness or a globally closed adjacency graph.
 
@@ -129,4 +129,7 @@ The separate PAN Geometric Depth Engine depth-four conformance workflow also pas
 
 The cell-adjacency engine enumerates all 708,480 cell-facet incidences in the origin star and builds an exact facet-to-cell index. For every shared facet, the two owning cells are required to have precisely that facet as their full vertex-set intersection. A cell pair may not share multiple distinct facets. All origin-containing facets must have two owners within the finite origin star.
 
-This is a finite-star adjacency certificate. It does not classify every lower-dimensional intersection between nonadjacent cell pairs, nor does it prove that singleton boundary facets away from the origin are paired by cells outside the star. Those are explicit next-stage obligations.
+This is a finite-star adjacency certificate. It does not classify every lower-dimensional intersection between non-facet-adjacent cell pairs, nor does it prove that singleton boundary facets away from the origin are paired by cells outside the star. Those are explicit next-stage obligations.
+
+
+The supporting-hyperplane side test is exact: for each facet, seven independent facet-edge vectors and an off-facet vertex form an 8x8 determinant. The sign is constant across all off-facet vertices of each incident cell and reverses across the two cells sharing the facet. Thus the adjacent convex cells lie in opposite closed halfspaces and meet precisely in the shared facet. This strengthens the certificate from combinatorial adjacency to geometric face-to-face adjacency for every shared facet within the finite star.
