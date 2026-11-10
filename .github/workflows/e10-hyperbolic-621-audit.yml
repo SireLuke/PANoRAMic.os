@@ -1,0 +1,19 @@
+name: E10 Lorentzian coordinate audit
+on:
+  push:
+    branches: [research/e10-hyperbolic-621-construction-2026-11-10]
+  workflow_dispatch:
+concurrency:
+  group: e10-lorentzian-coordinate-audit
+  cancel-in-progress: false
+jobs:
+  e10-coordinate-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run focused exact Lorentzian audit
+        run: python -m unittest tests.test_e10_hyperbolic_621_coordinate_audit -v
