@@ -116,9 +116,12 @@ def run_audit():
     roots = build_e8_roots()
     simple = simple_roots()
     root_index = {root: index for index, root in enumerate(roots)}
-    gram = [[dot(a, b) for b in simple] for a in simple]
+    # Fundamental weights satisfy alpha_i . omega_j = delta_ij.
+    # The simple-root coordinate rows form the linear system directly;
+    # using the Cartan Gram matrix here would instead solve for coefficients
+    # in the simple-root basis and is not the same Euclidean vector.
     weights = [
-        solve_exact(gram, [Q(int(i == j)) for i in range(8)])
+        solve_exact(simple, [Q(int(i == j)) for i in range(8)])
         for j in range(8)
     ]
     reflection_maps = [
