@@ -40,6 +40,8 @@ The audit now also re-roots each origin-star cell at each of its non-origin vert
 
 The unique non-origin vertices encountered are exactly 2,400: 240 norm-two roots and 2,160 norm-four vectors. All cell re-root checks pass with zero failures.
 
+The cell-vertex incidence degrees in the origin star are uniform by shell: each of the 240 norm-two root neighbors occurs in exactly 702 origin-star cells, while each of the 2,160 norm-four opposite vertices occurs in exactly one origin-star cell. The first number also counts the cells shared by the origin star and the star centered at an adjacent root vertex; the latter identifies the unique orthoplex cell in which an opposite pair of vertices is separated by squared distance four.
+
 This establishes closure for all cells incident to the origin and every vertex in those cells. It is not yet an independent construction of every cell incident to each neighboring vertex: it verifies the shared cells by translation, while a full neighboring-star comparison must independently regenerate each neighboring star from its own vertex figure and compare the complete cell sets.
 
 This is an exact local incidence check around one vertex. It is stronger than merely reconstructing the cell star, but it is not a proof of global space-filling, completeness, or absence of nonlocal overlaps. A global proof still requires propagating the cell/facet construction across neighboring vertices and proving the resulting incidence complex is complete and locally finite.
