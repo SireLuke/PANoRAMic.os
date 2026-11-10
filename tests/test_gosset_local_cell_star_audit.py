@@ -28,6 +28,16 @@ class GossetLocalCellStarAuditTests(unittest.TestCase):
             reroot["cells_shared_with_origin_star_by_neighbor_type"],
             {"norm_two_root_edge": 702, "norm_four_orthoplex_opposite": 1},
         )
+        adjacency = result["cell_adjacency_audit"]
+        self.assertEqual(adjacency["cell_count"], 19440)
+        self.assertEqual(adjacency["facet_incidence_count"], 708480)
+        self.assertEqual(adjacency["origin_containing_facets"]["multiplicity_counts"], {2: 207360})
+        self.assertTrue(adjacency["origin_containing_facets"]["all_paired"])
+        self.assertEqual(adjacency["maximum_facets_shared_by_cell_pair"], 1)
+        self.assertTrue(adjacency["every_shared_facet_is_exact_cell_intersection"])
+        self.assertEqual(sum(
+            degree * count for degree, count in adjacency["cell_adjacency_degree_distribution"].items()
+        ), 2 * adjacency["shared_facet_adjacencies"])
 
 
 if __name__ == "__main__":
