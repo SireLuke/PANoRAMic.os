@@ -214,9 +214,17 @@ def run_audit():
 
     combined = simplex_face_incidence + orthoplex_face_incidence
     multiplicities = Counter(combined.values())
+    orthoplex_multiplicities = Counter(orthoplex_face_incidence.values())
+    simplex_multiplicities = Counter(simplex_face_incidence.values())
+    cross_type_facets = set(simplex_face_incidence).intersection(
+        orthoplex_face_incidence
+    )
     assert multiplicities == Counter({2: 207360})
     assert len(simplex_face_incidence) == 138240
-    assert len(orthoplex_face_incidence) == 276480
+    assert simplex_multiplicities == Counter({1: 138240})
+    assert len(orthoplex_face_incidence) == 207360
+    assert orthoplex_multiplicities == Counter({1: 138240, 2: 69120})
+    assert len(cross_type_facets) == 138240
     assert len(combined) == 207360
 
     return {
@@ -252,6 +260,10 @@ def run_audit():
             "orthoplex_facets_with_origin": sum(orthoplex_face_incidence.values()),
             "unique_facets": len(combined),
             "multiplicity_counts": dict(multiplicities),
+            "simplex_orthoplex_shared_facets": len(cross_type_facets),
+            "orthoplex_orthoplex_shared_facets": 69120,
+            "simplex_simplex_shared_facets": 0,
+            "orthoplex_incidence_multiplicity_counts": dict(orthoplex_multiplicities),
         },
         "scope": (
             "Exact local incidence around one vertex. This does not alone prove "
