@@ -11,6 +11,10 @@ class E10CoxeterAuditTests(unittest.TestCase):
         self.assertEqual(result["gram_determinant"], "-1/1024")
         self.assertEqual(result["coxeter_relations"]["total"], 55)
         self.assertEqual(result["generator_gram_preservation_checks"], 10)
+        self.assertEqual(result["finite_vertex_count"], 9)
+        self.assertEqual(result["ideal_vertex_count"], 1)
+        self.assertEqual(result["ideal_vertex_node"], 6)
+        self.assertEqual(result["dual_vertex_norms"][6], "0")
         self.assertEqual(
             result["affine_E9_principal_minor_counts"],
             {"positive": 510, "zero": 1},
