@@ -28,6 +28,11 @@ For every reconstructed cell incident to the origin, enumerate every 7-dimension
 - 2,160 orthoplex cells contribute 276,480 origin-containing facets (128 each).
 - There are 207,360 distinct origin-containing facets.
 - Every distinct facet occurs exactly twice.
+- 138,240 facets are shared by one simplex cell and one orthoplex cell.
+- 69,120 facets are shared by two orthoplex cells.
+- No simplex-simplex shared facet occurs in this local star.
+
+The orthoplex-side facet incidence has 138,240 facets occurring once in the orthoplex list (the other incidence comes from a simplex cell) and 69,120 facets occurring twice in the orthoplex list. This makes the local pairing pattern explicit: 138,240 simplex/orthoplex pairs and 69,120 orthoplex/orthoplex pairs.
 
 This is an exact local incidence check around one vertex. It is stronger than merely reconstructing the cell star, but it is not a proof of global space-filling, completeness, or absence of nonlocal overlaps. A global proof still requires propagating the cell/facet construction across neighboring vertices and proving the resulting incidence complex is complete and locally finite.
 
