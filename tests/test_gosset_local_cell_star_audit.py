@@ -24,6 +24,10 @@ class GossetLocalCellStarAuditTests(unittest.TestCase):
         self.assertGreater(reroot["cell_re_root_checks"], 0)
         self.assertEqual(reroot["failed_re_root_checks"], 0)
         self.assertTrue(reroot["all_shared_cells_agree"])
+        self.assertEqual(
+            reroot["cells_shared_with_origin_star_by_neighbor_type"],
+            {"norm_two_root_edge": 702, "norm_four_orthoplex_opposite": 1},
+        )
 
 
 if __name__ == "__main__":
