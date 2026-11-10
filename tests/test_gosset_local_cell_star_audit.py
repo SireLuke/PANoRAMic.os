@@ -18,6 +18,12 @@ class GossetLocalCellStarAuditTests(unittest.TestCase):
         self.assertEqual(incidence["simplex_orthoplex_shared_facets"], 138240)
         self.assertEqual(incidence["orthoplex_orthoplex_shared_facets"], 69120)
         self.assertEqual(incidence["simplex_simplex_shared_facets"], 0)
+        reroot = result["neighboring_star_reroot_closure"]
+        self.assertEqual(reroot["distinct_neighbor_vertices"], 2400)
+        self.assertEqual(reroot["neighbor_norm_counts"], {"2": 240, "4": 2160})
+        self.assertGreater(reroot["cell_re_root_checks"], 0)
+        self.assertEqual(reroot["failed_re_root_checks"], 0)
+        self.assertTrue(reroot["all_shared_cells_agree"])
 
 
 if __name__ == "__main__":
