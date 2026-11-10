@@ -1,7 +1,7 @@
 # Gosset local cell-star and E10 exact audit
 
 **Branch:** research/gosset-cell-star-e10-audit-2026-11-09  
-**Status:** reproducible standard-library research scripts and tests added; GitHub Actions result pending at initial report creation.  
+**Status:** reproducible standard-library research scripts and tests added; focused GitHub Actions suite passed on 2026-11-10.  
 **No changes to main.**
 
 ## A. E8 / Gosset 4_21 local cell star
@@ -92,3 +92,14 @@ All experiment arithmetic uses Python's standard-library fractions.Fraction; no 
 - Janus Hydra remains a translator, not UHFE or UDFE.
 - PAN V8 coordinates and UHFE/UDFE semantics are not changed.
 - No physical interpretation or new-physics claim follows from these finite geometric and algebraic results.
+
+## F. Validation record
+
+The first CI attempts caught two implementation defects before acceptance:
+
+1. The initial fundamental-weight solve incorrectly used the simple-root Gram matrix as though its solution were already expressed in orthonormal coordinates. It was corrected to solve the simple-root row matrix directly for alpha_i dot omega_j = delta_ij.
+2. The initial incidence assertion confused the number of orthoplex facet incidences (276,480) with the number of distinct orthoplex-side facets (207,360). The final audit now separately verifies the 138,240 simplex/orthoplex shared facets and 69,120 orthoplex/orthoplex shared facets.
+
+The final focused GitHub Actions run passed on commit 476882e7226dcc27ebc15ec67a55f1f8710ae63c: [run 42754915224](https://github.com/SireLuke/PANoRAMic.os/actions/runs/42754915224). It executes both exact-arithmetic unittest modules. This is not a full-repository CI run and does not test the TypeScript import patch.
+
+The separate PAN Geometric Depth Engine depth-four conformance workflow also passed on commit d1c12b773934fa99198f2b3b8075f0788f5448b8: [run 42753676246](https://github.com/SireLuke/pan-fractal-kernel/actions/runs/42753676246). Its conformance job includes the depth-four reference shell counts and existing independence gate.
