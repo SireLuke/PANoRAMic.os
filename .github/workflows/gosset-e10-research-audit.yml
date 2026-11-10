@@ -1,0 +1,21 @@
+name: Gosset local cell-star and E10 exact audits
+on:
+  push:
+    branches: [research/gosset-cell-star-e10-audit-2026-11-09]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+concurrency:
+  group: gosset-e10-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  exact-geometry-audits:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run exact standard-library audits
+        run: python -m unittest discover -s tests -p 'test_*_audit.py' -v
