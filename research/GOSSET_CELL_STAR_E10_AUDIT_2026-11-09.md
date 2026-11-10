@@ -34,6 +34,14 @@ For every reconstructed cell incident to the origin, enumerate every 7-dimension
 
 The orthoplex-side facet incidence has 138,240 facets occurring once in the orthoplex list (the other incidence comes from a simplex cell) and 69,120 facets occurring twice in the orthoplex list. This makes the local pairing pattern explicit: 138,240 simplex/orthoplex pairs and 69,120 orthoplex/orthoplex pairs.
 
+### Cell-facet adjacency graph
+
+A facet-indexed adjacency pass now enumerates every codimension-one facet of every cell in the 19,440-cell origin star. Simplex cells contribute 9 facets each; orthoplex cells contribute 256 facets each, for 708,480 total cell-facet incidences.
+
+Each facet is keyed by its exact sorted E8 vertex coordinates. The audit records one- or two-cell ownership, builds the shared-facet adjacency graph, and verifies that each adjacent cell pair intersects in exactly the eight vertices of its shared facet. It also checks that no cell pair shares more than one facet and that every origin-containing facet is paired inside the origin star.
+
+Singleton facets not containing the origin are boundary facets only relative to this finite star; they may be paired by cells outside it. This is why the audit does not yet assert global completeness or a globally closed adjacency graph.
+
 ### Neighboring-star re-root closure
 
 The audit now also re-roots each origin-star cell at each of its non-origin vertices. Every translated cell is required to match an existing cell in the original star. This is a strong overlap-consistency check: any cell shared by the origin star and one of these neighboring stars has the same translated vertex set from both descriptions.
@@ -115,3 +123,10 @@ The first CI attempts caught two implementation defects before acceptance:
 The final focused GitHub Actions run passed on commit 476882e7226dcc27ebc15ec67a55f1f8710ae63c: [run 42754915224](https://github.com/SireLuke/PANoRAMic.os/actions/runs/42754915224). It executes both exact-arithmetic unittest modules. This is not a full-repository CI run and does not test the TypeScript import patch.
 
 The separate PAN Geometric Depth Engine depth-four conformance workflow also passed on commit d1c12b773934fa99198f2b3b8075f0788f5448b8: [run 42753676246](https://github.com/SireLuke/pan-fractal-kernel/actions/runs/42753676246). Its conformance job includes the depth-four reference shell counts and existing independence gate.
+
+
+## G. Finite-star cell adjacency extension
+
+The cell-adjacency engine enumerates all 708,480 cell-facet incidences in the origin star and builds an exact facet-to-cell index. For every shared facet, the two owning cells are required to have precisely that facet as their full vertex-set intersection. A cell pair may not share multiple distinct facets. All origin-containing facets must have two owners within the finite origin star.
+
+This is a finite-star adjacency certificate. It does not classify every lower-dimensional intersection between nonadjacent cell pairs, nor does it prove that singleton boundary facets away from the origin are paired by cells outside the star. Those are explicit next-stage obligations.
