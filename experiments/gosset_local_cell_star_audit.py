@@ -222,6 +222,9 @@ def run_audit():
     reroot_checks = 0
     reroot_failures = []
     neighbor_vertices = set()
+    vertex_cell_degree = Counter(
+        vertex for cell_key in cell_star for vertex in cell_key
+    )
     for cell_key in cell_star:
         for vertex in cell_key:
             if vertex == zero:
@@ -242,6 +245,16 @@ def run_audit():
     assert len(neighbor_vertices) == 240 + 2160
     neighbor_norms = Counter(sum(x * x for x in v) for v in neighbor_vertices)
     assert neighbor_norms == Counter({Q(2): 240, Q(4): 2160})
+    root_degrees = {
+        vertex_cell_degree[v] for v in neighbor_vertices
+        if sum(x * x for x in v) == 2
+    }
+    norm4_degrees = {
+        vertex_cell_degree[v] for v in neighbor_vertices
+        if sum(x * x for x in v) == 4
+    }
+    assert root_degrees == {702}
+    assert norm4_degrees == {1}
 
     combined = simplex_face_incidence + orthoplex_face_incidence
     multiplicities = Counter(combined.values())
@@ -292,6 +305,10 @@ def run_audit():
             "cell_re_root_checks": reroot_checks,
             "failed_re_root_checks": len(reroot_failures),
             "all_shared_cells_agree": not reroot_failures,
+            "cells_shared_with_origin_star_by_neighbor_type": {
+                "norm_two_root_edge": 702,
+                "norm_four_orthoplex_opposite": 1,
+            },
         },
         "origin_containing_facet_incidence": {
             "simplex_facets_with_origin": sum(simplex_face_incidence.values()),
