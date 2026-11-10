@@ -16,7 +16,7 @@ The calculation starts with the 240 standard E8 roots in exact rational coordina
 The cells incident to the chosen origin are reconstructed as follows:
 
 - Each 7-simplex facet plus the origin gives an 8-simplex cell with 9 vertices. All 36 vertex-pair squared distances equal 2.
-- Each 7-orthoplex facet plus the origin and its antipode gives an 8-orthoplex cell with 16 vertices. The centroid of the 14-neighbor facet is c_F=(1/14) sum(v), and the opposite vertex is 2c_F. Its 120 vertex-pair distances consist of 112 squared distances 2 and 8 squared distances 4.
+- Each 7-orthoplex facet plus the origin and its antipode gives an 8-orthoplex cell with 16 vertices. The centroid of the 14-neighbor facet is c_F=(1/14) sum(v), and the opposite vertex is 2c_F. Its 120 vertex-pair distances consist of 112 squared distances 2 and 8 squared distances 4. All eight antipodal pairs have the same midpoint, the cell has a common center, and every vertex is exactly unit distance from that center.
 
 The centroid construction produces 2,160 distinct opposite vertices. An independent enumeration of the E8 lattice vectors of squared norm 4 produces exactly 2,160 vectors, and the sets are equal.
 
