@@ -50,6 +50,14 @@ class GossetLocalCellStarAuditTests(unittest.TestCase):
         self.assertEqual(volume["orthoplex"]["volume_contribution"], "6/7")
         self.assertEqual(volume["total_cell_volume_per_e8_fundamental_volume"], "1")
         self.assertTrue(volume["exact_volume_balance"])
+        delaunay = result["delaunay_empty_sphere_certificate"]
+        self.assertTrue(delaunay["delaunay_cell_certificate"])
+        self.assertEqual(delaunay["representative_orbits_checked"], 2)
+        self.assertEqual(delaunay["orbits"]["simplex"]["circumradius_squared"], "1")
+        self.assertEqual(delaunay["orbits"]["orthoplex"]["circumradius_squared"], "1")
+        self.assertEqual(delaunay["orbits"]["simplex"]["roots_on_circumsphere"], 8)
+        self.assertEqual(delaunay["orbits"]["orthoplex"]["roots_on_circumsphere"], 14)
+        self.assertEqual(delaunay["orbits"]["orthoplex"]["norm_four_boundary_point"], "opposite vertex")
 
 
 if __name__ == "__main__":
