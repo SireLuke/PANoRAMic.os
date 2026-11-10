@@ -15,6 +15,9 @@ class GossetLocalCellStarAuditTests(unittest.TestCase):
         incidence = result["origin_containing_facet_incidence"]
         self.assertEqual(incidence["unique_facets"], 207360)
         self.assertEqual(incidence["multiplicity_counts"], {2: 207360})
+        self.assertEqual(incidence["simplex_orthoplex_shared_facets"], 138240)
+        self.assertEqual(incidence["orthoplex_orthoplex_shared_facets"], 69120)
+        self.assertEqual(incidence["simplex_simplex_shared_facets"], 0)
 
 
 if __name__ == "__main__":
