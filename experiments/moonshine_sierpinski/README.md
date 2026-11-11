@@ -53,3 +53,15 @@ python experiments/moonshine_sierpinski/lattice_modular_audit.py
 ```
 
 All calculations use the Python standard library.
+
+
+## Extended Golay / Leech construction phase
+
+The branch now includes an explicit extended binary Golay generator and
+Wilson/Conway parity-and-coset membership test. It checks the [24,12,8]
+weight enumerator and enumerates the three minimal-vector families, totaling
+196,560 vectors of lattice squared norm 4. The root count is therefore zero
+within this constructed minimal shell.
+
+The new code does not yet construct a full lattice basis or independently
+verify its Gram determinant. It also does not construct the Moonshine VOA.
