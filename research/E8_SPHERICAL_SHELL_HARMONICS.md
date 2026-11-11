@@ -25,11 +25,15 @@ For a unit vector uniformly distributed on S^7 and even multi-index
 
 `prod_i (2b_i-1)!! / prod_{j=0}^{m-1}(8+2j)`, where `m=sum_i b_i`.
 
-The audit checks every even coordinate monomial at degrees 2, 4, 6, and 8.
-Central symmetry makes odd moments vanish. The first three E8 shells match
-the sphere through degree 7, while degree-8 moments differ. This is a direct
-finite exact-moment check of spherical 7-design behavior for these shells;
-it does not imply 8-design behavior.
+The audit checks every all-even coordinate monomial at degrees 2, 4, 6, and 8.
+It also verifies all 28 pairwise coordinate sign flips, which generate the
+even-sign subgroup of E8. For total degree at most 6, every mixed-parity
+monomial has an odd exponent in at least one coordinate and an even exponent
+in another, so a pair flip changes its sign and its shell average is zero.
+Central symmetry makes every odd-total-degree monomial average zero. Thus
+the exact all-even checks plus verified symmetries establish agreement of
+all polynomial moments through degree 7. Degree-8 moments differ, so these
+shells are spherical 7-designs but not 8-designs.
 
 ## Polynomial resolution
 
