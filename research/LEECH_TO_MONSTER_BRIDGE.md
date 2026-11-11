@@ -14,16 +14,16 @@ Moonshine module from its untwisted fixed and twisted fixed sectors. With
 q = exp(2 pi i tau), the coefficient of q^n in J(q)=j(q)-744 corresponds
 to conformal weight n+1.
 
-The first four comparisons are:
+The first four comparisons are (the q^4 row uses the sixth-smallest irreducible degree, chi_6, rather than chi_5):
 
 | q power | Orbifold weight | Dimension / J coefficient | Monster irreducible decomposition |
 |---:|---:|---:|---|
 | 1 | 2 | 196,884 | 1 + 196,883 |
 | 2 | 3 | 21,493,760 | 1 + 196,883 + 21,296,876 |
 | 3 | 4 | 864,299,970 | 2(1) + 2(196,883) + 21,296,876 + 842,609,326 |
-| 4 | 5 | 20,245,856,256 | 2(1) + 3(196,883) + 2(21,296,876) + 842,609,326 + 19,360,062,527 |
+| 4 | 5 | 20,245,856,256 | 2(chi_1) + 3(chi_2) + 2(chi_3) + chi_4 + chi_6\n  = 2(1) + 3(196,883) + 2(21,296,876) + 842,609,326 + 19,360,062,527 |
 
-Each side is computed independently in the test: the orbifold side comes
+The q^4 Monster decomposition is Serre's corrected decomposition reproduced by Duncan–Griffin–Ono; chi_5 has dimension 18,538,750,076 and is intentionally not used in this row. The code labels the selected irreducibles explicitly. Each side is computed independently in the test: the orbifold side comes
 from exact q-series projections; the representation side is an integer
 linear combination of published irreducible dimensions.
 
