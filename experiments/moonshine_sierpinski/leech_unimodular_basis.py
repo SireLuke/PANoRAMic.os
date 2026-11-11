@@ -1,0 +1,153 @@
+"""Exact rank-24 basis and unimodularity certificate for the Leech lattice.
+
+Coordinates are integral vectors scaled by 1/sqrt(8).  The basis matrix below
+is a column basis for the coordinate lattice defined by the existing
+extended-Golay parity/coset congruences.  Its columns are checked against those
+congruences; its exact determinant is compared with the index-derived
+coordinate covolume 2^36.  The scaled Gram matrix is then checked to be
+integral, even, positive definite, and determinant one.
+
+This certifies the full lattice basis and even unimodularity.  It does not by
+itself prove the minimum norm; the separate Golay/short-shell audit addresses
+the shortest-vector layer.
+"""
+from __future__ import annotations
+
+from experiments.moonshine_sierpinski.leech_golay_construction import (
+    extended_golay_codewords,
+)
+
+# Columns are basis vectors in the integral, unscaled coordinates x.
+# This upper-triangular matrix is the column-Hermite basis of the natural
+# generators 2*C_i, 4(e_i-e_24), 8e_24, and (1,...,1)+4e_24.
+_COORDINATE_BASIS = (
+    (8,4,4,4,4,4,4,4,4,4,4,4,2,2,0,0,0,2,2,2,0,2,0,5),
+    (0,4,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,2,2,2,0,2,1),
+    (0,0,4,0,0,0,0,0,0,0,0,0,2,2,2,2,0,2,2,0,2,0,0,1),
+    (0,0,0,4,0,0,0,0,0,0,0,0,0,2,2,2,2,0,2,2,0,2,0,1),
+    (0,0,0,0,4,0,0,0,0,0,0,0,0,0,2,2,2,2,0,2,2,0,2,1),
+    (0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,2,2,0,0,2,2,0,0,1),
+    (0,0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,2,2,0,0,2,2,0,1),
+    (0,0,0,0,0,0,0,4,0,0,0,0,0,0,2,2,0,2,2,0,0,2,2,1),
+    (0,0,0,0,0,0,0,0,4,0,0,0,2,2,0,2,2,2,0,0,0,2,2,1),
+    (0,0,0,0,0,0,0,0,0,4,0,0,2,0,2,0,2,0,0,2,0,2,2,1),
+    (0,0,0,0,0,0,0,0,0,0,4,0,2,0,0,2,0,0,2,2,2,2,2,1),
+    (0,0,0,0,0,0,0,0,0,0,0,4,2,0,0,0,2,2,2,0,2,0,2,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1),
+    (0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1),
+)
+
+
+def _determinant_bareiss(matrix: tuple[tuple[int, ...], ...]) -> int:
+    """Exact determinant over Z using fraction-free Bareiss elimination."""
+    a = [list(row) for row in matrix]
+    n = len(a)
+    if any(len(row) != n for row in a):
+        raise ValueError("determinant requires a square matrix")
+    sign, previous = 1, 1
+    for k in range(n - 1):
+        if a[k][k] == 0:
+            pivot = next((i for i in range(k + 1, n) if a[i][k]), None)
+            if pivot is None:
+                return 0
+            a[k], a[pivot] = a[pivot], a[k]
+            sign *= -1
+        pivot_value = a[k][k]
+        for i in range(k + 1, n):
+            for j in range(k + 1, n):
+                numerator = a[i][j] * pivot_value - a[i][k] * a[k][j]
+                if numerator % previous:
+                    raise ArithmeticError("Bareiss division was not exact")
+                a[i][j] = numerator // previous
+        for i in range(k + 1, n):
+            a[i][k] = 0
+        previous = pivot_value
+    return sign * a[-1][-1]
+
+
+def _is_coordinate_lattice_vector(
+    vector: tuple[int, ...], codeword_set: frozenset[int]
+) -> bool:
+    parity = vector[0] % 2
+    if any(value % 2 != parity for value in vector):
+        return False
+    residue = 0
+    for i, value in enumerate(vector):
+        if (((value - parity) // 2) % 2):
+            residue |= 1 << i
+    return residue in codeword_set and sum(vector) % 8 == (4 * parity) % 8
+
+
+def leech_unimodular_basis_audit() -> dict:
+    basis = _COORDINATE_BASIS
+    if len(basis) != 24 or any(len(row) != 24 for row in basis):
+        raise AssertionError("basis matrix must be 24 by 24")
+
+    # The stored matrix is row-major; its columns are the 24 basis vectors.
+    codeword_set = frozenset(extended_golay_codewords())
+    columns = tuple(
+        tuple(basis[row][column] for row in range(24))
+        for column in range(24)
+    )
+    if not all(_is_coordinate_lattice_vector(v, codeword_set) for v in columns):
+        raise AssertionError("a basis column violates Leech coordinate congruences")
+
+    coordinate_det = _determinant_bareiss(basis)
+    expected_coordinate_covolume = 1 << 36
+    if abs(coordinate_det) != expected_coordinate_covolume:
+        raise AssertionError("basis determinant does not match index-derived covolume")
+
+    # G = (1/8) B^T B is the Gram matrix in the lattice's 1/sqrt(8) scale.
+    gram_numerators = tuple(
+        tuple(sum(basis[k][i] * basis[k][j] for k in range(24))
+              for j in range(24))
+        for i in range(24)
+    )
+    if any(value % 8 for row in gram_numerators for value in row):
+        raise AssertionError("scaled Gram matrix is not integral")
+    gram = tuple(tuple(value // 8 for value in row) for row in gram_numerators)
+    if any(gram[i][i] % 2 for i in range(24)):
+        raise AssertionError("lattice is not even")
+    gram_det = _determinant_bareiss(gram)
+    if gram_det != 1:
+        raise AssertionError("scaled Gram determinant is not one")
+
+    # Positive definiteness follows exactly from G=B^T B/8 and det(B)!=0.
+    return {
+        "rank": 24,
+        "coordinate_scale": "1/sqrt(8)",
+        "basis_columns_checked": 24,
+        "all_columns_satisfy_golay_congruences": True,
+        "coordinate_basis_determinant": coordinate_det,
+        "coordinate_covolume_from_index": expected_coordinate_covolume,
+        "index_factors": {
+            "common_coordinate_parity": 1 << 23,
+            "Golay_residue_subspace": 1 << 12,
+            "coordinate_sum_congruence": 2,
+        },
+        "scaled_gram_integral": True,
+        "scaled_gram_even": True,
+        "scaled_gram_determinant": gram_det,
+        "positive_definite": True,
+        "even_unimodular": True,
+        "minimum_norm_proved_by_this_audit": False,
+        "scope": (
+            "exact rank-24 basis and covolume certificate for the Golay-defined "
+            "coordinate lattice; minimum norm remains a separate certificate"
+        ),
+    }
+
+
+if __name__ == "__main__":
+    import json
+    print(json.dumps(leech_unimodular_basis_audit(), indent=2, sort_keys=True))
