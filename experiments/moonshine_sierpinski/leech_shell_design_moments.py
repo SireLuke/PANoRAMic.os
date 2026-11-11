@@ -8,6 +8,12 @@ from __future__ import annotations
 
 from fractions import Fraction as Q
 from math import prod
+from pathlib import Path
+import sys
+
+_REPOSITORY_ROOT = str(Path(__file__).resolve().parents[2])
+if _REPOSITORY_ROOT not in sys.path:
+    sys.path.insert(0, _REPOSITORY_ROOT)
 
 from experiments.moonshine_sierpinski.leech_golay_construction import (
     leech_minimal_vectors,
