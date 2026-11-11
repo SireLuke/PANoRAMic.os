@@ -18,8 +18,9 @@ digest shown on the Zenodo record before parsing.
 - Confirms all three source files match the record's checksums.
 - Records row counts and column names.
 - Extracts experimental first-order correlation series for ell=0, 2, 4.
-- Linearly interpolates measured zero crossings.
-- Finds the first negative trough between the first two zero crossings.
+- Linearly interpolates measured zero crossings for the FFS states ell=2,4.
+- Treats ell=0 as a non-FFS control: late sign changes near the noise floor are recorded separately and are not called Friedel oscillations.
+- Finds the first negative trough between the first two zero crossings for ell=2,4.
 - Computes an effective homogeneous-sinc kF from the first zero for ell=2,4:
   `kF_eff = pi / (ell * x_zero)`.
 
