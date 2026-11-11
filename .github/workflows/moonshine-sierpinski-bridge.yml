@@ -1,0 +1,28 @@
+name: Moonshine and Sierpinski bridge audit
+
+on:
+  push:
+    branches: [main, research/moonshine-sierpinski-24d-v1]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: moonshine-sierpinski-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  modular-and-recursive-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run bridge regression tests
+        run: python -m unittest tests.test_moonshine_sierpinski_bridge -v
+      - name: Run modular theta reference audit
+        run: python experiments/moonshine_sierpinski/lattice_modular_audit.py
+      - name: Run finite Sierpinski graph spectrum audit
+        run: python experiments/moonshine_sierpinski/sierpinski_graph_spectrum.py
