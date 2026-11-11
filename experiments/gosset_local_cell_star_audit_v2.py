@@ -1,0 +1,838 @@
+#!/usr/bin/env python3
+"""Version 2 exact local cell-star audit for the E8 / Gosset 4_21 vertex figure.
+
+Standard-library only. Reconstructs the two facet orbits of 4_21, the
+incident 8-simplex and 8-orthoplex cells, the norm-four opposite-vertex
+shell, and pairing of every cell facet containing the chosen origin.
+"""
+from __future__ import annotations
+
+from collections import Counter
+from fractions import Fraction as Q
+from itertools import combinations, product
+import json
+
+from core.geometry.e8_root_system import e8_roots_exact
+
+
+def dot(a, b):
+    return sum(x * y for x, y in zip(a, b))
+
+
+def build_e8_roots():
+    """Compatibility wrapper for the canonical exact E8 root system."""
+    return list(e8_roots_exact())
+
+def simple_roots():
+    return [
+        tuple(map(Q, [Q(1, 2), Q(-1, 2), Q(-1, 2), Q(-1, 2),
+                      Q(-1, 2), Q(-1, 2), Q(-1, 2), Q(1, 2)])),
+        tuple(map(Q, [1, 1, 0, 0, 0, 0, 0, 0])),
+        tuple(map(Q, [-1, 1, 0, 0, 0, 0, 0, 0])),
+        tuple(map(Q, [0, -1, 1, 0, 0, 0, 0, 0])),
+        tuple(map(Q, [0, 0, -1, 1, 0, 0, 0, 0])),
+        tuple(map(Q, [0, 0, 0, -1, 1, 0, 0, 0])),
+        tuple(map(Q, [0, 0, 0, 0, -1, 1, 0, 0])),
+        tuple(map(Q, [0, 0, 0, 0, 0, -1, 1, 0])),
+    ]
+
+
+def solve_exact(matrix, rhs):
+    n = len(matrix)
+    work = [list(map(Q, row)) + [Q(value)]
+            for row, value in zip(matrix, rhs)]
+    for col in range(n):
+        pivot_row = next(row for row in range(col, n)
+                         if work[row][col] != 0)
+        work[col], work[pivot_row] = work[pivot_row], work[col]
+        pivot = work[col][col]
+        work[col] = [value / pivot for value in work[col]]
+        for row in range(n):
+            if row == col:
+                continue
+            factor = work[row][col]
+            work[row] = [
+                value - factor * pivot_value
+                for value, pivot_value in zip(work[row], work[col])
+            ]
+    return tuple(work[i][-1] for i in range(n))
+
+
+def reflect(vector, root):
+    coefficient = dot(vector, root)
+    return tuple(x - coefficient * a for x, a in zip(vector, root))
+
+
+def facet_orbit(seed, reflection_maps):
+    seen = {seed}
+    frontier = [seed]
+    while frontier:
+        following = []
+        for facet in frontier:
+            for mapping in reflection_maps:
+                image = frozenset(mapping[index] for index in facet)
+                if image not in seen:
+                    seen.add(image)
+                    following.append(image)
+        frontier = following
+    return seen
+
+
+def squared_distance(a, b):
+    return sum((x - y) ** 2 for x, y in zip(a, b))
+
+
+def is_e8_lattice_vector(vector):
+    if all(x.denominator == 1 for x in vector):
+        return int(sum(vector)) % 2 == 0
+    if all(x.denominator == 2 for x in vector):
+        return int(sum(vector)) % 2 == 0
+    return False
+
+
+def norm_four_shell():
+    shell = set()
+    integer_values = (Q(-2), Q(-1), Q(0), Q(1), Q(2))
+    half_values = (Q(-3, 2), Q(-1, 2), Q(1, 2), Q(3, 2))
+    for vector in product(integer_values, repeat=8):
+        if sum(x * x for x in vector) == 4 and int(sum(vector)) % 2 == 0:
+            shell.add(vector)
+    for vector in product(half_values, repeat=8):
+        if sum(x * x for x in vector) == 4 and int(sum(vector)) % 2 == 0:
+            shell.add(vector)
+    return shell
+
+
+
+
+def build_cell_adjacency(cell_star):
+    """Build exact codimension-one adjacency for the finite origin star.
+
+    Cells are represented by exact E8 coordinates. Every cell facet is
+    keyed by its sorted global vertex IDs, so equality is exact and
+    independent of traversal order.
+    """
+    cells = sorted(cell_star)
+    all_vertices = sorted({vertex for cell in cells for vertex in cell})
+    vertex_id = {vertex: index for index, vertex in enumerate(all_vertices)}
+    cell_vertex_ids = [
+        frozenset(vertex_id[vertex] for vertex in cell) for cell in cells
+    ]
+    cell_types = ["simplex" if len(cell) == 9 else "orthoplex" for cell in cells]
+    facet_to_cells = {}
+    facet_outward_normals = {}
+    facet_type_counts = Counter()
+
+    for cell_id, cell in enumerate(cells):
+        facets = []
+        if len(cell) == 9:
+            for omitted in range(9):
+                facets.append(tuple(cell[j] for j in range(9) if j != omitted))
+        elif len(cell) == 16:
+            remaining = set(cell)
+            opposite_pairs = []
+            while remaining:
+                first = min(remaining)
+                matches = [
+                    candidate for candidate in remaining
+                    if candidate != first
+                    and squared_distance(first, candidate) == 4
+                ]
+                assert len(matches) == 1
+                second = matches[0]
+                opposite_pairs.append((first, second))
+                remaining.remove(first)
+                remaining.remove(second)
+            assert len(opposite_pairs) == 8
+            for choices in product((0, 1), repeat=8):
+                facets.append(tuple(
+                    opposite_pairs[k][choices[k]] for k in range(8)
+                ))
+        else:
+            raise AssertionError(f"Unexpected cell vertex count: {len(cell)}")
+
+        expected_facets = 9 if len(cell) == 9 else 256
+        assert len(facets) == expected_facets
+        for facet in facets:
+            assert len(facet) == 8
+            assert all(
+                squared_distance(a, b) == 2
+                for a, b in combinations(facet, 2)
+            )
+            key = tuple(sorted(vertex_id[vertex] for vertex in facet))
+            facet_to_cells.setdefault(key, []).append(cell_id)
+            facet_type_counts[cell_types[cell_id]] += 1
+
+            # Exact supporting hyperplane: for these regular simplex and
+            # orthoplex cells, the vector from cell centroid to facet
+            # centroid is perpendicular to the facet. Verify every facet
+            # vertex lies in that hyperplane and every omitted cell vertex
+            # lies strictly on the interior side.
+            facet_points = [all_vertices[index] for index in key]
+            facet_centroid = tuple(
+                sum((point[k] for point in facet_points), Q(0)) / 8
+                for k in range(8)
+            )
+            cell_centroid = tuple(
+                sum((point[k] for point in cell), Q(0)) / len(cell)
+                for k in range(8)
+            )
+            outward = tuple(
+                facet_centroid[k] - cell_centroid[k] for k in range(8)
+            )
+            assert dot(outward, outward) > 0
+            assert all(
+                dot(outward, tuple(point[k] - facet_centroid[k] for k in range(8))) == 0
+                for point in facet_points
+            )
+            off_facet = [vertex for vertex in cell if vertex not in set(facet)]
+            assert all(
+                dot(outward, tuple(vertex[k] - facet_centroid[k] for k in range(8))) < 0
+                for vertex in off_facet
+            )
+            facet_outward_normals.setdefault(key, {})[cell_id] = outward
+
+    multiplicities = Counter(len(owners) for owners in facet_to_cells.values())
+    assert all(multiplicity in (1, 2) for multiplicity in multiplicities)
+    adjacency = {}
+    pair_facet_counts = Counter()
+    origin_vertex_id = vertex_id[(Q(0),) * 8]
+    origin_facet_counts = Counter()
+    nonorigin_facet_counts = Counter()
+    shared_by_cell_type = Counter()
+
+    for facet, owners in facet_to_cells.items():
+        if origin_vertex_id in facet:
+            origin_facet_counts[len(owners)] += 1
+        else:
+            nonorigin_facet_counts[len(owners)] += 1
+        if len(owners) == 2:
+            a, b = sorted(owners)
+            pair = (a, b)
+            pair_facet_counts[pair] += 1
+            shared_vertices = cell_vertex_ids[a].intersection(cell_vertex_ids[b])
+            assert shared_vertices == frozenset(facet)
+            normal_a = facet_outward_normals[facet][a]
+            normal_b = facet_outward_normals[facet][b]
+            # Both vectors are normals to the same facet; a negative exact
+            # dot product proves the incident cell interiors lie on opposite
+            # sides of its supporting hyperplane.
+            assert dot(normal_a, normal_b) < 0
+            shared_by_cell_type[tuple(sorted((cell_types[a], cell_types[b])))] += 1
+            adjacency.setdefault(a, set()).add(b)
+            adjacency.setdefault(b, set()).add(a)
+
+    assert all(count == 2 for count in origin_facet_counts)
+    assert max(pair_facet_counts.values(), default=0) == 1
+    degree_counts = Counter(len(adjacency.get(cell_id, ())) for cell_id in range(len(cells)))
+    return {
+        "cell_count": len(cells),
+        "vertex_count": len(all_vertices),
+        "facet_incidence_count": sum(facet_type_counts.values()),
+        "distinct_facets": len(facet_to_cells),
+        "facet_multiplicity_counts": dict(sorted(multiplicities.items())),
+        "origin_containing_facets": {
+            "multiplicity_counts": dict(sorted(origin_facet_counts.items())),
+            "all_paired": all(count == 2 for count in origin_facet_counts),
+        },
+        "facets_not_containing_origin": {
+            "multiplicity_counts": dict(sorted(nonorigin_facet_counts.items())),
+        },
+        "shared_facet_adjacencies": sum(len(v) for v in adjacency.values()) // 2,
+        "shared_facet_pairings_by_cell_type": {
+            "+".join(k): v for k, v in sorted(shared_by_cell_type.items())
+        },
+        "cell_adjacency_degree_distribution": dict(sorted(degree_counts.items())),
+        "maximum_facets_shared_by_cell_pair": max(pair_facet_counts.values(), default=0),
+        "shared_facet_vertex_sets_equal_cell_common_vertices": True,
+        "adjacent_cells_occupy_opposite_facet_halfspaces": True,
+        "facet_adjacent_convex_intersection_is_exactly_shared_facet": True,
+        "scope": (
+            "Exact codimension-one adjacency among cells in the finite origin star. "
+            "Singleton facets are boundary facets relative to this finite star; "
+            "they may be paired by cells outside the star."
+        ),
+    }
+
+
+
+def determinant_exact(matrix):
+    """Exact determinant using rational Gaussian elimination."""
+    work = [list(map(Q, row)) for row in matrix]
+    n = len(work)
+    determinant = Q(1)
+    for col in range(n):
+        pivot_row = next(
+            (row for row in range(col, n) if work[row][col] != 0), None
+        )
+        if pivot_row is None:
+            return Q(0)
+        if pivot_row != col:
+            work[col], work[pivot_row] = work[pivot_row], work[col]
+            determinant = -determinant
+        pivot = work[col][col]
+        determinant *= pivot
+        for row in range(col + 1, n):
+            if work[row][col] == 0:
+                continue
+            factor = work[row][col] / pivot
+            for j in range(col + 1, n):
+                work[row][j] -= factor * work[col][j]
+            work[row][col] = Q(0)
+    return determinant
+
+
+def cell_facets(cell):
+    """Enumerate all codimension-one vertex facets of a regular 8-cell."""
+    if len(cell) == 9:
+        return [
+            tuple(cell[j] for j in range(9) if j != omitted)
+            for omitted in range(9)
+        ]
+    if len(cell) != 16:
+        raise AssertionError(f"Unexpected cell vertex count: {len(cell)}")
+    remaining = set(cell)
+    opposite_pairs = []
+    while remaining:
+        first = min(remaining)
+        matches = [
+            candidate for candidate in remaining
+            if candidate != first and squared_distance(first, candidate) == 4
+        ]
+        assert len(matches) == 1
+        second = matches[0]
+        opposite_pairs.append((first, second))
+        remaining.remove(first)
+        remaining.remove(second)
+    assert len(opposite_pairs) == 8
+    return [
+        tuple(opposite_pairs[k][choices[k]] for k in range(8))
+        for choices in product((0, 1), repeat=8)
+    ]
+
+
+def is_cell_facet(facet, cell):
+    """Exact combinatorial test that an 8-vertex set is a facet of cell."""
+    facet_set, cell_set = set(facet), set(cell)
+    if not facet_set.issubset(cell_set) or len(facet_set) != 8:
+        return False
+    if len(cell) == 9:
+        return True
+    remaining = set(cell)
+    while remaining:
+        first = min(remaining)
+        matches = [
+            candidate for candidate in remaining
+            if candidate != first and squared_distance(first, candidate) == 4
+        ]
+        if len(matches) != 1:
+            return False
+        second = matches[0]
+        if first in facet_set and second in facet_set:
+            return False
+        if (first in facet_set) == (second in facet_set):
+            return False
+        remaining.remove(first)
+        remaining.remove(second)
+    return True
+
+
+def facet_outward_normal(cell, facet):
+    """Return exact outward normal for a regular simplex/orthoplex facet."""
+    facet_centroid = tuple(
+        sum((point[k] for point in facet), Q(0)) / 8 for k in range(8)
+    )
+    cell_centroid = tuple(
+        sum((point[k] for point in cell), Q(0)) / len(cell)
+        for k in range(8)
+    )
+    outward = tuple(
+        facet_centroid[k] - cell_centroid[k] for k in range(8)
+    )
+    assert dot(outward, outward) > 0
+    assert all(
+        dot(outward, tuple(point[k] - facet_centroid[k] for k in range(8))) == 0
+        for point in facet
+    )
+    assert all(
+        dot(outward, tuple(vertex[k] - facet_centroid[k] for k in range(8))) < 0
+        for vertex in cell if vertex not in set(facet)
+    )
+    return outward
+
+
+def audit_boundary_facet_closure(cell_star):
+    """Pair every finite-star singleton facet using a translated neighboring star.
+
+    A candidate cell across facet F is found by anchoring one F vertex p and
+    searching the origin star for cells containing every translated vertex
+    q-p. Translating such a cell by p independently regenerates a cell in
+    the p-centered star. Exact facet and opposite-halfspace checks follow.
+    """
+    zero = (Q(0),) * 8
+    cells = sorted(cell_star)
+    vertex_to_cells = {}
+    facet_owners = {}
+    for cell_id, cell in enumerate(cells):
+        for vertex in cell:
+            vertex_to_cells.setdefault(vertex, set()).add(cell_id)
+        for facet in cell_facets(cell):
+            facet_owners.setdefault(tuple(sorted(facet)), []).append(cell_id)
+
+    singleton_facets = [
+        (facet, owners[0])
+        for facet, owners in facet_owners.items()
+        if len(owners) == 1 and zero not in facet
+    ]
+    assert all(len(owners) in (1, 2) for owners in facet_owners.values())
+    paired = 0
+    candidate_count_distribution = Counter()
+    boundary_cell_types = Counter()
+    for facet_key, owner_id in singleton_facets:
+        facet = tuple(facet_key)
+        anchor = facet[0]
+        relative_facet = tuple(
+            tuple(point[k] - anchor[k] for k in range(8))
+            for point in facet
+        )
+        index_sets = [vertex_to_cells.get(point, set()) for point in relative_facet]
+        if not index_sets or any(not values for values in index_sets):
+            candidates = set()
+        else:
+            ordered = sorted(index_sets, key=len)
+            candidates = set(ordered[0])
+            for values in ordered[1:]:
+                candidates.intersection_update(values)
+                if not candidates:
+                    break
+
+        valid = []
+        for candidate_id in candidates:
+            relative_cell = cells[candidate_id]
+            if not all(point in relative_cell for point in relative_facet):
+                continue
+            if not is_cell_facet(relative_facet, relative_cell):
+                continue
+            translated_cell = tuple(sorted(
+                tuple(point[k] + anchor[k] for k in range(8))
+                for point in relative_cell
+            ))
+            if translated_cell == cells[owner_id]:
+                continue
+            valid.append(translated_cell)
+
+        candidate_count_distribution[len(valid)] += 1
+        assert len(valid) == 1, (
+            "Boundary facet must have exactly one translated-star partner; "
+            f"found {len(valid)} for facet {facet_key}"
+        )
+        partner = valid[0]
+        assert set(facet).issubset(partner)
+        assert is_cell_facet(facet, partner)
+        owner = cells[owner_id]
+        normal_a = facet_outward_normal(owner, facet)
+        normal_b = facet_outward_normal(partner, facet)
+        assert dot(normal_a, normal_b) < 0
+        paired += 1
+        boundary_cell_types["simplex" if len(owner) == 9 else "orthoplex"] += 1
+
+    return {
+        "finite_star_singleton_facets_not_containing_origin": len(singleton_facets),
+        "paired_by_translated_neighbor_star": paired,
+        "unpaired": len(singleton_facets) - paired,
+        "partner_candidate_count_distribution": dict(sorted(candidate_count_distribution.items())),
+        "origin_owner_cell_type_counts": dict(sorted(boundary_cell_types.items())),
+        "all_boundary_facets_have_unique_partner": paired == len(singleton_facets),
+        "all_partner_cells_on_opposite_exact_halfspaces": paired == len(singleton_facets),
+        "scope": (
+            "Every singleton facet of the finite origin star away from the origin "
+            "is paired by a cell in the translated star centered at a facet vertex. "
+            "This is a local periodic-closure check, not by itself a global "
+            "non-overlap or coverage proof."
+        ),
+    }
+
+
+
+def audit_delaunay_empty_spheres(cell_star, roots):
+    """Certify the two E8 Delaunay-cell orbits with exact rational arithmetic.
+
+    The regular 8-simplex has circumradius squared 8/9; the 8-orthoplex
+    has circumradius squared 1. The simplex and orthoplex therefore require
+    different empty-sphere bounds. E8 is even: nonzero lattice norms squared
+    are 2, 4, 6, ... . Check all 240 norm-two roots exactly. For norm-squared
+    >=4, reverse triangle inequality excludes every point from the simplex
+    sphere; for the orthoplex, equality is possible only at x=2c.
+    """
+    zero = (Q(0),) * 8
+    representatives = {
+        "simplex": next(cell for cell in cell_star if len(cell) == 9),
+        "orthoplex": next(cell for cell in cell_star if len(cell) == 16),
+    }
+    results = {}
+    for cell_type, cell in representatives.items():
+        center = tuple(
+            sum((vertex[k] for vertex in cell), Q(0)) / len(cell)
+            for k in range(8)
+        )
+        center_norm_squared = dot(center, center)
+        radius_squared = squared_distance(cell[0], center)
+        assert all(
+            squared_distance(vertex, center) == radius_squared
+            for vertex in cell
+        )
+        expected_radius_squared = Q(8, 9) if cell_type == "simplex" else Q(1)
+        assert radius_squared == expected_radius_squared
+        assert center_norm_squared == radius_squared
+
+        root_distances = Counter(squared_distance(root, center) for root in roots)
+        assert min(root_distances) >= radius_squared
+        boundary_roots = {
+            root for root in roots if squared_distance(root, center) == radius_squared
+        }
+        expected_roots = set(cell).intersection(roots)
+        assert boundary_roots == expected_roots
+
+        twice_center = tuple(2 * x for x in center)
+        twice_center_is_lattice = is_e8_lattice_vector(twice_center)
+        if cell_type == "orthoplex":
+            assert twice_center_is_lattice
+            assert twice_center in cell
+            norm_four_boundary_point = "opposite vertex"
+            norm_four_points_can_touch = True
+        else:
+            assert not twice_center_is_lattice
+            # 2 - ||c|| > ||c|| iff 1 > ||c||; here ||c||^2=8/9.
+            assert Q(4) > 4 * radius_squared
+            norm_four_boundary_point = "none; all norm-four points are strictly outside"
+            norm_four_points_can_touch = False
+
+        results[cell_type] = {
+            "orbit_size": 17280 if cell_type == "simplex" else 2160,
+            "circumradius_squared": str(radius_squared),
+            "circumcenter_norm_squared": str(center_norm_squared),
+            "root_distance_squared_counts": {
+                str(k): v for k, v in sorted(root_distances.items())
+            },
+            "roots_on_circumsphere": len(boundary_roots),
+            "all_root_lattice_points_outside_or_on_sphere": True,
+            "norm_four_boundary_point": norm_four_boundary_point,
+            "norm_four_points_can_touch": norm_four_points_can_touch,
+            "all_cell_vertices_on_circumsphere": True,
+            "empty_open_circumsphere_proved": True,
+        }
+
+    return {
+        "lattice": "even E8 lattice",
+        "representative_orbits_checked": 2,
+        "all_cells_in_each_orbit_are_weyl_isometric": True,
+        "orbits": results,
+        "delaunay_cell_certificate": True,
+        "proof": (
+            "For each representative, the exact centroid is its circumcenter. "
+            "The regular 8-simplex has radius-squared 8/9; the 8-orthoplex has "
+            "radius-squared 1. All 240 norm-squared-2 E8 roots are checked "
+            "exactly and none lies inside the relevant sphere. Every remaining "
+            "nonzero E8 lattice point has norm at least 2. Reverse triangle "
+            "inequality excludes all norm-squared >=4 points from the simplex "
+            "sphere; for the orthoplex, equality can occur only at x=2c, its "
+            "opposite vertex. Weyl invariance extends each representative "
+            "certificate to its complete cell orbit."
+        ),
+    }
+
+def audit_periodic_volume_balance(cell_star):
+    """Exact orbit-volume balance against the covolume of the E8 lattice."""
+    simplex_cells = sum(len(cell) == 9 for cell in cell_star)
+    orthoplex_cells = sum(len(cell) == 16 for cell in cell_star)
+    assert simplex_cells == 17280
+    assert orthoplex_cells == 2160
+
+    simple = simple_roots()
+    lattice_basis_determinant = abs(determinant_exact(simple))
+    assert lattice_basis_determinant == 1
+
+    simplex = next(cell for cell in cell_star if len(cell) == 9)
+    anchor = simplex[0]
+    edges = [
+        tuple(vertex[k] - anchor[k] for k in range(8))
+        for vertex in simplex[1:]
+    ]
+    gram = [[dot(a, b) for b in edges] for a in edges]
+    gram_det = determinant_exact(gram)
+    assert gram_det == 9
+    simplex_volume = Q(3, 40320)
+
+    orthoplex_volume = Q(2**8, 40320)
+    simplex_orbits = Q(simplex_cells, 9)
+    orthoplex_orbits = Q(orthoplex_cells, 16)
+    simplex_contribution = simplex_orbits * simplex_volume
+    orthoplex_contribution = orthoplex_orbits * orthoplex_volume
+    total = simplex_contribution + orthoplex_contribution
+    assert total == lattice_basis_determinant
+
+    return {
+        "e8_lattice_covolume": str(lattice_basis_determinant),
+        "simplex": {
+            "incident_cells": simplex_cells,
+            "vertices_per_cell": 9,
+            "translation_orbits_per_fundamental_volume": str(simplex_orbits),
+            "exact_volume": str(simplex_volume),
+            "volume_contribution": str(simplex_contribution),
+            "edge_gram_determinant": str(gram_det),
+        },
+        "orthoplex": {
+            "incident_cells": orthoplex_cells,
+            "vertices_per_cell": 16,
+            "translation_orbits_per_fundamental_volume": str(orthoplex_orbits),
+            "exact_volume": str(orthoplex_volume),
+            "volume_contribution": str(orthoplex_contribution),
+        },
+        "total_cell_volume_per_e8_fundamental_volume": str(total),
+        "exact_volume_balance": total == lattice_basis_determinant,
+        "coverage_conclusion": (
+            "Conditional: if the translated cells form a locally finite "
+            "face-to-face complex with pairwise disjoint interiors, exact "
+            "volume balance forces complete Euclidean coverage. The balance "
+            "alone does not establish those hypotheses."
+        ),
+    }
+
+
+def run_audit():
+    roots = build_e8_roots()
+    simple = simple_roots()
+    root_index = {root: index for index, root in enumerate(roots)}
+    # Fundamental weights satisfy alpha_i . omega_j = delta_ij.
+    # The simple-root coordinate rows form the linear system directly;
+    # using the Cartan Gram matrix here would instead solve for coefficients
+    # in the simple-root basis and is not the same Euclidean vector.
+    weights = [
+        solve_exact(simple, [Q(int(i == j)) for i in range(8)])
+        for j in range(8)
+    ]
+    reflection_maps = [
+        [root_index[reflect(root, alpha)] for root in roots]
+        for alpha in simple
+    ]
+
+    seed_facets = {}
+    for node in (0, 1):
+        values = [dot(root, weights[node]) for root in roots]
+        support_value = max(values)
+        seed_facets[node] = frozenset(
+            index for index, value in enumerate(values)
+            if value == support_value
+        )
+    orthoplex_facets = facet_orbit(seed_facets[0], reflection_maps)
+    simplex_facets = facet_orbit(seed_facets[1], reflection_maps)
+    assert len(seed_facets[0]) == 14
+    assert len(seed_facets[1]) == 8
+    assert len(orthoplex_facets) == 2160
+    assert len(simplex_facets) == 17280
+
+    zero = (Q(0),) * 8
+    simplex_face_incidence = Counter()
+    cell_star = set()
+    for facet in simplex_facets:
+        cell = (zero,) + tuple(roots[i] for i in sorted(facet))
+        cell_star.add(tuple(sorted(cell)))
+        assert len(cell) == 9
+        assert all(squared_distance(a, b) == 2
+                   for a, b in combinations(cell, 2))
+        # Every cell facet containing the origin omits one nonzero vertex.
+        for omit in range(1, 9):
+            simplex_face_incidence[
+                tuple(sorted(cell[j] for j in range(9) if j != omit))
+            ] += 1
+
+    opposite_vertices = set()
+    orthoplex_face_incidence = Counter()
+    for facet in orthoplex_facets:
+        facet_vertices = [roots[i] for i in sorted(facet)]
+        assert len(facet_vertices) == 14
+        centroid = tuple(
+            sum((v[k] for v in facet_vertices), Q(0)) / 14
+            for k in range(8)
+        )
+        opposite = tuple(2 * x for x in centroid)
+        assert is_e8_lattice_vector(opposite)
+        assert sum(x * x for x in opposite) == 4
+        opposite_vertices.add(opposite)
+
+        cell = (zero,) + tuple(facet_vertices) + (opposite,)
+        cell_star.add(tuple(sorted(cell)))
+        distances = Counter(
+            squared_distance(a, b) for a, b in combinations(cell, 2)
+        )
+        assert distances == Counter({Q(2): 112, Q(4): 8})
+
+        # The 14 facet vertices form seven opposite pairs in this cell.
+        remaining = set(facet_vertices)
+        opposite_pairs = []
+        while remaining:
+            first = min(remaining)
+            matches = [
+                candidate for candidate in remaining
+                if candidate != first
+                and squared_distance(first, candidate) == 4
+            ]
+            assert len(matches) == 1
+            second = matches[0]
+            opposite_pairs.append((first, second))
+            remaining.remove(first)
+            remaining.remove(second)
+        assert len(opposite_pairs) == 7
+        center = tuple(x / 2 for x in opposite)
+        assert all(squared_distance(vertex, center) == 1 for vertex in cell)
+        assert all(
+            tuple((a[k] + b[k]) / 2 for k in range(8)) == center
+            for a, b in opposite_pairs
+        )
+
+        # An 8-orthoplex facet containing the origin chooses one vertex
+        # from each of the seven other opposite pairs.
+        for choices in product((0, 1), repeat=7):
+            face = (zero,) + tuple(
+                opposite_pairs[k][choices[k]] for k in range(7)
+            )
+            orthoplex_face_incidence[tuple(sorted(face))] += 1
+
+    norm4 = norm_four_shell()
+    assert len(opposite_vertices) == len(norm4) == 2160
+    assert opposite_vertices == norm4
+
+    # Run the compact exact metric/Delaunay certificate before expensive
+    # global incidence and adjacency enumeration, so geometry failures fail fast.
+    delaunay_certificate = audit_delaunay_empty_spheres(cell_star, roots)
+    assert delaunay_certificate["delaunay_cell_certificate"]
+
+    # Build the complete codimension-one adjacency graph of this finite star.
+    adjacency_audit = build_cell_adjacency(cell_star)
+    assert adjacency_audit["cell_count"] == 19440
+    assert adjacency_audit["origin_containing_facets"]["all_paired"]
+
+    boundary_facet_closure = audit_boundary_facet_closure(cell_star)
+    assert boundary_facet_closure["unpaired"] == 0
+    periodic_volume_balance = audit_periodic_volume_balance(cell_star)
+    assert periodic_volume_balance["exact_volume_balance"]
+
+    # Re-root closure: for every cell C in the origin star and every
+    # non-origin vertex v of C, translate C by -v. The translated cell
+    # must also occur in the origin star. This checks that overlapping
+    # neighboring vertex stars agree on every cell they share.
+    reroot_checks = 0
+    reroot_failures = []
+    neighbor_vertices = set()
+    vertex_cell_degree = Counter(
+        vertex for cell_key in cell_star for vertex in cell_key
+    )
+    for cell_key in cell_star:
+        for vertex in cell_key:
+            if vertex == zero:
+                continue
+            neighbor_vertices.add(vertex)
+            translated = tuple(sorted(
+                tuple(point[k] - vertex[k] for k in range(8))
+                for point in cell_key
+            ))
+            reroot_checks += 1
+            if translated not in cell_star:
+                if len(reroot_failures) < 5:
+                    reroot_failures.append({
+                        "vertex": [str(x) for x in vertex],
+                        "cell": [[str(x) for x in point] for point in cell_key],
+                    })
+    assert not reroot_failures
+    assert len(neighbor_vertices) == 240 + 2160
+    neighbor_norms = Counter(sum(x * x for x in v) for v in neighbor_vertices)
+    assert neighbor_norms == Counter({Q(2): 240, Q(4): 2160})
+    root_degrees = {
+        vertex_cell_degree[v] for v in neighbor_vertices
+        if sum(x * x for x in v) == 2
+    }
+    norm4_degrees = {
+        vertex_cell_degree[v] for v in neighbor_vertices
+        if sum(x * x for x in v) == 4
+    }
+    assert root_degrees == {702}
+    assert norm4_degrees == {1}
+
+    combined = simplex_face_incidence + orthoplex_face_incidence
+    multiplicities = Counter(combined.values())
+    orthoplex_multiplicities = Counter(orthoplex_face_incidence.values())
+    simplex_multiplicities = Counter(simplex_face_incidence.values())
+    cross_type_facets = set(simplex_face_incidence).intersection(
+        orthoplex_face_incidence
+    )
+    assert multiplicities == Counter({2: 207360})
+    assert len(simplex_face_incidence) == 138240
+    assert simplex_multiplicities == Counter({1: 138240})
+    assert len(orthoplex_face_incidence) == 207360
+    assert orthoplex_multiplicities == Counter({1: 138240, 2: 69120})
+    assert len(cross_type_facets) == 138240
+    assert len(combined) == 207360
+
+    return {
+        "status": "PASS",
+        "arithmetic": "exact rational",
+        "e8_roots": len(roots),
+        "gosset_facets": {
+            "7_orthoplex": len(orthoplex_facets),
+            "7_simplex": len(simplex_facets),
+        },
+        "incident_cells": {
+            "8_orthoplex": len(orthoplex_facets),
+            "8_simplex": len(simplex_facets),
+            "total": len(orthoplex_facets) + len(simplex_facets),
+        },
+        "opposite_vertex_shell": {
+            "constructed_vertices": len(opposite_vertices),
+            "independent_norm4_shell": len(norm4),
+            "exact_set_equality": opposite_vertices == norm4,
+        },
+        "cell_metric_checks": {
+            "simplex_pairs_per_cell": 36,
+            "simplex_pair_squared_distance": 2,
+            "orthoplex_edge_pairs_per_cell": 112,
+            "orthoplex_edge_squared_distance": 2,
+            "orthoplex_opposite_pairs_per_cell": 8,
+            "orthoplex_opposite_squared_distance": 4,
+            "simplex_common_center_and_circumradius_squared_8_over_9": True,
+            "orthoplex_common_center_and_unit_circumradius": True,
+            "all_eight_opposite_pairs_share_center": True,
+        },
+        "cell_adjacency_audit": adjacency_audit,
+        "boundary_facet_closure": boundary_facet_closure,
+        "periodic_volume_balance": periodic_volume_balance,
+        "delaunay_empty_sphere_certificate": delaunay_certificate,
+        "neighboring_star_reroot_closure": {
+            "distinct_neighbor_vertices": len(neighbor_vertices),
+            "neighbor_norm_counts": {str(k): v for k, v in neighbor_norms.items()},
+            "cell_re_root_checks": reroot_checks,
+            "failed_re_root_checks": len(reroot_failures),
+            "all_shared_cells_agree": not reroot_failures,
+            "cells_shared_with_origin_star_by_neighbor_type": {
+                "norm_two_root_edge": 702,
+                "norm_four_orthoplex_opposite": 1,
+            },
+        },
+        "origin_containing_facet_incidence": {
+            "simplex_facets_with_origin": sum(simplex_face_incidence.values()),
+            "orthoplex_facets_with_origin": sum(orthoplex_face_incidence.values()),
+            "unique_facets": len(combined),
+            "multiplicity_counts": dict(multiplicities),
+            "simplex_orthoplex_shared_facets": len(cross_type_facets),
+            "orthoplex_orthoplex_shared_facets": 69120,
+            "simplex_simplex_shared_facets": 0,
+            "orthoplex_incidence_multiplicity_counts": dict(orthoplex_multiplicities),
+        },
+        "scope": (
+            "Exact local incidence around one vertex. This does not alone prove "
+            "global space-filling, completeness, or absence of nonlocal overlaps."
+        ),
+    }
+
+
+if __name__ == "__main__":
+    print(json.dumps(run_audit(), indent=2, sort_keys=True))
