@@ -8,10 +8,10 @@ class LeechZ2OrbifoldCharacterTests(unittest.TestCase):
     def test_initial_moonshine_grades(self):
         result = leech_z2_orbifold_character(4)
         self.assertEqual(result["untwisted_fixed_dimensions"], {
-            "0": 1, "1": 0, "2": 98580, "3": 10745856, "4": 413443380
+            "0": 1, "1": 0, "2": 98580, "3": 10745856, "4": 432155586
         })
         self.assertEqual(result["twisted_fixed_dimensions"], {
-            "0": 0, "1": 0, "2": 98304, "3": 10747904, "4": 450856590
+            "0": 0, "1": 0, "2": 98304, "3": 10747904, "4": 432144384
         })
         self.assertEqual(result["moonshine_orbifold_graded_dimensions"], {
             "0": 1, "1": 0, "2": 196884, "3": 21493760, "4": 864299970
