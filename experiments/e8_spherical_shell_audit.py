@@ -75,6 +75,20 @@ def spherical_moment_audit(n: int, max_even_degree: int = 8) -> dict:
     centrally_symmetric = all(tuple(-x for x in v) in shell_set for v in shell)
     if not centrally_symmetric:
         raise AssertionError("E8 shell must be centrally symmetric")
+    # E8 is invariant under sign changes of any even number of coordinates.
+    # It is enough to check the 28 generating pair-flips.
+    even_sign_flip_invariant = True
+    for i, j in combinations(range(8), 2):
+        for vector in shell:
+            transformed = tuple(-x if k in (i, j) else x
+                                for k, x in enumerate(vector))
+            if transformed not in shell_set:
+                even_sign_flip_invariant = False
+                break
+        if not even_sign_flip_invariant:
+            break
+    if not even_sign_flip_invariant:
+        raise AssertionError("E8 shell failed an even coordinate sign-flip symmetry")
 
     results = {}
     for degree in range(2, max_even_degree + 1, 2):
@@ -113,10 +127,15 @@ def spherical_moment_audit(n: int, max_even_degree: int = 8) -> dict:
         "point_count": len(shell),
         "squared_norm": 2 * n,
         "centrally_symmetric": centrally_symmetric,
+        "even_coordinate_sign_flip_symmetry": even_sign_flip_invariant,
         "odd_moments_zero_through_degree_7": centrally_symmetric,
+        "mixed_parity_even_moments_zero_through_degree_6": even_sign_flip_invariant,
         "even_moment_checks": results,
         "spherical_design_conclusion": (
-            "exact coordinate-moment agreement through degree 7; degree 8 fails"
+            "all polynomial moments through degree 7 agree: checked all-even "
+            "monomials exactly, mixed-parity even monomials vanish by even "
+            "sign-flip symmetry, and odd total degrees vanish by central "
+            "symmetry; degree 8 fails"
             if all(results[str(k)]["matches_uniform_sphere"] for k in (2, 4, 6))
             and results.get("8", {}).get("mismatches", 0) > 0
             else "see per-degree moment results"
