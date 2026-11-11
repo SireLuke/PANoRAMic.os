@@ -14,7 +14,7 @@ McKay-Thompson coefficients.
 For the Monster ordinary character table, the audit requires 194 conjugacy
 classes and 194 irreducible characters and checks all 194^2 row inner products:
 
-<math-placeholder>
+For irreducible characters `chi_i` and `chi_j`, the row identity is:
 
 It also checks all 194^2 column orthogonality identities exactly:
 
