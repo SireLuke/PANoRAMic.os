@@ -21,12 +21,14 @@ from experiments.moonshine_sierpinski.leech_z2_orbifold_character import (
     leech_z2_orbifold_character,
 )
 
-# First five Monster irreducible dimensions, ordered by dimension.
+# Selected Monster irreducible dimensions. The q^4 Serre decomposition uses
+# chi_6 (dimension 19,360,062,527), skipping chi_5 (dimension 18,538,750,076).
 # Source references are documented in research/LEECH_TO_MONSTER_BRIDGE.md.
+MONSTER_IRREP_LABELS = ("chi_1", "chi_2", "chi_3", "chi_4", "chi_6")
 MONSTER_IRREP_DIMENSIONS = (1, 196883, 21296876, 842609326, 19360062527)
 
 # Rows correspond to q^1, q^2, q^3, q^4 in J(q)=j(q)-744.
-# Columns correspond to the five irreducible dimensions above.
+# Columns correspond to chi_1, chi_2, chi_3, chi_4, chi_6.
 IDENTITY_MULTIPLICITIES = (
     (1, 1, 0, 0, 0),
     (1, 1, 1, 0, 0),
@@ -91,6 +93,7 @@ def leech_to_monster_representation_bridge(max_q_power: int = 4) -> dict:
             "q_power": q_power,
             "orbifold_conformal_weight": weight,
             "orbifold_dimension": orbifold_dimension,
+            "monster_irrep_labels": MONSTER_IRREP_LABELS,
             "monster_irrep_multiplicities": IDENTITY_MULTIPLICITIES[index],
             "representation_dimension_sum": representation_sum,
             "matches": True,
