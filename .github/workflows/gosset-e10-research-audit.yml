@@ -1,21 +1,58 @@
 name: Gosset local cell-star and E10 exact audits
+
 on:
   push:
-    branches: [research/gosset-cell-star-e10-audit-2026-11-09]
+    branches: [main, research/qwave-ci-audit-split-2026-11-10]
   pull_request:
     branches: [main]
   workflow_dispatch:
+
+# Do not cancel a running exact audit merely because another ref is updated.
 concurrency:
-  group: gosset-e10-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  exact-geometry-audits:
+  gosset-local-cell-star:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Run exact standard-library audits
-        run: python -m unittest discover -s tests -p 'test_*_audit.py' -v
+      - name: Run exact Gosset local cell-star audit
+        run: python -m unittest tests.test_gosset_local_cell_star_audit -v
+
+  e10-coxeter-relations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run exact E10 Coxeter and affine-link audit
+        run: python -m unittest tests.test_e10_coxeter_relations_audit -v
+
+  e10-lorentzian-coordinates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run exact E10 Lorentzian coordinate and cusp-link audit
+        run: python -m unittest tests.test_e10_hyperbolic_621_coordinate_audit -v
+
+  qwave-si-metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run QWAVE v0 SI and temporal metadata tests
+        run: python -m unittest tests.test_qwave -v
