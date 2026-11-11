@@ -45,3 +45,14 @@ jobs:
           python-version: "3.12"
       - name: Run exact E10 Lorentzian coordinate and cusp-link audit
         run: python -m unittest tests.test_e10_hyperbolic_621_coordinate_audit -v
+
+  qwave-si-metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run QWAVE v0 SI and temporal metadata tests
+        run: python -m unittest tests.test_qwave -v
