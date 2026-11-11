@@ -2,7 +2,7 @@ name: Moonshine and Sierpinski bridge audit
 
 on:
   push:
-    branches: [main, research/moonshine-sierpinski-24d-v1]
+    branches: [main, research/moonshine-sierpinski-24d-v1, research/leech-z2-orbifold-character-v1]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -21,8 +21,8 @@ jobs:
         with:
           python-version: "3.12"
       - name: Run bridge regression tests
-        run: python -m unittest tests.test_moonshine_sierpinski_bridge tests.test_leech_golay_construction tests.test_leech_voa_character -v
-      - name: Run modular theta reference audit
+        run: python -m unittest tests.test_moonshine_sierpinski_bridge tests.test_leech_golay_construction tests.test_leech_voa_character tests.test_leech_z2_orbifold_character -v
+      - name: Run Leech Z2 orbifold sector character audit\n        run: python experiments/moonshine_sierpinski/leech_z2_orbifold_character.py\n      - name: Run modular theta reference audit
         run: python experiments/moonshine_sierpinski/lattice_modular_audit.py
       - name: Run finite Sierpinski graph spectrum audit
         run: python experiments/moonshine_sierpinski/sierpinski_graph_spectrum.py
