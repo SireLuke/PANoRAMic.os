@@ -47,8 +47,9 @@ class QWaveTests(unittest.TestCase):
         self.assertAlmostEqual(from_wavelength["wavenumber_m_inv"], 1.0 / wavelength)
 
     def test_temporal_metadata_records_scale_without_enforcing_floor(self):
+        # Deliberately below the derived Planck-time reference scale.
         metadata = temporal_measurement_metadata(
-            1e-30, 2e-31, physical_time_s=1.25, timing_uncertainty_s=0.0
+            1e-50, 2e-51, physical_time_s=1.25, timing_uncertainty_s=0.0
         )
         self.assertLess(metadata["sample_interval_s"], metadata["planck_time_s"])
         self.assertEqual(
