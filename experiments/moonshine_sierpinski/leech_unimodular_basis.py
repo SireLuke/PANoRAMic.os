@@ -13,6 +13,14 @@ the shortest-vector layer.
 """
 from __future__ import annotations
 
+from pathlib import Path
+import sys
+
+# Support both direct script execution and module execution from repository root.
+_REPOSITORY_ROOT = str(Path(__file__).resolve().parents[2])
+if _REPOSITORY_ROOT not in sys.path:
+    sys.path.insert(0, _REPOSITORY_ROOT)
+
 from experiments.moonshine_sierpinski.leech_golay_construction import (
     extended_golay_codewords,
 )
