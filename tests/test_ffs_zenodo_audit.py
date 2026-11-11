@@ -3,6 +3,7 @@ import unittest
 from experiments.fractional_fermi_sea.zenodo_dataset_audit import (
     ZENODO_FILES,
     first_zero_crossings,
+    _series_points,
 )
 
 
@@ -23,6 +24,18 @@ class FFSZenodoAuditTests(unittest.TestCase):
             [1.0, -1.0, -1.0, 1.0, -1.0],
         )
         self.assertEqual(crossings, [0.5, 2.5, 3.5])
+
+    def test_sparse_padded_csv_columns_are_extracted_as_pairs(self):
+        rows = [
+            {"x": "0", "y": "1"},
+            {"x": "", "y": ""},
+            {"x": "2", "y": "-1"},
+        ]
+        self.assertEqual(_series_points(rows, "x", "y"), [(0.0, 1.0), (2.0, -1.0)])
+
+    def test_rejects_half_missing_sample(self):
+        with self.assertRaises(ValueError):
+            _series_points([{"x": "1", "y": ""}], "x", "y")
 
     def test_rejects_length_mismatch(self):
         with self.assertRaises(ValueError):
