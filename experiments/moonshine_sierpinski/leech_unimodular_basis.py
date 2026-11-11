@@ -23,6 +23,8 @@ if _REPOSITORY_ROOT not in sys.path:
 
 from experiments.moonshine_sierpinski.leech_golay_construction import (
     extended_golay_codewords,
+    golay_code_audit,
+    leech_minimal_vectors,
 )
 
 # Columns are basis vectors in the integral, unscaled coordinates x.
@@ -130,6 +132,27 @@ def leech_unimodular_basis_audit() -> dict:
     if gram_det != 1:
         raise AssertionError("scaled Gram determinant is not one")
 
+    # Minimum norm lower bound from the Golay congruences:
+    # p=0: x=2y. If y mod 2 is nonzero, Golay distance >=8 gives
+    # sum(y_i^2)>=8 and ||x/sqrt(8)||^2>=4. If y is even, x=4z;
+    # sum(z_i) is even, so nonzero z has sum(z_i^2)>=2, again norm>=4.
+    # p=1: x is odd in every coordinate. If all |x_i|=1, its sign
+    # pattern is either all +1 (residue 0, sum 24 !=4 mod 8), or has
+    # minus signs exactly on a nonzero Golay word c. Such a word has
+    # weight divisible by 4, making 24-2 wt(c) ==0 mod 8, not 4.
+    # Thus at least one coordinate has |x_i|>=3 and sum(x_i^2)>=32.
+    golay = golay_code_audit()
+    if golay["minimum_distance"] != 8:
+        raise AssertionError("minimum-norm proof requires Golay minimum distance 8")
+    if any(weight % 4 for weight in golay["weight_distribution"]):
+        raise AssertionError("minimum-norm proof requires Type-II weights divisible by 4")
+    minimal_vectors = leech_minimal_vectors()
+    if len(minimal_vectors) != 196560 or any(
+        sum(value * value for value in vector) != 32
+        for vector in minimal_vectors
+    ):
+        raise AssertionError("explicit norm-four shell witness audit failed")
+
     # Positive definiteness follows exactly from G=B^T B/8 and det(B)!=0.
     return {
         "rank": 24,
@@ -148,10 +171,16 @@ def leech_unimodular_basis_audit() -> dict:
         "scaled_gram_determinant": gram_det,
         "positive_definite": True,
         "even_unimodular": True,
-        "minimum_norm_proved_by_this_audit": False,
+        "minimum_norm_lower_bound": 4,
+        "minimum_norm_attained": 4,
+        "minimal_vectors_at_minimum": len(minimal_vectors),
+        "minimum_norm_proof": (
+            "Golay minimum distance 8 and Type-II weights divisible by 4 "
+            "exclude every nonzero coordinate vector of lattice norm below 4"
+        ),
         "scope": (
-            "exact rank-24 basis and covolume certificate for the Golay-defined "
-            "coordinate lattice; minimum norm remains a separate certificate"
+            "exact rank-24 basis, covolume, even-unimodular and minimum-norm "
+            "certificate for the Golay-defined coordinate lattice"
         ),
     }
 
