@@ -44,6 +44,19 @@ def _number(row: dict[str, str], key: str) -> float:
     return float(value)
 
 
+def _series_points(rows: list[dict[str, str]], x_key: str, y_key: str) -> list[tuple[float, float]]:
+    """Extract paired nonblank samples; Zenodo figure CSVs pad unequal series."""
+    points = []
+    for row in rows:
+        x_raw, y_raw = row.get(x_key, ""), row.get(y_key, "")
+        if x_raw == "" and y_raw == "":
+            continue
+        if x_raw == "" or y_raw == "":
+            raise ValueError(f"unpaired missing sample in {x_key}/{y_key}")
+        points.append((float(x_raw), float(y_raw)))
+    return sorted(points)
+
+
 def first_zero_crossings(x_values: list[float], y_values: list[float]) -> list[float]:
     """Linearly interpolate every strict sign change in an ordered series."""
     if len(x_values) != len(y_values):
@@ -98,9 +111,7 @@ def audit_zenodo_ffs_dataset() -> dict:
     series = {}
     for ell in (0, 2, 4):
         suffix = f"L{ell}"
-        xs = [_number(row, f"exp_x_{suffix}") for row in correlations]
-        ys = [_number(row, f"exp_y_{suffix}") for row in correlations]
-        pairs = sorted((x, y) for x, y in zip(xs, ys) if x >= 0.0)
+        pairs = [pair for pair in _series_points(correlations, f"exp_x_{suffix}", f"exp_y_{suffix}") if pair[0] >= 0.0]
         x_sorted = [p[0] for p in pairs]
         y_sorted = [p[1] for p in pairs]
         crossings = first_zero_crossings(x_sorted, y_sorted)
