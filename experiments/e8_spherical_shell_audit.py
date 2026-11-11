@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from collections import Counter
 from fractions import Fraction as Q
-from itertools import combinations_with_replacement, product
+from itertools import combinations, combinations_with_replacement, product
 from math import comb, prod
 from pathlib import Path
 import sys
