@@ -121,7 +121,7 @@ def leech_construction_audit() -> dict:
         for i, x in enumerate(v):
             if (((x - parity) // 2) & 1):
                 residue_word |= 1 << i
-        if residue_word not in set(code_words_cached):
+        if residue_word not in code_words_cached:
             raise AssertionError("residue word is not in extended Golay code")
         if sum(v) % 8 != (4 * parity) % 8:
             raise AssertionError("Leech coordinate sum congruence failed")
