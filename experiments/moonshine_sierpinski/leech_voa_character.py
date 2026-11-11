@@ -36,13 +36,13 @@ def leech_lattice_voa_character(max_weight: int = 5) -> dict:
     """Compute ch(V_Lambda)=q^-1 Theta_Lambda prod(1-q^n)^-24."""
     if not isinstance(max_weight, int) or max_weight < 0:
         raise ValueError("max_weight must be non-negative")
-    theta = leech_theta_reference(max_weight + 2)["coefficients_q0_to_qN"]
+    theta = leech_theta_reference(max_weight)["coefficients_q0_to_qN"]
     oscillators = eta_inverse_24_product(max_weight + 1)
     # Character coefficient at q^(weight-1) is convolution of theta and
     # oscillator series. Return weights starting at 0.
     graded = {}
     for weight in range(max_weight + 1):
-        power = weight + 1
+        power = weight
         graded[str(weight)] = sum(
             theta[k] * oscillators[power - k]
             for k in range(min(power, len(theta) - 1) + 1)
