@@ -10,6 +10,8 @@ from itertools import combinations, product
 from math import exp, isfinite, log2, sqrt
 from typing import Iterable, Sequence
 
+from core.geometry.e8_root_system import e8_roots_float
+
 PHI = (1.0 + sqrt(5.0)) / 2.0
 PHI_INV = PHI - 1.0
 
@@ -68,19 +70,8 @@ def fermi_channels(energy: float, chemical_potential: float = 0.0,
 
 
 def e8_roots() -> tuple[tuple[float, ...], ...]:
-    """Generate the 240 E8 roots in R^8, each with squared norm 2."""
-    roots: list[tuple[float, ...]] = []
-    # Integer roots: two nonzero entries, each +/-1 (112 roots).
-    for i, j in combinations(range(8), 2):
-        for si, sj in product((-1.0, 1.0), repeat=2):
-            v = [0.0] * 8
-            v[i], v[j] = si, sj
-            roots.append(tuple(v))
-    # Half-integer roots: all coordinates +/-1/2, even number of minus signs (128).
-    for signs in product((-1.0, 1.0), repeat=8):
-        if sum(1 for s in signs if s < 0) % 2 == 0:
-            roots.append(tuple(s * 0.5 for s in signs))
-    return tuple(roots)
+    """Float compatibility view of the canonical exact E8 root set."""
+    return e8_roots_float()
 
 
 def hyperoctahedral_action(vector: Sequence[float], permutation: Sequence[int],
