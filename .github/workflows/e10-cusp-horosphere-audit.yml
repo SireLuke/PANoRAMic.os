@@ -1,0 +1,24 @@
+name: E10 ideal-vertex horosphere cusp audit
+
+on:
+  push:
+    branches: [main, research/e10-cusp-horosphere-harness-2026-11-10]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: e10-cusp-horosphere-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  e10-cusp-horosphere:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Construct and verify ideal-vertex horosphere section
+        run: python -m unittest tests.test_e10_cusp_horosphere_audit -v
