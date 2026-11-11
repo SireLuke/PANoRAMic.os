@@ -1,6 +1,6 @@
 import unittest
 
-from experiments.gosset_local_cell_star_audit import run_audit
+from experiments.gosset_local_cell_star_audit_v2 import run_audit
 
 
 class GossetLocalCellStarAuditTests(unittest.TestCase):
@@ -10,6 +10,7 @@ class GossetLocalCellStarAuditTests(unittest.TestCase):
         self.assertEqual(result["incident_cells"]["8_simplex"], 17280)
         self.assertEqual(result["incident_cells"]["8_orthoplex"], 2160)
         self.assertTrue(result["opposite_vertex_shell"]["exact_set_equality"])
+        self.assertTrue(result["cell_metric_checks"]["simplex_common_center_and_circumradius_squared_8_over_9"])
         self.assertTrue(result["cell_metric_checks"]["orthoplex_common_center_and_unit_circumradius"])
         self.assertTrue(result["cell_metric_checks"]["all_eight_opposite_pairs_share_center"])
         incidence = result["origin_containing_facet_incidence"]
@@ -53,8 +54,12 @@ class GossetLocalCellStarAuditTests(unittest.TestCase):
         delaunay = result["delaunay_empty_sphere_certificate"]
         self.assertTrue(delaunay["delaunay_cell_certificate"])
         self.assertEqual(delaunay["representative_orbits_checked"], 2)
-        self.assertEqual(delaunay["orbits"]["simplex"]["circumradius_squared"], "1")
+        self.assertEqual(delaunay["orbits"]["simplex"]["circumradius_squared"], "8/9")
         self.assertEqual(delaunay["orbits"]["orthoplex"]["circumradius_squared"], "1")
+        self.assertEqual(delaunay["orbits"]["simplex"]["circumcenter_norm_squared"], "8/9")
+        self.assertEqual(delaunay["orbits"]["orthoplex"]["circumcenter_norm_squared"], "1")
+        self.assertFalse(delaunay["orbits"]["simplex"]["norm_four_points_can_touch"])
+        self.assertTrue(delaunay["orbits"]["orthoplex"]["norm_four_points_can_touch"])
         self.assertEqual(delaunay["orbits"]["simplex"]["roots_on_circumsphere"], 8)
         self.assertEqual(delaunay["orbits"]["orthoplex"]["roots_on_circumsphere"], 14)
         self.assertEqual(delaunay["orbits"]["orthoplex"]["norm_four_boundary_point"], "opposite vertex")
