@@ -65,3 +65,11 @@ within this constructed minimal shell.
 
 The new code does not yet construct a full lattice basis or independently
 verify its Gram determinant. It also does not construct the Moonshine VOA.
+
+
+## Leech lattice VOA character precursor
+
+The branch computes the Leech lattice VOA character
+Theta_Leech/eta^24 with exact integer q-series arithmetic and checks the first
+graded dimensions 1, 24, 196884, 21493760. This is V_Lambda, not V-natural:
+the Z2 fixed-point and twisted-sector extension remains a distinct next task.
