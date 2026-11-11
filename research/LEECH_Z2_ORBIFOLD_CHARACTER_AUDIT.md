@@ -41,7 +41,7 @@ computed exactly as
 | 1 | 0 | 0 | 0 |
 | 2 | 98,580 | 98,304 | 196,884 |
 | 3 | 10,745,856 | 10,747,904 | 21,493,760 |
-| 4 | 413,443,380 | 450,856,590 | 864,299,970 |
+| 4 | 432,155,586 | 432,144,384 | 864,299,970 |
 
 The totals match the first graded dimensions of J(q)=j(q)-744.
 The weight-two equality is now derived by separately projecting both sectors:
