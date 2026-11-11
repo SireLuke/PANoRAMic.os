@@ -15,6 +15,13 @@ Thus the theta-fixed twisted character is the odd-oscillator projection.
 from __future__ import annotations
 
 from math import comb
+from pathlib import Path
+import sys
+
+# Support both module execution and direct invocation from the repository root.
+_REPOSITORY_ROOT = str(Path(__file__).resolve().parents[2])
+if _REPOSITORY_ROOT not in sys.path:
+    sys.path.insert(0, _REPOSITORY_ROOT)
 
 from experiments.moonshine_sierpinski.leech_voa_character import (
     leech_lattice_voa_character,
