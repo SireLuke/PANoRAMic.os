@@ -26,6 +26,8 @@ class E8SphericalMomentTests(unittest.TestCase):
         for n in (1, 2, 3):
             result = spherical_moment_audit(n, 6)
             self.assertTrue(result["centrally_symmetric"])
+            self.assertTrue(result["even_coordinate_sign_flip_symmetry"])
+            self.assertTrue(result["mixed_parity_even_moments_zero_through_degree_6"])
             self.assertTrue(result["odd_moments_zero_through_degree_7"])
             for degree in ("2", "4", "6"):
                 self.assertEqual(result["even_moment_checks"][degree]["mismatches"], 0)
