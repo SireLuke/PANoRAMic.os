@@ -11,6 +11,13 @@ from collections import Counter
 from fractions import Fraction as Q
 from itertools import combinations_with_replacement, product
 from math import comb, prod
+from pathlib import Path
+import sys
+
+# Permit direct execution as `python experiments/e8_spherical_shell_audit.py`.
+_REPOSITORY_ROOT = str(Path(__file__).resolve().parents[1])
+if _REPOSITORY_ROOT not in sys.path:
+    sys.path.insert(0, _REPOSITORY_ROOT)
 
 from core.geometry.e8_root_system import dot, e8_roots_exact
 
