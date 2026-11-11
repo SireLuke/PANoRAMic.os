@@ -2,7 +2,7 @@
 
 Implements the ideal homogeneous endpoint profiles described by Zeng et al.
 (2026): at cycle index ell=2,4, n(k)=1/ell for |k|<ell*k_F and zero outside.
-This is a momentum/rapidity-space reference profile, not a Lieb-Liniger GHD
+This is a momentum-space reference profile, not a Lieb-Liniger GHD
 solver or a simulation of the experimental interaction ramps.
 """
 from __future__ import annotations
