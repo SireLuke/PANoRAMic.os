@@ -115,10 +115,13 @@ def audit_zenodo_ffs_dataset() -> dict:
         x_sorted = [p[0] for p in pairs]
         y_sorted = [p[1] for p in pairs]
         crossings = first_zero_crossings(x_sorted, y_sorted)
-        trough = _first_trough_between_crossings(x_sorted, y_sorted, crossings)
+        # L0 is the non-FFS control: late sign changes occur near the noise
+        # floor and are not interpreted as Friedel oscillations.
+        trough = _first_trough_between_crossings(x_sorted, y_sorted, crossings) if ell in (2, 4) else None
         result = {
             "measured_points": len(pairs),
-            "zero_crossings_um": crossings[:4],
+            "zero_crossings_um": crossings[:4] if ell in (2, 4) else [],
+            "control_noise_floor_sign_changes_um": crossings[:4] if ell == 0 else [],
             "first_oscillation_trough": trough,
         }
         if ell in (2, 4) and crossings:
