@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Exact local cell-star audit for the E8 / Gosset 4_21 vertex figure.
+"""DEPRECATED v1 reference for the E8 / Gosset 4_21 local cell-star audit.
+
+This frozen historical implementation contains an invalid Delaunay invariant:
+it assumes both the simplex and orthoplex have unit circumradius. Do not use it
+as a validator. Use experiments.gosset_local_cell_star_audit_v2 instead.
 
 Standard-library only. Reconstructs the two facet orbits of 4_21, the
 incident 8-simplex and 8-orthoplex cells, the norm-four opposite-vertex
