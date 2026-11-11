@@ -1,0 +1,28 @@
+name: Leech shell design and VOA grading audit
+
+on:
+  push:
+    branches: [main, research/leech-shell-design-voa-grading-v1]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: leech-shell-voa-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  leech-shell-and-voa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Leech shell and VOA tests
+        run: python -m unittest tests.test_leech_shell_design_and_voa_weight_two -v
+      - name: Run Leech directional moment audit
+        run: python experiments/moonshine_sierpinski/leech_shell_design_moments.py
+      - name: Run weight-two VOA grading audit
+        run: python experiments/moonshine_sierpinski/leech_voa_weight_two.py
