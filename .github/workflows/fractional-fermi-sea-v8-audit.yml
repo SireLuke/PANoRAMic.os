@@ -1,0 +1,27 @@
+name: Fractional Fermi sea V8 reference audit
+
+on:
+  push:
+    branches: [main, research/fractional-fermi-sea-v8-bridge-v1]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: fractional-fermi-sea-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  fractional-fermi-sea:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run fractional Fermi sea reference tests
+        run: python -m unittest tests.test_fractional_fermi_sea -v
+      - name: Run existing ABOM V8 baseline tests
+        run: python -m unittest discover -s tests -p 'test_abom_v8_model.py' -v
+      - name: Run existing ABOM V8 adapter tests
+        run: python -m unittest discover -s tests -p 'test_abom_v8_physics_adapters.py' -v
