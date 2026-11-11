@@ -26,32 +26,36 @@ def sierpinski_graph(stage):
     return vertices, edges
 
 def jacobi_eigenvalues(matrix, tolerance=1e-12):
+    """Eigenvalues of a real symmetric matrix using cyclic Jacobi sweeps."""
     n = len(matrix)
     a = [row[:] for row in matrix]
-    for _ in range(max(1, 100 * n * n)):
-        p, q, largest = 0, 0, 0.0
-        for i in range(n):
-            for j in range(i + 1, n):
-                value = abs(a[i][j])
-                if value > largest:
-                    p, q, largest = i, j, value
+    for _ in range(50):
+        largest = max((abs(a[p][q]) for p in range(n) for q in range(p + 1, n)), default=0.0)
         if largest <= tolerance:
             break
-        apq = a[p][q]
-        tau = (a[q][q] - a[p][p]) / (2.0 * apq)
-        t = copysign(1.0, tau) / (abs(tau) + sqrt(1.0 + tau*tau)) if tau else 1.0
-        c, s = 1.0 / sqrt(1.0 + t*t), t / sqrt(1.0 + t*t)
-        app, aqq = a[p][p], a[q][q]
-        a[p][p], a[q][q] = app - t*apq, aqq + t*apq
-        a[p][q] = a[q][p] = 0.0
-        for r in range(n):
-            if r in (p, q):
-                continue
-            arp, arq = a[r][p], a[r][q]
-            a[r][p] = a[p][r] = c*arp - s*arq
-            a[r][q] = a[q][r] = s*arp + c*arq
+        for p in range(n):
+            for q in range(p + 1, n):
+                apq = a[p][q]
+                if abs(apq) <= tolerance:
+                    continue
+                tau = (a[q][q] - a[p][p]) / (2.0 * apq)
+                t = copysign(1.0, tau) / (abs(tau) + sqrt(1.0 + tau*tau)) if tau else 1.0
+                c = 1.0 / sqrt(1.0 + t*t)
+                s = t*c
+                app, aqq = a[p][p], a[q][q]
+                a[p][p] = app - t*apq
+                a[q][q] = aqq + t*apq
+                a[p][q] = a[q][p] = 0.0
+                for r in range(n):
+                    if r == p or r == q:
+                        continue
+                    arp, arq = a[r][p], a[r][q]
+                    a[r][p] = a[p][r] = c*arp - s*arq
+                    a[r][q] = a[q][r] = s*arp + c*arq
     else:
-        raise RuntimeError("Jacobi diagonalization did not converge")
+        residual = max((abs(a[p][q]) for p in range(n) for q in range(p + 1, n)), default=0.0)
+        if residual > tolerance:
+            raise RuntimeError("Jacobi diagonalization did not converge within 50 sweeps")
     return sorted(a[i][i] for i in range(n))
 
 def audit_sierpinski_stage(stage, max_spectral_vertices=64):
