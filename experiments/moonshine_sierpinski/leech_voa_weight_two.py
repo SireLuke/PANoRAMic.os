@@ -7,7 +7,15 @@ For V_Lambda, the weight-two subspace splits into:
 Their sum is 196,884, the same integer appearing as the q^1 coefficient of
 J(q)=j(q)-744. This numerical equality is not itself the Monster action or
 the Moonshine orbifold decomposition.
-"""
+""""""
+from pathlib import Path
+import sys
+
+_REPOSITORY_ROOT = str(Path(__file__).resolve().parents[2])
+if _REPOSITORY_ROOT not in sys.path:
+    sys.path.insert(0, _REPOSITORY_ROOT)
+
+
 from experiments.moonshine_sierpinski.lattice_modular_audit import (
     leech_theta_reference,
     moonshine_character_reference,
