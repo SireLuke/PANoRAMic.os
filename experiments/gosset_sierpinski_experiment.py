@@ -7,6 +7,8 @@ from collections import deque
 from itertools import combinations, product
 from math import sqrt
 
+from core.geometry.e8_root_system import e8_roots_float
+
 TOL = 1e-8
 PROJECTION = (
     (0.0, -0.119117702264, -0.192736490926, -0.217638871657,
@@ -37,21 +39,8 @@ def reflect(x, alpha):
 
 
 def build_e8_roots():
-    roots = []
-    # 112 roots with two nonzero integer coordinates.
-    for i, j in combinations(range(8), 2):
-        for si, sj in product((-1.0, 1.0), repeat=2):
-            v = [0.0] * 8
-            v[i], v[j] = si, sj
-            roots.append(tuple(v))
-    # 128 half-integer roots with an even number of minus signs.
-    for signs in product((-0.5, 0.5), repeat=8):
-        if sum(value < 0 for value in signs) % 2 == 0:
-            roots.append(tuple(signs))
-    assert len(roots) == 240 and len(set(roots)) == 240
-    assert all(dot(root, root) == 2 for root in roots)
-    return roots
-
+    """Float compatibility view of the canonical exact E8 root set."""
+    return list(e8_roots_float())
 
 def project(root):
     return tuple(dot(row, root) for row in PROJECTION)
