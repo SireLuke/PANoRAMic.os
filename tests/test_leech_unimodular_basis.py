@@ -20,9 +20,11 @@ class LeechUnimodularBasisTests(unittest.TestCase):
         self.assertTrue(result["positive_definite"])
         self.assertTrue(result["even_unimodular"])
 
-    def test_minimum_norm_scope_is_not_overclaimed(self):
+    def test_minimum_norm_four_from_golay_congruences(self):
         result = leech_unimodular_basis_audit()
-        self.assertFalse(result["minimum_norm_proved_by_this_audit"])
+        self.assertEqual(result["minimum_norm_lower_bound"], 4)
+        self.assertEqual(result["minimum_norm_attained"], 4)
+        self.assertEqual(result["minimal_vectors_at_minimum"], 196560)
 
 if __name__ == "__main__":
     unittest.main()
