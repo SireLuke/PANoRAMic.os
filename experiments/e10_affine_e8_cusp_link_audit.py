@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from fractions import Fraction as Q
 from itertools import combinations
+from math import gcd
 
 from core.geometry.e8_root_system import (
     dot,
@@ -95,6 +96,57 @@ def negate(vector):
     return tuple(-value for value in vector)
 
 
+def finite_reflect(vector, root):
+    coefficient = dot(vector, root)
+    return tuple(value - coefficient * component
+                 for value, component in zip(vector, root))
+
+
+def determinant(matrix):
+    work = [list(map(Q, row)) for row in matrix]
+    n = len(work)
+    result = Q(1)
+    for column in range(n):
+        pivot = next((row for row in range(column, n)
+                      if work[row][column]), None)
+        if pivot is None:
+            return Q(0)
+        if pivot != column:
+            work[column], work[pivot] = work[pivot], work[column]
+            result = -result
+        value = work[column][column]
+        result *= value
+        for row in range(column + 1, n):
+            factor = work[row][column] / value
+            for j in range(column + 1, n):
+                work[row][j] -= factor * work[column][j]
+    return result
+
+
+def finite_weyl_root_orbit(seed, simple_roots):
+    """Return every root in the Weyl orbit together with a matrix witness."""
+    unit = identity(8)
+    queue = [(seed, unit)]
+    witnesses = {seed: unit}
+    reflections = [
+        [
+            [Q(int(i == j)) - alpha[i] * alpha[j] for j in range(8)]
+            for i in range(8)
+        ]
+        for alpha in simple_roots
+    ]
+    cursor = 0
+    while cursor < len(queue):
+        root, witness = queue[cursor]
+        cursor += 1
+        for alpha, reflection in zip(simple_roots, reflections):
+            image = finite_reflect(root, alpha)
+            if image not in witnesses:
+                witnesses[image] = matrix_multiply(reflection, witness)
+                queue.append((image, witnesses[image]))
+    return witnesses
+
+
 def run_audit():
     e10_gram = e10_gram_from_arms()
     simple = e8_simple_roots_exact()
@@ -121,6 +173,30 @@ def run_audit():
         raise AssertionError("null marks do not construct an E8 root")
     if dot(highest_root, highest_root) != 2:
         raise AssertionError("highest root norm squared is not 2")
+    simple_basis_determinant = determinant(
+        [[simple[column][row] for column in range(8)] for row in range(8)]
+    )
+    if abs(simple_basis_determinant) != 1:
+        raise AssertionError("E8 simple roots are not a unimodular lattice basis")
+
+    # The finite Weyl orbit of theta is the complete 240-root set. Conjugating
+    # t_theta by each witnessed Weyl element gives translation by that root.
+    root_witnesses = finite_weyl_root_orbit(highest_root, simple)
+    if set(root_witnesses) != roots:
+        raise AssertionError("highest-root Weyl orbit does not contain all 240 E8 roots")
+    root_translation_witnesses = 0
+    for root, witness in root_witnesses.items():
+        inverse_witness = [list(row) for row in zip(*witness)]
+        conjugate = affine_compose(
+            (witness, (Q(0),) * 8),
+            affine_compose(
+                (identity(8), highest_root),
+                (inverse_witness, (Q(0),) * 8),
+            ),
+        )
+        if conjugate != (identity(8), root):
+            raise AssertionError("Weyl conjugate did not produce root translation")
+        root_translation_witnesses += 1
 
     affine_root = negate(highest_root)
     simple_by_node = {**finite_roots, 5: affine_root}
@@ -208,9 +284,16 @@ def run_audit():
         "nonadjacent_commutations": commuting_relations,
         "total_pair_relations": adjacent_relations + commuting_relations,
         "translation_witness": {
-            "product": "affine_reflection_at_node_5 after finite highest-root reflection",
+            "product": "affine reflection at node 5 after finite highest-root reflection",
             "translation_vector": [str(x) for x in highest_root],
             "exact_translation_by_highest_root": True,
+            "finite_weyl_root_orbit_size": len(root_witnesses),
+            "all_240_root_translations_verified_by_weyl_conjugation": (
+                root_translation_witnesses == 240
+            ),
+            "root_translation_witness_count": root_translation_witnesses,
+            "simple_root_lattice_basis_determinant": str(simple_basis_determinant),
+            "origin_affine_wythoff_orbit_is_e8_root_lattice": True,
         },
         "scope": (
             "Exact affine E8 root-system and affine-reflection realization "
