@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from fractions import Fraction as Q
 from itertools import combinations
-from math import gcd
 
 from core.geometry.e8_root_system import (
     dot,
@@ -292,7 +291,7 @@ def run_audit():
                 root_translation_witnesses == 240
             ),
             "root_translation_witness_count": root_translation_witnesses,
-            "simple_root_lattice_basis_determinant": str(simple_basis_determinant),
+            "simple_root_lattice_basis_determinant": str(abs(simple_basis_determinant)),
             "origin_affine_wythoff_orbit_is_e8_root_lattice": True,
         },
         "scope": (
