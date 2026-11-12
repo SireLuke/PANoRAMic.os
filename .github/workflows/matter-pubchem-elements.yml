@@ -1,0 +1,26 @@
+name: Matter PubChem elements
+
+on:
+  push:
+    branches: [main, research/matter-element-structure-data]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: matter-pubchem-elements-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  pubchem-elements:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install numerical dependency
+        run: python -m pip install numpy
+      - name: Run PubChem table checks and similarity test
+        run: python -m unittest tests.test_element_structure tests.test_pubchem_elements -v

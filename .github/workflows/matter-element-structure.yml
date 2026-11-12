@@ -1,0 +1,24 @@
+name: Matter element structure
+
+on:
+  push:
+    branches: [main, research/matter-element-structure]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: matter-element-structure-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  element-structure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run element structure tests (standard library only)
+        run: python -m unittest tests.test_element_structure -v
