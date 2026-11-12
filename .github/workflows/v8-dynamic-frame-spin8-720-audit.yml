@@ -23,4 +23,4 @@ jobs:
       - name: Run dynamic frame and Spin(8) tests
         run: python -m unittest tests.test_v8_dynamic_frame_spin8_720_audit -v
       - name: Emit reproducible audit record
-        run: python experiments/v8_dynamic_frame_spin8_720_audit.py
+        run: python -m experiments.v8_dynamic_frame_spin8_720_audit
