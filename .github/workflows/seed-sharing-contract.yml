@@ -1,0 +1,33 @@
+name: Seed sharing contract reference tests
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "core/seed_sharing/**"
+      - "tests/test_seed_sharing_contract.py"
+      - "docs/architecture/SEED_SHARING_CONTRACT_V0.md"
+      - ".github/workflows/seed-sharing-contract.yml"
+  push:
+    branches: [main, research/seed-sharing-contract-v0]
+    paths:
+      - "core/seed_sharing/**"
+      - "tests/test_seed_sharing_contract.py"
+      - "docs/architecture/SEED_SHARING_CONTRACT_V0.md"
+      - ".github/workflows/seed-sharing-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  seed-sharing-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run seed-sharing contract tests
+        run: python -m unittest tests.test_seed_sharing_contract -v
