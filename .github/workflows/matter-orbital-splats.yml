@@ -1,0 +1,26 @@
+name: Matter orbital splats
+
+on:
+  push:
+    branches: [main, research/matter-orbital-splats]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: matter-orbital-splats-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  orbital-splats:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install numerical dependency
+        run: python -m pip install numpy
+      - name: Run hydrogen baseline and orbital splat tests
+        run: python -m unittest tests.test_hydrogen_baseline tests.test_matter_orbital_splats -v

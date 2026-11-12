@@ -1,0 +1,26 @@
+name: PAN V8 dynamic frame and Spin(8) 720-degree audit
+
+on:
+  push:
+    branches: [main, research/v8-frame-spinor-720-audit-v1]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  v8-frame-spin8:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run dynamic frame and Spin(8) tests
+        run: python -m unittest tests.test_v8_dynamic_frame_spin8_720_audit -v
+      - name: Emit reproducible audit record
+        run: python -m experiments.v8_dynamic_frame_spin8_720_audit

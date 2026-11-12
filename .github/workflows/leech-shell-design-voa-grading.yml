@@ -2,7 +2,7 @@ name: Leech shell design and VOA grading audit
 
 on:
   push:
-    branches: [main, research/leech-shell-design-voa-grading-v1, research/leech-unimodular-basis-certificate-v1]
+    branches: [main, research/leech-shell-design-voa-grading-v1, research/leech-unimodular-basis-certificate-v1, research/leech-monster-representation-bridge-v1]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -28,3 +28,7 @@ jobs:
         run: python experiments/moonshine_sierpinski/leech_voa_weight_two.py
       - name: Run exact Leech basis and unimodularity certificate
         run: python experiments/moonshine_sierpinski/leech_unimodular_basis.py
+      - name: Run Leech-to-Monster representation bridge tests
+        run: python -m unittest tests.test_leech_monster_representation_bridge -v
+      - name: Run Leech-to-Monster representation bridge
+        run: python experiments/moonshine_sierpinski/leech_monster_representation_bridge.py

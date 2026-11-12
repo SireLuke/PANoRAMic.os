@@ -18,6 +18,15 @@ class E10CuspHorosphereAuditTests(unittest.TestCase):
             result["minimum_pairwise_euclidean_distance_squared"], 0
         )
 
+    def test_cusp_simplex_metric_matches_affine_e8_coxeter_angles(self):
+        result = run_horosphere_audit()["cusp_simplex_metric_audit"]
+        self.assertEqual(result["dihedral_pair_count"], 36)
+        self.assertEqual(result["edge_pair_count"], 36)
+        self.assertEqual(result["dihedral_angle_counts"], {"pi/3": 8, "pi/2": 28})
+        self.assertEqual(result["coxeter_adjacency_edges"], 8)
+        self.assertTrue(result["all_angles_match_affine_E8_link"])
+        self.assertEqual(len(result["squared_edge_lengths"]), 36)
+
 
 if __name__ == "__main__":
     unittest.main()

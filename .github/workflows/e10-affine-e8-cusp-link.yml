@@ -1,0 +1,35 @@
+name: E10 affine E8 cusp-link realization
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "core/geometry/e8_root_system.py"
+      - "experiments/e10_affine_e8_cusp_link_audit.py"
+      - "tests/test_e10_affine_e8_cusp_link_audit.py"
+      - "research/E10_AFFINE_E8_CUSP_LINK_AUDIT.md"
+      - ".github/workflows/e10-affine-e8-cusp-link.yml"
+  push:
+    branches: [main, research/affine-e8-cusp-link-v1]
+    paths:
+      - "core/geometry/e8_root_system.py"
+      - "experiments/e10_affine_e8_cusp_link_audit.py"
+      - "tests/test_e10_affine_e8_cusp_link_audit.py"
+      - "research/E10_AFFINE_E8_CUSP_LINK_AUDIT.md"
+      - ".github/workflows/e10-affine-e8-cusp-link.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  affine-e8-cusp-link:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify exact affine E8 root system and reflection relations
+        run: python -m unittest tests.test_e10_affine_e8_cusp_link_audit -v
