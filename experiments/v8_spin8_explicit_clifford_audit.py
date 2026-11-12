@@ -203,7 +203,8 @@ def run_audit() -> dict:
     }
 
     tolerance = 1e-10
-    if max(gamma.values()) > tolerance:
+    residual_keys = ("gamma_square_max_error", "anticommutator_max_error", "hermitian_max_error")
+    if max(gamma[key] for key in residual_keys) > tolerance:
         raise AssertionError("Clifford generator identities failed")
     if single_360_error > tolerance or single_720_error > tolerance:
         raise AssertionError("Spin(8) single-plane double-cover loop failed")
