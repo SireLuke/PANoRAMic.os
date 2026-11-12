@@ -11,7 +11,7 @@ class ExplicitSpin8CliffordAuditTests(unittest.TestCase):
     def test_eight_hermitian_clifford_generators(self):
         residuals = clifford_residuals()
         self.assertEqual(residuals["generator_count"], 8)
-        self.assertLess(max(residuals.values()), 1e-10)
+        self.assertLess(max(residuals[key] for key in ("gamma_square_max_error", "anticommutator_max_error", "hermitian_max_error")), 1e-10)
 
     def test_single_plane_spin_lift_is_minus_identity_at_360(self):
         result = spinor_lift((2*math.pi, 0, 0, 0))
