@@ -23,9 +23,13 @@ class E10AffineE8CuspLinkTests(unittest.TestCase):
         self.assertEqual(result["adjacent_order_three_relations"], 8)
         self.assertEqual(result["nonadjacent_commutations"], 28)
         self.assertEqual(result["total_pair_relations"], 36)
-        self.assertTrue(
-            result["translation_witness"]["exact_translation_by_highest_root"]
-        )
+        translation = result["translation_witness"]
+        self.assertTrue(translation["exact_translation_by_highest_root"])
+        self.assertEqual(translation["finite_weyl_root_orbit_size"], 240)
+        self.assertTrue(translation["all_240_root_translations_verified_by_weyl_conjugation"])
+        self.assertEqual(translation["root_translation_witness_count"], 240)
+        self.assertEqual(translation["simple_root_lattice_basis_determinant"], "1")
+        self.assertTrue(translation["origin_affine_wythoff_orbit_is_e8_root_lattice"])
 
 
 if __name__ == "__main__":
