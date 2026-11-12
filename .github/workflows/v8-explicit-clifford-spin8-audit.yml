@@ -1,0 +1,26 @@
+name: PAN V8 explicit Clifford and multi-plane Spin(8) audit
+
+on:
+  push:
+    branches: [main, research/v8-spinor-multiplane-orientation-v1]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  explicit-spin8:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run explicit Clifford and Spin(8) tests
+        run: python -m unittest tests.test_v8_spin8_explicit_clifford_audit -v
+      - name: Emit reproducible audit record
+        run: python -m experiments.v8_spin8_explicit_clifford_audit
