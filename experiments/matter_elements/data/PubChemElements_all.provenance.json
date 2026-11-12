@@ -1,0 +1,17 @@
+{
+  "file": "PubChemElements_all.csv",
+  "sha256": "efcadb3dd180bd06fc0fa069a81082e86553ba2b8b5d679b7827bb8c03afd3ce",
+  "source_label": "PubChem periodic table CSV export, as supplied by the repository owner",
+  "supplied_on": "2026-11-12",
+  "rows": 118,
+  "columns": ["AtomicNumber","Symbol","Name","AtomicMass","CPKHexColor","ElectronConfiguration","Electronegativity","AtomicRadius","IonizationEnergy","ElectronAffinity","OxidationStates","StandardState","MeltingPoint","BoilingPoint","Density","GroupBlock","YearDiscovered"],
+  "per_field_sources": "not recorded in the file; PubChem's own page must be consulted for the origin of each property before any value is cited as sourced",
+  "units": "not stated in the file; PubChem's usual units are assumed but unverified (mass u, radius pm, ionisation energy eV, melting/boiling K, density g/cm3)",
+  "known_quirks": [
+    "US spellings: Aluminum, Cesium",
+    "Several masses are rounded to 0-1 decimals: Li 7.0, Ar 39.9, Zn 65.4, Ru 101.1, Te 127.6, Sm 150.4, Os 190.2, Pb 207",
+    "CPKHexColor of Pd is 6985 (leading zeros lost); empty for Er and Z>=110",
+    "Lu and Lr are labelled Lanthanide / Actinide in GroupBlock",
+    "Configurations of Mt..Og are marked calculated or predicted; many Z>=104 property fields are empty"
+  ]
+}
