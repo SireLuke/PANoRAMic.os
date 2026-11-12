@@ -9,7 +9,7 @@ at the ideal vertex; it does not claim a complete 6_21 honeycomb.
 from __future__ import annotations
 
 from fractions import Fraction as Q
-from math import sqrt
+from math import acos, pi, sqrt
 
 
 def identity(n):
