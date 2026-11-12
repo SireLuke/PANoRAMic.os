@@ -1,0 +1,28 @@
+name: SU2 Lattice Gauge Research Audit
+
+on:
+  pull_request:
+    paths:
+      - "core/gauge_theory/**"
+      - "tests/test_su2_lattice_gauge.py"
+      - "experiments/su2_lattice_gauge_audit.py"
+      - "research/SU2_LATTICE_GAUGE_FOUNDATIONS.md"
+      - ".github/workflows/su2-lattice-gauge-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  finite-lattice-su2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run SU(2) lattice regression tests
+        run: python -m unittest tests.test_su2_lattice_gauge -v
+      - name: Emit reproducible audit
+        run: python experiments/su2_lattice_gauge_audit.py
