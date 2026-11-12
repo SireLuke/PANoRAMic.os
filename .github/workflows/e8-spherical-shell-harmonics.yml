@@ -1,0 +1,30 @@
+name: E8 spherical shell harmonic audit
+
+on:
+  push:
+    branches: [main, research/e8-spherical-shell-harmonics-v1]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: e8-spherical-shell-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  shell-moments-and-spectrum:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install numerical diagnostic dependency
+        run: python -m pip install numpy
+      - name: Run exact shell and harmonic regression tests
+        run: python -m unittest tests.test_e8_spherical_shell_audit tests.test_six_hundred_cell_s3_spectrum -v
+      - name: Run full bounded shell audit
+        run: python experiments/e8_spherical_shell_audit.py
+      - name: Run 600-cell S3 harmonic audit
+        run: python experiments/six_hundred_cell_s3_spectrum.py

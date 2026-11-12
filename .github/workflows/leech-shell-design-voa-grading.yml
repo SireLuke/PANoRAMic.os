@@ -1,0 +1,34 @@
+name: Leech shell design and VOA grading audit
+
+on:
+  push:
+    branches: [main, research/leech-shell-design-voa-grading-v1, research/leech-unimodular-basis-certificate-v1, research/leech-monster-representation-bridge-v1]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: leech-shell-voa-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  leech-shell-and-voa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Leech shell, VOA, and basis tests
+        run: python -m unittest tests.test_leech_shell_design_and_voa_weight_two tests.test_leech_golay_construction tests.test_leech_voa_character tests.test_leech_z2_orbifold_character tests.test_leech_unimodular_basis -v
+      - name: Run Leech directional moment audit
+        run: python experiments/moonshine_sierpinski/leech_shell_design_moments.py
+      - name: Run weight-two VOA grading audit
+        run: python experiments/moonshine_sierpinski/leech_voa_weight_two.py
+      - name: Run exact Leech basis and unimodularity certificate
+        run: python experiments/moonshine_sierpinski/leech_unimodular_basis.py
+      - name: Run Leech-to-Monster representation bridge tests
+        run: python -m unittest tests.test_leech_monster_representation_bridge -v
+      - name: Run Leech-to-Monster representation bridge
+        run: python experiments/moonshine_sierpinski/leech_monster_representation_bridge.py

@@ -56,3 +56,14 @@ jobs:
           python-version: "3.12"
       - name: Run QWAVE v0 SI and temporal metadata tests
         run: python -m unittest tests.test_qwave -v
+
+  gosset-projection-robustness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Gosset Coxeter-plane projection robustness tests
+        run: python -m unittest tests.test_gosset_projection_robustness_audit -v

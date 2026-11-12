@@ -1,0 +1,34 @@
+name: Monster character table and Leech involution audit
+
+on:
+  push:
+    branches: [main, research/monster-character-table-leech-bridge-v1]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: monster-character-audit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  monster-character-table:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GAP and Character Table Library
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gap-core gap-character-tables
+      - name: Run exact Monster character-table and involution audit
+        run: gap -q -b -r scripts/monster_character_table_audit.g
+  source-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run Monster audit source regression tests
+        run: python -m unittest tests.test_monster_character_audit_source -v
