@@ -30,4 +30,4 @@ jobs:
       - name: Run exact Weyl orbit tests
         run: python -m unittest tests.test_e8_weyl_orbits -v
       - name: Run deterministic audit
-        run: python experiments/e8_weyl_orbit_audit.py
+        run: PYTHONPATH=. python experiments/e8_weyl_orbit_audit.py
