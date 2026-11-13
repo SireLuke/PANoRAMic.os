@@ -19,6 +19,8 @@ from core.geometry.e8_root_system import (
 E8_EXPONENTS = (1, 7, 11, 13, 17, 19, 23, 29)
 E8_WEYL_ORDER = prod(exponent + 1 for exponent in E8_EXPONENTS)
 E8_EXPECTED_WEYL_ORDER = 696_729_600
+E7_EXPONENTS = (1, 5, 7, 9, 11, 13, 17)
+E7_WEYL_ORDER = prod(exponent + 1 for exponent in E7_EXPONENTS)
 
 
 def reflect_root(vector: Root, simple_root: Root) -> Root:
@@ -107,6 +109,8 @@ class E8RootStabilizerAudit:
             raise ValueError("orbit-stabilizer identity failed")
         if self.orthogonal_root_count != 126:
             raise ValueError("root perpendicular subsystem is not the expected E7 system")
+        if self.stabilizer_order != E7_WEYL_ORDER:
+            raise ValueError("derived root stabilizer order disagrees with |W(E7)|")
         return True
 
 
