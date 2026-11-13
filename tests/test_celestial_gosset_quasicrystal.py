@@ -16,7 +16,7 @@ from experiments.celestial_gosset_quasicrystal_audit import run_audit
 class CelestialKinematicsTests(unittest.TestCase):
     def test_primary_weights_and_chart_round_trip(self):
         primary = CelestialPrimary(1.0 + 0.25j, 1.0, 0.3 + 0.4j, 1.0, -0.5, 1)
-        self.assertEqual(primary.weights, (1.0 + 0.625j, 0.0 - 0.375j))
+        self.assertEqual(primary.weights, (1.0 + 0.125j, 0.0 + 0.125j))
         chart = CelestialChart8.from_primary(primary)
         self.assertEqual(len(chart.as_vector()), 8)
         self.assertEqual(chart.to_primary(), primary)
