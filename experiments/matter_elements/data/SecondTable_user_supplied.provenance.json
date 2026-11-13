@@ -1,0 +1,11 @@
+{
+  "file": "SecondTable_user_supplied.csv",
+  "sha256": "6973e882e60740c924709ac3dce760da306098e1bb1c6e2433c9994d00f97a4f",
+  "rows": 118,
+  "origin": "Supplied by the user as a chat attachment on 2026-11-12; upstream source and licence not stated by the user and not verified.",
+  "encoding": "UTF-8; contains U+FFFD replacement characters inside some Discoverer names (not used by any analysis)",
+  "notes": [
+    "Not independent of the PubChem table: Spearman >= 0.99 on all shared properties except AtomicRadius (0.79; different definition)",
+    "Type labels contain errors vs Madelung-derived groups (see research/MATTER_ELEMENT_SECOND_TABLE.md)"
+  ]
+}
