@@ -23,4 +23,4 @@ jobs:
       - name: Install numerical dependency
         run: python -m pip install numpy
       - name: Run PubChem table checks and similarity test
-        run: python -m unittest tests.test_element_structure tests.test_pubchem_elements tests.test_v8_element_map tests.test_second_table_and_grid -v
+        run: python -m unittest tests.test_element_structure tests.test_pubchem_elements tests.test_v8_element_map tests.test_second_table_and_grid tests.test_molecule_starter -v
