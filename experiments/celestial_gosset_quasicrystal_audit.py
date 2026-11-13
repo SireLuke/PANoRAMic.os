@@ -5,6 +5,12 @@ separate mathematical components. No physical coupling is asserted.
 """
 from __future__ import annotations
 import json
+from pathlib import Path
+import sys
+
+_REPOSITORY_ROOT = str(Path(__file__).resolve().parents[1])
+if _REPOSITORY_ROOT not in sys.path:
+    sys.path.insert(0, _REPOSITORY_ROOT)
 
 from core.geometry.e8_quasicrystal import run_quasicrystal_shell_audit
 from core.holography.celestial import (
