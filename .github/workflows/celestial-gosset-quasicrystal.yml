@@ -1,0 +1,33 @@
+name: Celestial and E8 quasicrystal research baseline
+
+on:
+  push:
+    branches: [research/celestial-gosset-quasicrystal-v0]
+  pull_request:
+    branches: [main]
+    paths:
+      - "core/holography/celestial.py"
+      - "core/geometry/e8_quasicrystal.py"
+      - "experiments/celestial_gosset_quasicrystal_audit.py"
+      - "tests/test_celestial_gosset_quasicrystal.py"
+      - "research/PAN_CELESTIAL_GOSSET_QUASICRYSTAL.md"
+      - ".github/workflows/celestial-gosset-quasicrystal.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: celestial-gosset-quasicrystal-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  celestial-gosset-quasicrystal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run focused regression tests
+        run: python -m unittest tests.test_celestial_gosset_quasicrystal -v
+      - name: Emit deterministic audit record
+        run: python experiments/celestial_gosset_quasicrystal_audit.py
