@@ -1,0 +1,33 @@
+name: E8 Weyl root-orbit research audit
+
+on:
+  push:
+    branches: [research/e8-weyl-orbits-v0]
+  pull_request:
+    branches: [main]
+    paths:
+      - "core/geometry/e8_weyl_orbits.py"
+      - "core/geometry/e8_root_system.py"
+      - "tests/test_e8_weyl_orbits.py"
+      - "experiments/e8_weyl_orbit_audit.py"
+      - "research/PAN_E8_WEYL_ORBITS.md"
+      - ".github/workflows/e8-weyl-orbits-research.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: e8-weyl-orbits-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  exact-root-orbit-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run exact Weyl orbit tests
+        run: python -m unittest tests.test_e8_weyl_orbits -v
+      - name: Run deterministic audit
+        run: python experiments/e8_weyl_orbit_audit.py
