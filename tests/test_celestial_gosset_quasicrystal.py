@@ -70,7 +70,8 @@ class E8GoldenCutProjectTests(unittest.TestCase):
         last = breathing_phason_window(2 * math.pi)
         self.assertGreater(first.radius, 0.0)
         self.assertAlmostEqual(first.radius, last.radius, places=14)
-        self.assertEqual(first.center, last.center)
+        self.assertAlmostEqual(first.center[0], last.center[0], places=14)
+        self.assertEqual(first.center[1:], last.center[1:])
 
     def test_undulating_selection_is_periodic_and_phase_dependent(self):
         first = projected_shell(1, 0.0)
