@@ -30,7 +30,7 @@ class WaveGeometryTests(unittest.TestCase):
         self.assertAlmostEqual(inner_product(lambda x,L:neumann_mode(0,x,L),lambda x,L:neumann_mode(0,x,L),L),1,places=7)
         self.assertAlmostEqual(inner_product(lambda x,L:neumann_mode(1,x,L),lambda x,L:neumann_mode(2,x,L),L),0,places=7)
     def test_mode_frequency(self):
-        self.assertAlmostEqual(mode_angular_frequency(2,3,4),3*math.pi,places=12)
+        self.assertAlmostEqual(mode_angular_frequency(2,3,4),1.5*math.pi,places=12)
     def test_invalid_inputs(self):
         calls=(lambda:fringe_spacing(1,0,1),lambda:phase_from_path_difference(1,0),lambda:dirichlet_mode(0,.5,1),lambda:dirichlet_mode(1,1.1,1),lambda:neumann_mode(-1,.5,1),lambda:mode_angular_frequency(1,-1,1),lambda:PlaneWave(1+0j,(),1))
         for call in calls:
