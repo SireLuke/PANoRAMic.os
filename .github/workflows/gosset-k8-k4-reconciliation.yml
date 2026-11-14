@@ -1,0 +1,26 @@
+name: Gosset simplex-cell to global-clique reconciliation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [research/gosset-k8-k4-reconciliation-v0]
+  workflow_dispatch:
+
+jobs:
+  gosset-k8-k4-reconciliation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run exact local-to-global reconciliation tests
+        run: python -m unittest tests.test_gosset_k8_k4_reconciliation -v
+      - name: Emit reproducible reconciliation report
+        run: PYTHONPATH=. python experiments/gosset_k8_k4_reconciliation.py | tee gosset_k8_k4_reconciliation.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gosset-k8-k4-reconciliation
+          path: gosset_k8_k4_reconciliation.json
