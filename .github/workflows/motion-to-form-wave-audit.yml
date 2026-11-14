@@ -1,0 +1,30 @@
+name: Motion-to-form wave geometry audit
+on:
+  push:
+    branches: [research/motion-to-form-wave-baseline-v0]
+    paths:
+      - "core/abom_v8/wave_geometry.py"
+      - "tests/test_wave_geometry.py"
+      - "experiments/wave_geometry_audit.py"
+      - ".github/workflows/motion-to-form-wave-audit.yml"
+  pull_request:
+    paths:
+      - "core/abom_v8/wave_geometry.py"
+      - "tests/test_wave_geometry.py"
+      - "experiments/wave_geometry_audit.py"
+      - ".github/workflows/motion-to-form-wave-audit.yml"
+  workflow_dispatch:
+jobs:
+  analytic-wave-baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Focused wave geometry tests
+        run: python -m unittest tests.test_wave_geometry -v
+      - name: Deterministic analytic audit
+        env:
+          PYTHONPATH: .
+        run: python experiments/wave_geometry_audit.py
