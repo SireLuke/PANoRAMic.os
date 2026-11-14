@@ -97,3 +97,103 @@ export interface LibrarySnapshot {
   trustWeightDistribution: { [key: string]: number };
 }
 
+
+// ---------------------------------------------------------------------------
+// Matter layer (declared v0). Additive: nothing above this line changed.
+//
+// Ownership: the V8 coordinate schema is owned by pan-fractal-kernel. These types only
+// MIRROR it so the Library can carry V8 states; if they disagree, the kernel wins.
+// A MatterNode does not extend LibraryNode on purpose: cultural and nuance fields would
+// have to be invented for an element. It links to a LibraryNode by id instead.
+// Nothing here is a physical claim: V8 states of elements are a declared hypothesis.
+// ---------------------------------------------------------------------------
+
+export type V8Coordinate = "h" | "R" | "u" | "d" | "tau" | "chi" | "s" | "f";
+
+/** chi in [-1, 1], all others in [0, 1]. null = unassigned or no source value (never 0 as a stand-in). */
+export type V8State = { [K in V8Coordinate]: number | null };
+
+export type MatterKind = "element" | "molecule" | "ion";
+
+export type MatterClaimLevel = "declared-hypothesis" | "canonical";
+
+export interface V8MappingRef {
+  id: string; // e.g. "matter-element-v8-map"
+  version: string; // e.g. "v0"
+  claimLevel: MatterClaimLevel;
+  schemaOwner: "pan-fractal-kernel";
+  /** Declared source of each channel, in words; "unassigned" where none. */
+  channelSources: { [K in V8Coordinate]: string };
+  researchNote: string; // repo path of the note describing the map and its test
+}
+
+export interface MatterSource {
+  id: string;
+  file: string; // repo path
+  sha256: string | null;
+  origin: string; // as stated by whoever supplied it
+  verified: boolean; // false until checked against a primary source
+}
+
+export interface MatterMeasuredValue {
+  name: string;
+  value: number | null;
+  unit: string | null;
+  unitVerified: boolean;
+  sourceId: string;
+}
+
+export interface GridPlacement {
+  row: number; // 1..9 (rows 8 and 9 are the f-block rows)
+  col: number; // 1..18
+  period: number;
+  group: number | null; // null in the f-block
+  block: "s" | "p" | "d" | "f";
+}
+
+export interface ElementData {
+  atomicNumber: number;
+  symbol: string;
+  name: string;
+  grid: GridPlacement;
+}
+
+export interface MoleculeData {
+  formula: string;
+  smiles: string | null;
+  charge: number;
+  bondName: string;
+  bondLengthAngstrom: number;
+  angleName: string | null;
+  bondAngleDegrees: number | null;
+  sourceId: string;
+}
+
+export type MatterViewKind = "grid" | "orbitals" | "nucleus" | "molecule";
+
+export interface MatterView {
+  kind: MatterViewKind;
+  status: "available" | "planned";
+  ref: string | null; // repo path of the data behind an available view
+}
+
+export interface MatterNode {
+  id: string; // "matter:element:H", "matter:molecule:H2O", "matter:ion:H3+"
+  kind: MatterKind;
+  title: string;
+  libraryNodeId: string | null; // LibraryNode carrying culture/nuance, if one exists
+  element: ElementData | null;
+  molecule: MoleculeData | null;
+  v8: V8State;
+  v8Mapping: V8MappingRef | null; // null when no map is declared for this kind
+  measured: MatterMeasuredValue[];
+  views: MatterView[];
+  sourceIds: string[];
+  claimLevel: MatterClaimLevel;
+}
+
+export interface MatterCatalog {
+  schema: string;
+  sources: MatterSource[];
+  nodes: MatterNode[];
+}

@@ -51,3 +51,10 @@ clearly below it on C.
 No claim that V8 explains the periodic table, that tau or f have element meanings, that hydrogen or E8 geometry is
 involved, or that this map is canonical. Canonical status needs: criteria 1 to 4 (baseline parity, a second data source
 or held-out elements, noble gas and halogen fixes, defined tau and f) and promotion of the experimental phase layer.
+
+## Library schema (added 2026-11-13)
+`core/library/types.ts` now carries a `MatterNode` / `MatterCatalog` schema, `core/library/matterValidation.ts` a runtime
+validator, and `experiments/matter_elements/matter_nodes.json` a 125-node catalog (118 elements, 6 molecules, H3+). Elements
+hold the declared V8 state above; molecules and ions hold an all-null V8 state and no mapping, because none is declared.
+PubChem units are recorded as unverified and every source as not yet verified. Ownership of the V8 schema is described in
+`docs/architecture/SOURCE_OF_TRUTH.md`.
