@@ -4,7 +4,7 @@ Status: **declared hypothesis**, tested once against a shuffle null. Not canonic
 Code: `experiments/matter_elements/v8_element_map.py`; tests: `tests/test_v8_element_map.py`.
 
 ## Sources used
-- Eight-coordinate state and ranges (chi in [-1,1], others in [0,1]): `docs/PAN_V8_DYNAMIC_PHASE_LAYER.md` (experimental, unmerged there).
+- Eight-coordinate state: `docs/PAN_V8_DYNAMIC_PHASE_LAYER.md` (experimental, unmerged there). The kernel contract normalises all eight coordinates to [0,1] (see `M_THEORY_11D_5_21_INTEGRATION.md` section 6 and `janus_hydra.py`); chi is therefore reported as (x+1)/2 of the signed value, 0.5 = table median. This affine change leaves the z-scored test statistics unchanged.
 - Channel contract (named channel, declared source/transform, "not a derived physical identity"; unmapped = None):
   `core/abom_v8/physics_adapters.map_scalar_to_v8`, extended to several channels.
 - V9 affine-E8 `xi` traversal is a **display layer only** (orthogonal view frames, not lattice automorphisms). It is not
@@ -18,7 +18,7 @@ Code: `experiments/matter_elements/v8_element_map.py`; tests: `tests/test_v8_ele
 | R | structural | (period - 1) / 6 |
 | h | structural | position in period / period length; exactly 1 at each noble gas; theta = 2*pi*h wraps there |
 | u | structural | occupancy of last-filled subshell / its capacity 2(2l+1) |
-| chi | measured | (electronegativity - table median) / max abs deviation |
+| chi | measured | ((electronegativity - table median) / max abs deviation + 1) / 2, in [0,1] |
 | s | measured | min-max of log10(density) |
 | d | measured | min-max of ionisation energy |
 | tau, f | unassigned | None (atomic number is an ordering, not time) |

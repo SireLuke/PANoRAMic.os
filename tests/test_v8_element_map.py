@@ -40,11 +40,9 @@ class V8ElementMapTests(unittest.TestCase):
             self.assertEqual(set(v), set(M.COORDS))
             self.assertIsNone(v["tau"])
             self.assertIsNone(v["f"])
-            for k in ("h", "R", "u", "d", "s"):
+            for k in ("h", "R", "u", "d", "s", "chi"):
                 if v[k] is not None:
                     self.assertTrue(0.0 <= v[k] <= 1.0, (st["Symbol"], k, v[k]))
-            if v["chi"] is not None:
-                self.assertTrue(-1.0 <= v["chi"] <= 1.0)
             self.assertIn("not a derived physical identity", st["mapping_kind"])
 
     def test_missing_source_gives_none_not_zero(self):

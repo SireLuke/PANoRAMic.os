@@ -110,7 +110,7 @@ export interface LibrarySnapshot {
 
 export type V8Coordinate = "h" | "R" | "u" | "d" | "tau" | "chi" | "s" | "f";
 
-/** chi in [-1, 1], all others in [0, 1]. null = unassigned or no source value (never 0 as a stand-in). */
+/** All coordinates in [0, 1] (kernel contract; chi is a unit mapping of a signed quantity). null = unassigned or no source value (never 0 as a stand-in). */
 export type V8State = { [K in V8Coordinate]: number | null };
 
 export type MatterKind = "element" | "molecule" | "ion";

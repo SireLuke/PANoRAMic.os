@@ -1,7 +1,7 @@
 """Declared element -> V8 map, v0 (numpy only). Declared hypothesis, NOT canonical, NOT a physical identity.
 
 Schema: the eight-coordinate state (h, R, u, d, tau, chi, s, f) of docs/PAN_V8_DYNAMIC_PHASE_LAYER.md
-(convention: chi in [-1, 1], all others in [0, 1]). Contract: the "named channel, declared source and transform,
+(kernel contract: all eight coordinates normalised to [0, 1], chi included; pan-fractal-kernel owns the schema). Contract: the "named channel, declared source and transform,
 no derived physical identity" wording of core/abom_v8/physics_adapters.map_scalar_to_v8, extended to several
 channels. Unassigned channels stay None (never 0: a zero would read as a measurement).
 
@@ -13,7 +13,9 @@ NOT tested for group recovery, because they largely determine group and block, s
   u   = occupancy of the last-filled subshell / its capacity 2(2l+1)
 
 MEASURED channels (PubChem table; the only channels the null test may use):
-  chi = (Electronegativity - median) / max|deviation|, in [-1, 1]
+  chi = (x + 1) / 2 with x = (Electronegativity - median) / max|deviation| in [-1, 1]; so chi is in [0, 1], 0.5 = table median.
+        (The (x + 1) / 2 unit mapping was added 2026-11-13 to meet the kernel contract; it is affine, so the z-scored
+        test statistics below are unchanged.)
   s   = min-max of log10(Density)
   d   = min-max of IonizationEnergy
 UNASSIGNED: tau (atomic number is an ordering, not time), f.
@@ -50,7 +52,7 @@ SOURCES = {
     "R": "structural: period of Madelung configuration",
     "h": "structural: position in period / period length",
     "u": "structural: last-filled subshell occupancy / capacity",
-    "chi": "measured: Electronegativity, centred at table median, scaled by max |deviation|",
+    "chi": "measured: Electronegativity, centred at table median, scaled by max |deviation|, mapped to [0, 1] by (x + 1) / 2",
     "s": "measured: log10 Density, min-max",
     "d": "measured: IonizationEnergy, min-max",
     "tau": "unassigned", "f": "unassigned",
@@ -92,7 +94,8 @@ def v8_state(row: dict, norm: dict) -> dict:
     out.update(structural(z))
     en, rho, ie = _val(row, "Electronegativity"), _val(row, "Density"), _val(row, "IonizationEnergy")
     if en is not None:
-        out["chi"] = max(-1.0, min(1.0, (en - norm["en_median"]) / norm["en_scale"]))
+        x = max(-1.0, min(1.0, (en - norm["en_median"]) / norm["en_scale"]))
+        out["chi"] = 0.5 * (x + 1.0)
     if rho is not None:
         out["s"] = (math.log10(rho) - norm["logrho_min"]) / (norm["logrho_max"] - norm["logrho_min"])
     if ie is not None:
