@@ -1,6 +1,6 @@
 # Panitarian Audit Specification (RAMS Act)
 
-The Panitarian audit subsystem enforces the Real Asset Market Standard Act (RAMS).  
+The Panitarian audit subsystem enforces the Real Asset Market Standard (a RAMS governance standard). RAMS itself is the Real Asset Management System.  
 It ensures transparency, prevents corruption, and stabilizes global economic behavior.
 
 ---
