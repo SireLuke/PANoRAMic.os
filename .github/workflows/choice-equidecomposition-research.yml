@@ -1,0 +1,29 @@
+name: Choice and equidecomposition research audit
+
+on:
+  push:
+    branches: [research/choice-equidecomposition-v0]
+  pull_request:
+    branches: [main]
+    paths:
+      - "core/geometry/choice_equidecomposition.py"
+      - "tests/test_choice_equidecomposition.py"
+      - "research/PAN_CHOICE_EQUIDECOMPOSITION.md"
+      - ".github/workflows/choice-equidecomposition-research.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: choice-equidecomposition-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  finite-choice-equidecomposition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run focused regression tests
+        run: python -m unittest tests.test_choice_equidecomposition -v
