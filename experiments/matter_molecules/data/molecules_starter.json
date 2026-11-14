@@ -1,0 +1,17 @@
+{
+  "provenance": {
+    "supplied_by_user": "Scientific_and_Physical_Data_Reference.pdf (1 page), sha256 0617191ac8e12eb0913a5d0c293a85a41774de6d29b585569d00b267760ed556, attached 2026-11-13. The PDF cites no primary sources ('literature surveys', 'compiled').",
+    "note": "The PDF subtitle mentions isotope classifications and energy levels; the file contains neither.",
+    "web_checked_2026-11-13": "H3+ entry only: https://en.wikipedia.org/wiki/Trihydrogen_cation. Geometry values for the other six were NOT yet checked against NIST CCCBDB.",
+    "bond_length_meaning": "Length of the bond named in bond_name, in angstrom; bond_angle_deg is the angle named in angle_name."
+  },
+  "molecules": [
+    {"name": "Water", "formula": "H2O", "smiles": "O", "charge": 0, "bond_name": "O-H", "bond_length_A": 0.9584, "angle_name": "H-O-H", "bond_angle_deg": 104.5, "source": "user PDF", "status": "supplied, not yet checked against CCCBDB"},
+    {"name": "Methane", "formula": "CH4", "smiles": "C", "charge": 0, "bond_name": "C-H", "bond_length_A": 1.0870, "angle_name": "H-C-H", "bond_angle_deg": 109.5, "source": "user PDF", "status": "supplied, not yet checked against CCCBDB"},
+    {"name": "Carbon dioxide", "formula": "CO2", "smiles": "O=C=O", "charge": 0, "bond_name": "C=O", "bond_length_A": 1.1600, "angle_name": "O=C=O", "bond_angle_deg": 180.0, "source": "user PDF", "status": "supplied, not yet checked against CCCBDB"},
+    {"name": "Ammonia", "formula": "NH3", "smiles": "N", "charge": 0, "bond_name": "N-H", "bond_length_A": 1.0120, "angle_name": "H-N-H", "bond_angle_deg": 106.7, "source": "user PDF", "status": "supplied, not yet checked against CCCBDB"},
+    {"name": "Hydrogen chloride", "formula": "HCl", "smiles": "Cl", "charge": 0, "bond_name": "H-Cl", "bond_length_A": 1.2745, "angle_name": null, "bond_angle_deg": null, "source": "user PDF", "status": "supplied, not yet checked against CCCBDB"},
+    {"name": "Ethene", "formula": "C2H4", "smiles": "C=C", "charge": 0, "bond_name": "C=C", "bond_length_A": 1.3390, "angle_name": "C=C-H", "bond_angle_deg": 121.3, "source": "user PDF", "status": "supplied, not yet checked against CCCBDB"},
+    {"name": "Trihydrogen cation", "formula": "H3", "smiles": null, "charge": 1, "bond_name": "H-H (equilateral triangle side)", "bond_length_A": 0.90, "angle_name": "H-H-H", "bond_angle_deg": 60.0, "source": "added at user request; Wikipedia (Trihydrogen cation)", "status": "web source only; 0.90 A is a rounded figure, the ab initio equilibrium value is believed to be about 0.87 A (to confirm); no single standard SMILES (two electrons shared over three centres)"}
+  ]
+}
