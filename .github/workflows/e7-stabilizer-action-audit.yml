@@ -1,0 +1,33 @@
+name: E7 stabilizer action audit
+
+on:
+  push:
+    branches:
+      - research/e7-stabilizer-action-v0
+    paths:
+      - "core/geometry/e7_stabilizer_action.py"
+      - "tests/test_e7_stabilizer_action.py"
+      - "experiments/e7_stabilizer_action_audit.py"
+      - ".github/workflows/e7-stabilizer-action-audit.yml"
+  pull_request:
+    paths:
+      - "core/geometry/e7_stabilizer_action.py"
+      - "tests/test_e7_stabilizer_action.py"
+      - "experiments/e7_stabilizer_action_audit.py"
+      - ".github/workflows/e7-stabilizer-action-audit.yml"
+  workflow_dispatch:
+
+jobs:
+  exact-e7-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run focused E7 tests
+        run: python -m unittest tests.test_e7_stabilizer_action -v
+      - name: Run deterministic audit
+        env:
+          PYTHONPATH: .
+        run: python experiments/e7_stabilizer_action_audit.py
