@@ -27,13 +27,11 @@ jobs:
 
   lean-proof:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: lean
     steps:
       - uses: actions/checkout@v4
       - uses: leanprover/lean-action@v1
         with:
-          lean-version: v4.19.0
+          lake-package-directory: lean
       - name: Build Lean formalization
+        working-directory: lean
         run: lake build
