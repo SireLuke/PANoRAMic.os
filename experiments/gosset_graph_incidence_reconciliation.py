@@ -212,11 +212,6 @@ def reconcile_incidence(simplex_cells, simplex_faces, orthoplex_cells, orthoplex
         for face in combinations(cell_set - {ZERO}, 7):
             key = tuple(sorted((ZERO,) + tuple(face)))
             owners[key].append(("simplex", cell))
-    for cell in orthoplex_cells:
-        # Use the independently generated face incidence map as the membership
-        # source; locate the unique owning cell by exact vertex containment.
-        pass
-
     # Index orthoplex cells by their origin faces. Each cell contributes 128.
     orth_face_owners = defaultdict(list)
     for cell in orthoplex_cells:
@@ -241,9 +236,13 @@ def reconcile_incidence(simplex_cells, simplex_faces, orthoplex_cells, orthoplex
 
     if Counter(map(len, orth_face_owners.values())) != Counter({1: 138240, 2: 69120}):
         raise ArithmeticError("orthoplex origin-face multiplicity profile mismatch")
-    if set(simplex_faces) != set(orth_face_owners):
+    if not set(simplex_faces).issubset(orth_face_owners):
         raise ArithmeticError(
-            "simplex and orthoplex origin-face sets do not coincide exactly"
+            "a simplex origin face is absent from the graph-derived orthoplex incidence"
+        )
+    if any(len(orth_face_owners[face]) != 1 for face in simplex_faces):
+        raise ArithmeticError(
+            "each simplex/orthoplex shared face must have exactly one orthoplex owner"
         )
     if Counter(map(len, owners.values())) != Counter({1: EXPECTED_SIMPLEX_ORIGIN_FACES}):
         raise ArithmeticError("simplex owner enumeration is not unique")
@@ -330,10 +329,6 @@ def run_reconciliation():
     simplex_facets = simplex_facet_orbit(roots)
     simplex_cells, simplex_faces = origin_faces_of_simplex_cells(roots, simplex_facets)
     orthoplex_faces = origin_faces_of_orthoplex_cells(orthoplex_cells)
-    if Counter(map(len, [tuple(x) for x in []])):
-        raise AssertionError("unreachable")
-    if Counter(map(len, orthoplex_faces.items())):
-        raise AssertionError("unreachable")
     if len(orthoplex_faces) != EXPECTED_UNIQUE_ORIGIN_FACES:
         raise ArithmeticError("unexpected unique orthoplex origin-face count")
 
