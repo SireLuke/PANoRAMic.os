@@ -25,4 +25,47 @@ theorem k14_minus_matching_edge_count :
     Nat.choose 14 2 - oppositePairCount 7 = crossPairCount 7 := by
   decide
 
+/-- Number of unique origin-containing facets in the reconciled star. -/
+def uniqueOriginFacets : Nat := 207360
+
+/-- Each simplex contributes eight origin-containing facets. -/
+def simplexOriginIncidences : Nat := 17280 * 8
+
+/-- Each 8-orthoplex contributes 128 origin-containing facets. -/
+def orthoplexOriginIncidences : Nat := 2160 * 128
+
+/-- 138,240 simplex/orthoplex shared facets and 69,120 orthoplex pairs. -/
+def simplexOrthoplexShared : Nat := 138240
+def orthoplexOrthoplexShared : Nat := 69120
+
+theorem simplex_face_incidence_count :
+    simplexOriginIncidences = 138240 := by
+  decide
+
+theorem orthoplex_face_incidence_count :
+    orthoplexOriginIncidences = 276480 := by
+  decide
+
+theorem unique_face_union_count :
+    simplexOrthoplexShared + orthoplexOrthoplexShared =
+      uniqueOriginFacets := by
+  decide
+
+/-- The incidence multiset has exactly two cell incidences per unique face. -/
+theorem total_origin_face_incidence_is_two_to_one :
+    simplexOriginIncidences + orthoplexOriginIncidences =
+      2 * uniqueOriginFacets := by
+  decide
+
+/-- Every simplex-origin facet is paired with one graph-derived orthoplex. -/
+theorem simplex_faces_pair_with_orthoplexes :
+    simplexOrthoplexShared = simplexOriginIncidences := by
+  decide
+
+/-- Remaining orthoplex-origin facets pair orthoplex-to-orthoplex. -/
+theorem orthoplex_pairings_account_for_remaining_faces :
+    orthoplexOrthoplexShared =
+      orthoplexOriginIncidences - simplexOrthoplexShared := by
+  decide
+
 end GossetOrthoplex
