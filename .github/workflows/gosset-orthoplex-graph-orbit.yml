@@ -18,12 +18,14 @@ jobs:
           python-version: "3.12"
       - name: Run independent graph-to-Weyl reconciliation
         run: python -m unittest tests.test_gosset_orthoplex_graph_orbit -v
-      - name: Emit exact audit report
-        run: PYTHONPATH=. python experiments/gosset_orthoplex_graph_orbit.py | tee gosset_orthoplex_graph_orbit.json
+      - name: Run graph-to-cell incidence reconciliation
+        run: python -m unittest tests.test_gosset_graph_incidence_reconciliation -v
+      - name: Emit exact incidence reconciliation report
+        run: PYTHONPATH=. python experiments/gosset_graph_incidence_reconciliation.py | tee gosset_graph_incidence_reconciliation.json
       - uses: actions/upload-artifact@v4
         with:
-          name: gosset-orthoplex-graph-orbit
-          path: gosset_orthoplex_graph_orbit.json
+          name: gosset-graph-incidence-reconciliation
+          path: gosset_graph_incidence_reconciliation.json
 
   lean-proof:
     runs-on: ubuntu-latest
