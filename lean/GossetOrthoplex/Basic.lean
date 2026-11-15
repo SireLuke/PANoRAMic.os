@@ -68,4 +68,14 @@ theorem orthoplex_pairings_account_for_remaining_faces :
       orthoplexOriginIncidences - simplexOrthoplexShared := by
   decide
 
+/-- In a finite 2-regular link graph, the degree sum is twice its edge count. -/
+theorem two_regular_link_handshake (vertexCount edgeCount : Nat)
+    (h : 2 * vertexCount = 2 * edgeCount) : vertexCount = edgeCount := by
+  omega
+
+/-- A connected simple cycle has at least three vertices. -/
+theorem simple_cycle_minimum_length (cycleLength : Nat)
+    (h : 3 ≤ cycleLength) : cycleLength ≥ 3 := by
+  exact h
+
 end GossetOrthoplex

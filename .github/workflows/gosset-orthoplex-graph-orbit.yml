@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [research/gosset-orthoplex-graph-orbit-v0]
+    branches: [research/gosset-orthoplex-graph-orbit-v0, research/gosset-codim2-link-audit-v0]
   workflow_dispatch:
 
 jobs:
@@ -20,6 +20,14 @@ jobs:
         run: python -m unittest tests.test_gosset_orthoplex_graph_orbit -v
       - name: Run graph-to-cell incidence reconciliation
         run: python -m unittest tests.test_gosset_graph_incidence_reconciliation -v
+      - name: Run codimension-two link-cycle audit
+        run: python -m unittest tests.test_gosset_codim2_link_audit -v
+      - name: Emit codimension-two link audit report
+        run: PYTHONPATH=. python experiments/gosset_codim2_link_audit.py | tee gosset_codim2_link_audit.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gosset-codim2-link-audit
+          path: gosset_codim2_link_audit.json
       - name: Emit exact incidence reconciliation report
         run: PYTHONPATH=. python experiments/gosset_graph_incidence_reconciliation.py | tee gosset_graph_incidence_reconciliation.json
       - uses: actions/upload-artifact@v4
