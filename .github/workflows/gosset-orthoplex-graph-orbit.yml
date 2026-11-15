@@ -1,0 +1,37 @@
+name: Gosset orthoplex graph-orbit audit
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [research/gosset-orthoplex-graph-orbit-v0]
+  workflow_dispatch:
+
+jobs:
+  graph-orbit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run independent graph-to-Weyl reconciliation
+        run: python -m unittest tests.test_gosset_orthoplex_graph_orbit -v
+      - name: Emit exact audit report
+        run: PYTHONPATH=. python experiments/gosset_orthoplex_graph_orbit.py | tee gosset_orthoplex_graph_orbit.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gosset-orthoplex-graph-orbit
+          path: gosset_orthoplex_graph_orbit.json
+
+  lean-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: lean
+      - name: Build Lean formalization
+        working-directory: lean
+        run: lake build
