@@ -16,7 +16,7 @@ class GossetCodimensionTwoLinkAuditTests(unittest.TestCase):
         self.assertTrue(audit["all_link_vertices_have_degree_two"])
         self.assertTrue(audit["no_parallel_link_edges"])
         self.assertEqual(audit["max_link_vertex_degree"], 2)
-        self.assertEqual(audit["facet_cell_owner_multiplicity"], {"2": 207360})
+        self.assertEqual(audit["facet_cell_owner_multiplicity"], {2: 207360})
 
 
 if __name__ == "__main__":
