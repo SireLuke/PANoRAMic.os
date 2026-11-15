@@ -13,7 +13,7 @@ PAR, RAMS, and the Humanitarian/Ecological and Stewardship/Dignity pools.
   allocations from actually collected citizen-tax revenue.
 - **PAR:** Economic circulation, reference valuation, conversion, transaction
   settlement, monetary accounting, demurrage, and pool-credit posting.
-- **RAMS:** Resource audit and management. It acts upon PAR through governed,
+- **RAMS:** Real Asset Management System (resource audit and management over an open public database; no surveillance). It acts upon PAR through governed,
   versioned scarcity/resource measurements, constraints, and authorized
   resource-management operations. PAR validates inputs before monetary effect.
 

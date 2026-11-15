@@ -1,4 +1,4 @@
-# PANoRAMic.os RAMS
+# PANoRAMic.os RAMS — Real Asset Management System
 
 RAMS acts upon PAR through governed resource/scarcity inputs, audit findings,
 and resource-management operations. It is not PAR's monetary ledger and does

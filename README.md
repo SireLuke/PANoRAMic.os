@@ -1,37 +1,7 @@
-<!-- 🌐 Auto‑Detect Language Routing -->
-<script>
-(function() {
-  // Map browser language codes to your translation files
-  const langMap = {
-    "zh": "translations/README.zh-CN.md",
-    "zh-CN": "translations/README.zh-CN.md",
-    "es": "translations/README.es.md",
-    "hi": "translations/README.hi.md",
-    "ar": "translations/README.ar.md",
-    "fr": "translations/README.fr.md",
-    "pt": "translations/README.pt.md",
-    "de": "translations/README.de.md"
-  };
+# 🌍 PANoRAMic.os
 
-  // Detect browser language
-  const userLang = (navigator.language || navigator.userLanguage || "").toLowerCase();
+**Planetary Always‑On Resource Allocation & Management Operating System**
 
-  // If we have a match, redirect once
-  if (langMap[userLang]) {
-    // Avoid infinite loops by checking if already on a translation page
-    if (!window.location.pathname.includes("translations")) {
-      window.location.href = langMap[userLang];
-    }
-  }
-})();
-</script>
-
-
-🌍 PANoRAMic.os
-
-Planetary Always‑On Resource Allocation & Management Operating System
-# 🌍 PANoRAMic.os  
-Planetary Always‑On Resource Allocation & Management Operating System
 <img width="8642" height="10027" alt="diagram" src="https://github.com/user-attachments/assets/2246afb0-6e7e-4690-ae5a-67e49a4d80d0" />
 Multilingual Versions  
 Choose your language:
@@ -110,10 +80,12 @@ Every RAMS audit, node evolution, ecological shift, infrastructure change, and P
 
 ---
 
-⚙️ RAMS — Resource Audit & Management System
+⚙️ RAMS — Real Asset Management System
 
 RAMS is the planetary audit engine inside PANoRAMic.os.  
-It continuously evaluates the planet’s condition and determines how resources should flow.
+It covers everything real — land, water, energy, materials, food, infrastructure — and continuously evaluates its condition from an **open public database** to determine how resources should flow.
+
+RAMS reads public datasets and aggregate indicators only. It does not collect personal data, track individuals, or perform surveillance.
 
 RAMS operates like a planetary immune system, detecting stress, imbalance, and risk across:
 
@@ -161,7 +133,8 @@ PAR Core Components
 Boot-time PAR supply is capped by population, a 1.35 float multiplier, and the Resource Scarcity Dynamic Vector (RSDV, clamped 0.65–1.00):
 
 \[
-PAR_{{max}} = \{Global Pop} \times 1.35 \times RSDV\]
+\text{PAR}_{\max} = \text{population} \times 1.35 \times \text{RSDV}
+\]
 
 RAMS also enforces a resource-backed dynamic cap:
 

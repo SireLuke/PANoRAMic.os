@@ -138,7 +138,7 @@ PANoRAMic.os/
 │   └── domain command folders (par, nodes, ecology, ...)
 │
 ├── core/                         # Models, audits, worldstate, pillars
-├── rams/                         # Resource Audit & Management System
+├── rams/                         # Real Asset Management System
 ├── signals/                      # Signal computation
 ├── dashboard/                    # Static/HTML dashboard + panels
 ├── app/                          # Vite + React frontend workspace

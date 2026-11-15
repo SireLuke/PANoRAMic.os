@@ -80,7 +80,7 @@ La couche de mémoire alimente un essaim interne de micro‑modèles IA. Grâce 
 
 ---
 
-## ⚙️ RAMS — Système d’Audit et de Gestion des Ressources
+## ⚙️ RAMS — Système de Gestion des Actifs Réels
 
 RAMS est le moteur d’audit planétaire de PANoRAMic.os. Il fonctionne linéairement comme une chronologie continue à tic unique, éliminant les erreurs de synchronisation humaine. Il évalue en permanence l’état de la planète via des sources institutionnelles (NASA, WHO, Banque Mondiale, ICC, Wiki) pour déterminer les flux de ressources.
 

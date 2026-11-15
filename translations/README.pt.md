@@ -80,7 +80,7 @@ A camada de memória ancora um enxame interno de micro‑modelos IA. Usando RAG 
 
 ---
 
-## ⚙️ RAMS — Sistema de Auditoria e Gestão de Recursos
+## ⚙️ RAMS — Sistema de Gestão de Ativos Reais
 
 RAMS é o motor de auditoria planetária dentro do PANoRAMic.os. Ele opera linearmente como uma cronologia contínua de um único tic, eliminando erros de sincronização humana. Avalia continuamente a condição do planeta através de fontes institucionais (NASA, WHO, Banco Mundial, ICC, Wiki).
 
