@@ -1,4 +1,4 @@
-import Mathlib
+import Lean
 
 namespace GossetOrthoplex
 
@@ -10,18 +10,19 @@ def crossPairCount (k : Nat) : Nat := 4 * Nat.choose k 2
 
 theorem seven_pairs_have_fourteen_vertices :
     2 * oppositePairCount 7 = 14 := by
-  norm_num [oppositePairCount]
+  decide
 
 theorem seven_pair_cross_edges :
     crossPairCount 7 = 84 := by
-  norm_num [crossPairCount]
+  decide
 
 theorem seven_pair_non_edges :
     oppositePairCount 7 = 7 := by
-  rfl
+  decide
 
+/-- K14 has 91 unordered pairs; removing the seven opposite pairs leaves 84. -/
 theorem k14_minus_matching_edge_count :
     Nat.choose 14 2 - oppositePairCount 7 = crossPairCount 7 := by
-  norm_num [oppositePairCount, crossPairCount]
+  decide
 
 end GossetOrthoplex
