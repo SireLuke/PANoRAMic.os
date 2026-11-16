@@ -1,0 +1,41 @@
+name: Library archive source
+
+on:
+  push:
+    branches: [main, feat/loa-kiwix-archive-source]
+    paths:
+      - "core/library/**"
+      - "tests/library_archive_check.ts"
+      - "tests/test_library_archive.py"
+      - "tools/kiwix_smoke.ts"
+      - ".github/workflows/library-archive.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "core/library/**"
+      - "tests/library_archive_check.ts"
+      - "tests/test_library_archive.py"
+      - "tools/kiwix_smoke.ts"
+      - ".github/workflows/library-archive.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: library-archive-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  library-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install TypeScript
+        run: npm install --global typescript@5
+      - name: Archive adapter checks (fake kiwix-serve, no network)
+        run: python -m unittest tests.test_library_archive -v

@@ -112,6 +112,10 @@ const results = libraryOfAlexandria.search({
 console.log(results); // Returns ranked search results with alignment scores
 ```
 
+## Offline archive source
+
+The Library can read a local Kiwix archive (for example an offline Wikipedia) through `kiwix-serve`, without copying it in or phoning home. See [ARCHIVE.md](./ARCHIVE.md).
+
 ## Categories Preserved
 
 - **Knowledge**: Scientific discoveries, theories, methodologies
