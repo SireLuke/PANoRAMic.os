@@ -9,6 +9,7 @@ import csv
 import hashlib
 import io
 import json
+from datetime import datetime, timezone
 from urllib.request import Request, urlopen
 
 ZENODO_FILES = {
@@ -19,13 +20,14 @@ ZENODO_FILES = {
 BASE_URL = "https://zenodo.org/records/18697242/files/{}?download=1"
 
 
-def fetch_verified_csv(filename: str) -> tuple[list[str], list[dict[str, str]], str]:
+def fetch_verified_csv(filename: str) -> tuple[list[str], list[dict[str, str]], str, str]:
     if filename not in ZENODO_FILES:
         raise ValueError(f"unregistered Zenodo file: {filename}")
     request = Request(BASE_URL.format(filename), headers={"User-Agent": "PAN-FFS-audit/1.0"})
     with urlopen(request, timeout=30) as response:
         payload = response.read()
     digest = hashlib.md5(payload).hexdigest()
+    sha256 = hashlib.sha256(payload).hexdigest()
     expected = ZENODO_FILES[filename]
     if digest != expected:
         raise ValueError(f"MD5 mismatch for {filename}: {digest} != {expected}")
@@ -34,7 +36,7 @@ def fetch_verified_csv(filename: str) -> tuple[list[str], list[dict[str, str]], 
     if not reader.fieldnames:
         raise ValueError(f"missing CSV header: {filename}")
     rows = list(reader)
-    return list(reader.fieldnames), rows, digest
+    return list(reader.fieldnames), rows, digest, sha256
 
 
 def _number(row: dict[str, str], key: str) -> float:
@@ -94,9 +96,11 @@ def audit_zenodo_ffs_dataset() -> dict:
     files = {}
     loaded = {}
     for filename in ZENODO_FILES:
-        header, rows, digest = fetch_verified_csv(filename)
+        header, rows, digest, sha256 = fetch_verified_csv(filename)
         files[filename] = {
             "md5": digest,
+            "sha256": sha256,
+            "retrieved_utc": datetime.now(timezone.utc).isoformat(),
             "rows": len(rows),
             "columns": header,
         }
@@ -144,7 +148,17 @@ def audit_zenodo_ffs_dataset() -> dict:
     return {
         "dataset": "Zeng et al., Realization of fractional Fermi seas",
         "zenodo_record": "10.5281/zenodo.18697242",
+        "source_version": "v1",
+        "published_utc": "2026-02-19",
+        "retrieved_utc": datetime.now(timezone.utc).isoformat(),
+        "license": "not_declared_in_accessible_zenodo_record; do_not_redistribute_until_confirmed",
+        "source_url": "https://zenodo.org/records/18697242",
         "files": files,
+        "file_usage": {
+            "figure3A_data.csv": "checksum/provenance plus required-column schema check; momentum-profile comparison not recomputed",
+            "figure3B_data.csv": "experimental correlation columns used for zero-crossing and first-trough diagnostics; supplied error columns retained but not propagated",
+            "figure3C_data.csv": "checksum/provenance only; log-correlation values are not analyzed in this run",
+        },
         "correlation_diagnostics": series,
         "interpretation": (
             "Measured figure data and GHD series are provenance-checked. "

@@ -1,14 +1,43 @@
-# No empirical data bundled in STRATA-002 v0.1.
-# Add one record per dataset before use:
-# - dataset_id:
-#   domain:
-#   source_url:
-#   source_version_or_release:
-#   license:
-#   retrieved_utc:
-#   checksum_sha256:
-#   inclusion_criteria:
-#   exclusions:
-#   preprocessing_version:
-#   train_test_split_policy:
-datasets: []
+# STRATA empirical dataset registry.
+# Data are fetched at run time and are not copied into the repository.
+datasets:
+  - dataset_id: zeng-et-al-realization-fractional-fermi-seas-v1
+    domain: experimental-quantum-gas-physics
+    source_url: https://zenodo.org/records/18697242
+    source_doi: 10.5281/zenodo.18697242
+    source_version_or_release: v1
+    published_utc: 2026-02-19
+    license: not_declared_in_accessible_zenodo_record
+    redistribution_policy: transient_fetch_only; do_not_repackage_or_redistribute_until_license_is_confirmed
+    retrieved_utc: recorded_per_file_in_generated_run_output
+    checksum_sha256: computed_per_retrieval_and_recorded_in_generated_run_output
+    source_checksum_md5:
+      figure3A_data.csv: 068240a2069550d96d0d302c40cab666
+      figure3B_data.csv: 2319b4d9cf9114466addc103525cd92d
+      figure3C_data.csv: b98af0284338f88a4fb39e8ea82972b4
+    included_files:
+      - figure3A_data.csv
+      - figure3B_data.csv
+      - figure3C_data.csv
+    excluded_files_and_reason:
+      figure4A_data.csv: not used in the current momentum/correlation diagnostic
+      figure4B_data.csv: not used in the current momentum/correlation diagnostic
+      lifetime_point_C_data.csv: lifetime analysis deferred to a separately preregistered question
+    inclusion_criteria:
+      - published Zenodo v1 figure CSVs for Figure 3A, 3B, and 3C
+      - require source-published MD5 checksum match before parsing
+      - require CSV headers and paired nonblank x/y observations
+    analysis_usage:
+      figure3A_data.csv: provenance_and_schema_check_only
+      figure3B_data.csv: experimental_correlation_diagnostics
+      figure3C_data.csv: provenance_only_not_analyzed
+    preprocessing_version: strata-zeng-ffs-csv-v1
+    preprocessing:
+      - decode UTF-8 with optional BOM
+      - parse CSV headers and numeric columns
+      - reject half-missing x/y sample pairs
+      - sort extracted correlation samples by x
+      - use nonnegative separation for first-zero-crossing diagnostics
+      - retain experimental error columns as source data; no uncertainty propagation yet
+    train_test_split_policy: no predictive split; descriptive source audit only
+    status: empirical_source_ingested_descriptive_only

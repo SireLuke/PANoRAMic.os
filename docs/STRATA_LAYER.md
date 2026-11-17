@@ -94,3 +94,28 @@ The dependency-free STRATA-002 smoke implementation lives in [`experiments/strat
 ## Non-goals
 
 STRATA does not assume that one representation is universal, that V8 is a physical law, that a geometric analogy implies causal identity, or that every domain must map cleanly into the same coordinates. Its job is to make such claims testable and falsifiable.
+
+
+## STRATA-003: Fermi disk partition and empirical FFS source audit
+
+The current empirical source adapter is registered in
+[`experiments/strata/datasets/manifest.yaml`](../experiments/strata/datasets/manifest.yaml).
+It transiently retrieves the Figure 3 CSVs for Zeng et al.,
+*Realization of fractional Fermi seas* (Zenodo v1, DOI
+10.5281/zenodo.18697242), checks the publisher-provided MD5 values, and records
+per-retrieval SHA-256 digests and UTC retrieval timestamps. The accessible
+Zenodo record does not expose a dataset license; files are not redistributed
+pending confirmation.
+
+The independent area verifier checks the Fractal Kernel's exact unit-disk
+semicircle partition. With `delta=2N-1`, `d_black=1-delta` and
+`d_white=1+delta`, the white area is
+`pi/2 - pi*d_black^2/8 + pi*d_white^2/8 = pi*N`; the black area is
+`pi*(1-N)`. This is exact because the two diameters sum to 2. Decorative
+Gerono/lemniscate eye marks are excluded from area accounting. The Gerono
+transport curve is a separate experiment, not the yin-yang disk boundary.
+
+STRATA-003 reports dataset ingestion and analytic identity separately from
+cross-domain validation. Scale transfer, independent domains, independent
+representations, structure-preserving controls, held-out prediction, and
+uncertainty propagation remain explicitly `not_tested`.
