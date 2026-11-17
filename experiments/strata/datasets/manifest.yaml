@@ -27,6 +27,10 @@ datasets:
       - published Zenodo v1 figure CSVs for Figure 3A, 3B, and 3C
       - require source-published MD5 checksum match before parsing
       - require CSV headers and paired nonblank x/y observations
+    analysis_usage:
+      figure3A_data.csv: provenance_and_schema_check_only
+      figure3B_data.csv: experimental_correlation_diagnostics
+      figure3C_data.csv: provenance_only_not_analyzed
     preprocessing_version: strata-zeng-ffs-csv-v1
     preprocessing:
       - decode UTF-8 with optional BOM
