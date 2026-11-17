@@ -20,7 +20,7 @@ def main() -> dict:
     return {
         "run_id": "STRATA-003-FERMI-DISK-FFS-001",
         "protocol": "STRATA-0.1",
-        "status": "PASS" if area_identity and dataset["files"] else "FAIL",
+        "status": "INCONCLUSIVE" if area_identity and dataset["files"] else "FAIL",
         "fermi_disk_partition": {
             "status": "PASS" if area_identity else "FAIL",
             "states": states,
@@ -30,7 +30,8 @@ def main() -> dict:
         "zeng_ffs_dataset": dataset,
         "strata_dimensions": [
             {"dimension": "Fermi disk area identity", "status": "pass" if area_identity else "fail"},
-            {"dimension": "empirical source provenance and file checksums", "status": "pass"},
+            {"dimension": "source identity and published checksum verification", "status": "pass"},
+            {"dimension": "dataset license and reuse permission", "status": "inconclusive"},
             {"dimension": "one experimental domain", "status": "pass"},
             {"dimension": "three meaningful scales", "status": "not_tested"},
             {"dimension": "independent domains", "status": "not_tested"},
