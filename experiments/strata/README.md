@@ -59,3 +59,13 @@ output. The accessible Zenodo record does not declare a dataset license;
 the files are not bundled or redistributed. This is descriptive empirical
 data ingestion, not held-out prediction, GHD reproduction, or cross-domain
 validation. See `datasets/manifest.yaml` for provenance and preprocessing.
+
+
+### Zeng file-use boundary
+
+All three Figure 3 CSVs are checksum-verified and recorded in the manifest.
+The current descriptive analysis uses the experimental correlation columns in
+Figure 3B for zero-crossing and first-trough diagnostics. Figure 3A is checked
+for its expected momentum/GHD columns but its profile is not recomputed;
+Figure 3C is provenance-checked but not analyzed. Supplied error columns are
+retained in source rows but are not propagated into the reported diagnostics.
