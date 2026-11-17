@@ -1,1 +1,3 @@
 import GossetOrthoplex.Basic
+
+import GossetOrthoplex.FermiDiskPartition
