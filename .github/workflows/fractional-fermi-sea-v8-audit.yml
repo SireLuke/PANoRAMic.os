@@ -19,12 +19,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Run STRATA Fermi disk-partition tests
+        run: python -m unittest tests.test_strata_003_fermi_disk_partition -v
       - name: Run fractional Fermi sea reference tests
         run: python -m unittest tests.test_fractional_fermi_sea -v
       - name: Run Zenodo dataset audit helper tests
         run: python -m unittest tests.test_ffs_zenodo_audit -v
-      - name: Fetch and audit published Zenodo figure data
-        run: python experiments/fractional_fermi_sea/zenodo_dataset_audit.py
+      - name: Run STRATA-003 Fermi disk-partition and Zeng FFS evidence audit
+        run: PYTHONPATH=. python experiments/strata/run_strata_003.py
       - name: Run existing ABOM V8 baseline tests
         run: python -m unittest discover -s tests -p 'test_abom_v8_model.py' -v
       - name: Run existing ABOM V8 adapter tests
