@@ -20,7 +20,7 @@ ZENODO_FILES = {
 BASE_URL = "https://zenodo.org/records/18697242/files/{}?download=1"
 
 
-def fetch_verified_csv(filename: str) -> tuple[list[str], list[dict[str, str]], str]:
+def fetch_verified_csv(filename: str) -> tuple[list[str], list[dict[str, str]], str, str]:
     if filename not in ZENODO_FILES:
         raise ValueError(f"unregistered Zenodo file: {filename}")
     request = Request(BASE_URL.format(filename), headers={"User-Agent": "PAN-FFS-audit/1.0"})
@@ -154,6 +154,11 @@ def audit_zenodo_ffs_dataset() -> dict:
         "license": "not_declared_in_accessible_zenodo_record; do_not_redistribute_until_confirmed",
         "source_url": "https://zenodo.org/records/18697242",
         "files": files,
+        "file_usage": {
+            "figure3A_data.csv": "checksum/provenance plus required-column schema check; momentum-profile comparison not recomputed",
+            "figure3B_data.csv": "experimental correlation columns used for zero-crossing and first-trough diagnostics; supplied error columns retained but not propagated",
+            "figure3C_data.csv": "checksum/provenance only; log-correlation values are not analyzed in this run",
+        },
         "correlation_diagnostics": series,
         "interpretation": (
             "Measured figure data and GHD series are provenance-checked. "
