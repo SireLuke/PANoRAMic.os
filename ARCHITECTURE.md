@@ -264,4 +264,4 @@ Architectural boundaries:
 
 Specification: [docs/STRATA_LAYER.md](docs/STRATA_LAYER.md).
 
-The first experimental implementation is maintained separately on `research/strata-002`; no experiment code is wired into production boot or merged into the canonical branch.
+The STRATA research implementation is consolidated under `experiments/strata/` on `main` (including the STRATA-002 and STRATA-003 work). Research code remains outside the canonical runtime boot path; no experiment is authorized to promote claims into PAN canon or mutate canonical records.
