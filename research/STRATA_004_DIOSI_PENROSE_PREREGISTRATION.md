@@ -1,6 +1,6 @@
 # STRATA-004: Diósi–Penrose mass-density audit (pre-registration)
 
-Status: protocol proposal; no calculation or empirical result is claimed. Protocol STRATA-0.1. Claim class: bounded model-consistency and constraint audit, not evidence that objective collapse occurs.
+Status: preregistered protocol with first analytic/Fourier sphere-calibration implementation; no empirical result is claimed. Protocol STRATA-0.1. Claim class: bounded model-consistency and constraint audit, not evidence that objective collapse occurs. Runner: `experiments/strata/dp_sphere_calibration.py`; tests: `tests/test_strata_004_dp_sphere.py`.
 
 ## Model layers and evidence grades
 
