@@ -4,7 +4,7 @@ import type {
 } from "../../../modules/naht/src/types.ts";
 import { validateState } from "../../../modules/naht/src/core.ts";
 
-/** Canonical PAN V8 coordinate names; u is Unified Field Potential. */
+/** Canonical PAN V8 coordinate names; u denotes construction. */
 export interface V8Vector {
   readonly h: number;
   readonly R: number;
