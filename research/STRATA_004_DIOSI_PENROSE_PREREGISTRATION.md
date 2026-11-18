@@ -86,4 +86,6 @@ PAN V8 remains (h,R,u,d,tau,chi,s,f), with chi in [-1,1] and other coordinates i
 - Donadi et al., Underground test of gravity-related wave function collapse, Nat. Phys. 17 (2021), DOI 10.1038/s41567-020-1008-4.
 - Oppenheim, A postquantum theory of classical gravity?, Phys. Rev. X 13 (2023), DOI 10.1103/PhysRevX.13.041040.
 
+- Kulkarni, Distinguishing a Two-Step Quantum–Classical Threshold from Collapse Models, Quantum Reports 8(4), 117 (2026), DOI 10.3390/quantum8040117; Appendix A gives the uniform-sphere overlap integral used as a cross-check.
+- Bortolotti et al., Fundamental Limits on Clock Precision from Spacetime Uncertainty in Quantum Collapse Models, Phys. Rev. Research 7, 043166 (2025), DOI 10.1103/P6TJ-LG8L.
 Bibliographic inclusion is not a claim that every model variant or experimental bound has been independently rederived here. Confirm assumptions, versions, and exclusions in the execution record.
