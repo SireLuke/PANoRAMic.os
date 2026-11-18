@@ -23,6 +23,20 @@ class MatterNodeCatalogTests(unittest.TestCase):
         self.assertEqual(sum(n["kind"] == "element" for n in nodes), 118)
         self.assertIn("matter:ion:H3+", {n["id"] for n in nodes})
 
+    def test_v8_coordinate_ranges_match_kernel_contract(self):
+        chi = []
+        for node in self.cat["nodes"]:
+            for key, value in node["v8"].items():
+                if value is None:
+                    continue
+                if key == "chi":
+                    self.assertTrue(-1.0 <= value <= 1.0, (node["id"], key, value))
+                    chi.append(value)
+                else:
+                    self.assertTrue(0.0 <= value <= 1.0, (node["id"], key, value))
+        self.assertTrue(chi)
+        self.assertAlmostEqual(sorted(chi)[len(chi) // 2], 0.0, places=12)
+
     def test_molecules_have_no_v8_map(self):
         for n in self.cat["nodes"]:
             if n["kind"] != "element":
