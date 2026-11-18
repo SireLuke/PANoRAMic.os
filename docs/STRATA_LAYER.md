@@ -81,6 +81,10 @@ Each STRATA result should be a versioned record containing:
 - status per test dimension: `pass`, `fail`, `inconclusive`, or `not_tested`;
 - limitations, reviewer notes, and reproduction instructions.
 
+## Program status: consolidated research implementation
+
+STRATA-002 and STRATA-003 code is consolidated under `experiments/strata/` on `main`; `research/strata-002` is historical, not the active isolated branch. Research remains outside production boot. STRATA dimensions apply to each scientific claim, not merely whether a runner executes.
+
 ## Initial research program: STRATA-002
 
 STRATA-002 is a cross-domain representation benchmark. Its first milestone is deliberately modest: validate the pipeline and its controls on deterministic synthetic structures, then add independently sourced empirical datasets. Synthetic results are software checks only; they cannot establish biological, ecological, infrastructural, or physical invariants.
@@ -90,6 +94,10 @@ The Gosset/E8 adapter is tested against the repository's existing construction a
 ## Reference implementation and records
 
 The dependency-free STRATA-002 smoke implementation lives in [`experiments/strata/`](../experiments/strata/README.md). Its evidence record shape is defined by [`strata-run.schema.json`](../experiments/strata/strata-run.schema.json), and the latest bounded geometry audit is [`STRATA-002-GEOMETRY-AUDIT-2026-11-09.json`](../experiments/strata/runs/STRATA-002-GEOMETRY-AUDIT-2026-11-09.json). Run `python experiments/strata/validate_run.py` from the repository root to validate the record structure.
+
+## STRATA-004: Diósi–Penrose mass-density audit
+
+The preregistration at `research/STRATA_004_DIOSI_PENROSE_PREREGISTRATION.md` defines a separate mass-density audit. It is a proposed protocol, not a completed experiment. It requires signed density differences, explicit smearing, displaced-sphere calibration, independent real/Fourier integrals, controls, uncertainty, and Donadi constraint review. It does not authorize physical interpretation or runtime integration.
 
 ## Non-goals
 
