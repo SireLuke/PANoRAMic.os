@@ -37,6 +37,22 @@ Only after A passes, define explicit normalized lobe densities rho_1(x;N) and rh
 
 Only after A and B are independently validated, construct densities on explicitly defined Gosset 4_21/E8-associated shell locations. E8 supplies geometry, not a mass law. Compare against matched randomized and structure-preserving controls with equal total mass, radial profile, smearing, and pair-distance statistics where feasible. Record geometry construction/version; hyperoctahedral geometry is auxiliary only.
 
+
+## Existing experimental constraints (context, not results of this repository run)
+
+| Evidence stream | What it constrains | Interpretation boundary |
+|---|---|---|
+| Underground germanium radiation (Donadi et al., 2021) | Radiation predicted by a specific stochastic DP implementation; establishes a lower bound on effective nuclear mass-density smearing and excludes its natural parameter-free version | Does not exclude every DP-inspired model, every smearing prescription, or Penrose's heuristic energy estimate in isolation |
+| LISA Pathfinder / precision acceleration-noise analyses | Parameter regions for specified CSL and DP noise/cutoff implementations | Bounds depend on the stochastic dynamics and cutoff assumptions; not direct observation of collapse |
+| Interferometry and nanoparticle/atom/nanodiamond programmes | Reach and constrain coherent spatial-superposition mass/separation regimes | An experiment's mass/separation reach is not itself a DP detection; report the actual visibility/decoherence result and model assumptions |
+| Bortolotti et al. clock-precision analysis (2025) | Derives a model-dependent time-uncertainty bound from Newtonian-potential fluctuations in DP and CSL frameworks | The calculated uncertainty is negligible for contemporary atomic clocks; it is not evidence that clocks have observed time noise |
+
+These are external published constraints and experimental programmes, not a unified experimental confirmation. Each model's stochastic law, mass-density kernel, frequency spectrum, and cutoff must be matched to the relevant bound before comparing parameter regions.
+
+## Adjacent theory: post-quantum classical gravity
+
+Oppenheim's post-quantum classical-gravity programme is a distinct hybrid classical-spacetime/quantum-matter framework. Its stochastic metric and matter dynamics arise from consistency requirements for that framework. It must not be identified with the DP energy functional or used as an interchangeable explanation for the same computed tau. Any future comparison requires its own observable, parameter map, and held-out test.
+
 ## STRATA controls and evidence
 
 - Provenance: DOI/version, license, retrieval timestamp, SHA-256, inclusion/exclusion, units, and preprocessing for empirical inputs.
