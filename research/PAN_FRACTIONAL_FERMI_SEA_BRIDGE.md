@@ -2,9 +2,7 @@
 
 ## Why this is connected to the existing PAN work
 
-The existing ABOM-v8 model already implements a Fermi-Dirac logistic occupation,
-a complementary hole fraction, and a signed contrast. These are distinct from the UHFE and UDFE organizational representations; neither engine is Janus Hydra. That is a meaningful
-precursor: it gives us an occupation channel and a number-complementary channel.
+The existing ABOM-v8 model implements a Fermi-Dirac logistic occupation, a complementary hole fraction, and a signed contrast. These are useful baseline channels, but they are distinct from the UHFE and UDFE organizational representations. Neither UHFE nor UDFE is Janus Hydra.
 But it is not the newly reported fractional Fermi sea.
 
 The 2026 FFS work describes a different object: a one-dimensional Bose gas
