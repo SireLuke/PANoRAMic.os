@@ -2,6 +2,7 @@ import copy
 import math
 import sys
 import unittest
+import numpy as np
 from pathlib import Path
 
 _dir = Path(__file__).resolve().parents[1] / "experiments" / "matter_elements"
@@ -46,6 +47,12 @@ class V8ElementMapTests(unittest.TestCase):
             if v["chi"] is not None:
                 self.assertTrue(-1.0 <= v["chi"] <= 1.0, (st["Symbol"], "chi", v["chi"]))
             self.assertIn("not a derived physical identity", st["mapping_kind"])
+            if v["chi"] is not None:
+                self.assertTrue(-1.0 <= v["chi"] <= 1.0, (st["Symbol"], "chi", v["chi"]))
+
+    def test_signed_chi_is_median_centered(self):
+        measured = [s["V8"]["chi"] for s in self.states if s["V8"]["chi"] is not None]
+        self.assertAlmostEqual(float(np.median(measured)), 0.0, places=12)
 
     def test_missing_source_gives_none_not_zero(self):
         he = self.states[1]["V8"]
