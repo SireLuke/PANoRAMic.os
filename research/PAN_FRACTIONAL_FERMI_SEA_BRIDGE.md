@@ -3,7 +3,7 @@
 ## Why this is connected to the existing PAN work
 
 The existing ABOM-v8 model already implements a Fermi-Dirac logistic occupation,
-a complementary hole fraction, and a signed contrast. That is a meaningful
+a complementary hole fraction, and a signed contrast. These are distinct from the UHFE and UDFE organizational representations; neither engine is Janus Hydra. That is a meaningful
 precursor: it gives us an occupation channel and a number-complementary channel.
 But it is not the newly reported fractional Fermi sea.
 
@@ -54,7 +54,7 @@ Suggested observational interface:
 - h: phase/coherence estimator from measured correlations;
 - R: scale dependence of correlation structure;
 - d: entropy production measured independently, not inferred as 1-n;
-- tau: measured state lifetime/persistence;
+- tau: persistence/temporal persistence measured with a declared operational definition and units;
 - s: a declared information/occupation estimator;
 - f: interaction-ramp forcing protocol and cycle count;
 - u and chi: unassigned until a defensible signed observable is defined.
