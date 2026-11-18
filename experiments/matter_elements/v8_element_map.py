@@ -13,9 +13,7 @@ NOT tested for group recovery, because they largely determine group and block, s
   u   = occupancy of the last-filled subshell / its capacity 2(2l+1)
 
 MEASURED channels (PubChem table; the only channels the null test may use):
-  chi = (x + 1) / 2 with x = (Electronegativity - median) / max|deviation| in [-1, 1]; so chi is in [0, 1], 0.5 = table median.
-        (The (x + 1) / 2 unit mapping was added 2026-11-13 to meet the kernel contract; it is affine, so the z-scored
-        test statistics below are unchanged.)
+  chi = x = (Electronegativity - median) / max|deviation| in [-1, 1]; 0 = table median.
   s   = min-max of log10(Density)
   d   = min-max of IonizationEnergy
 UNASSIGNED: tau (atomic number is an ordering, not time), f.
@@ -52,7 +50,7 @@ SOURCES = {
     "R": "structural: period of Madelung configuration",
     "h": "structural: position in period / period length",
     "u": "structural: last-filled subshell occupancy / capacity",
-    "chi": "measured: Electronegativity, centred at table median, scaled by max |deviation|, mapped to [0, 1] by (x + 1) / 2",
+    "chi": "measured: Electronegativity, centred at table median and scaled by max absolute deviation into [-1, 1]",
     "s": "measured: log10 Density, min-max",
     "d": "measured: IonizationEnergy, min-max",
     "tau": "unassigned", "f": "unassigned",
@@ -95,7 +93,7 @@ def v8_state(row: dict, norm: dict) -> dict:
     en, rho, ie = _val(row, "Electronegativity"), _val(row, "Density"), _val(row, "IonizationEnergy")
     if en is not None:
         x = max(-1.0, min(1.0, (en - norm["en_median"]) / norm["en_scale"]))
-        out["chi"] = 0.5 * (x + 1.0)
+        out["chi"] = x
     if rho is not None:
         out["s"] = (math.log10(rho) - norm["logrho_min"]) / (norm["logrho_max"] - norm["logrho_min"])
     if ie is not None:
