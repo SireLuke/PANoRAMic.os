@@ -27,7 +27,7 @@ An unsmeared point-particle, parameter-free implementation is an excluded compar
 
 ### A. Displaced uniform sphere
 
-Use a uniform sphere of mass M and radius R, with branch densities displaced by d=R. Compute the overlap-aware double integral using the same signed difference density. Compare with an analytic overlap result and an independent Fourier-space integral. For the sharp uniform sphere, the reference coefficient for this convention is E_G = 0.5 G M^2/R at d=R. For an unsmeared uniform sphere, I_self=6 M^2/(5R) and I_cross=7 M^2/(10R), hence E_G=G(I_self-I_cross)=G M^2/(2R). This coefficient is an analytic overlap result for this exact geometry and convention, not a universal constant. Repeat with declared smearing and sweep r_C/R. Require analytic/numerical agreement, grid convergence, dimensional consistency, and correct limiting behavior.
+Use a uniform sphere of mass M and radius R, with branch densities displaced by d=R. Compute the overlap-aware double integral using the same signed difference density. Compare with an analytic overlap result and an independent Fourier-space integral. For the sharp uniform sphere, use eta=d/(2R). The self-term is I(0)=6 M^2/(5R); for overlapping spheres (eta≤1), I(d)=(M^2/R)[6/5 - 2 eta^2 + (3/2) eta^3 - (1/5) eta^5]. Thus E_G=G[I(0)-I(d)]. At d=R (eta=1/2), E_G=0.31875 G M^2/R. This coefficient is an analytic overlap result for this exact geometry and convention, not a universal constant. Repeat with declared smearing and sweep r_C/R. Require analytic/numerical agreement, grid convergence, dimensional consistency, and correct limiting behavior.
 
 ### B. Taijitu occupancy difference
 
