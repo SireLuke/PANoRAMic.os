@@ -26,6 +26,17 @@ Add sourced datasets only after recording license, source URL/identifier, retrie
 
 A preregistration (not an execution result) is in `research/STRATA_004_DIOSI_PENROSE_PREREGISTRATION.md`. Start with displaced uniform-sphere calibration. Do not implement Taijitu occupancy or Gosset-shell cases until analytic and independent numerical calibrations agree. Point-particle unsmeared parameter-free runs are excluded comparison cases, not candidate results.
 
+## STRATA-004 displaced-sphere calibration
+
+The first gated DP calculation is implemented in `dp_sphere_calibration.py` with tests in `tests/test_strata_004_dp_sphere.py`. Run:
+
+```bash
+python -m unittest tests.test_strata_004_dp_sphere -v
+PYTHONPATH=. python experiments/strata/dp_sphere_calibration.py
+```
+
+The runner compares the analytic overlap expression against an independent Fourier-space integral for two displaced, sharp uniform spheres. It is a numerical/analytic calibration only: it does not apply a nuclear smearing model, reproduce Donadi's radiation analysis, or establish collapse physics. Taijitu and Gosset-shell work remains gated on this calibration and a preregistered smearing prescription.
+
 ## Evidence record and validation
 
 The STRATA run record schema is `strata-run.schema.json`. The checked-in audit at `runs/STRATA-002-GEOMETRY-AUDIT-2026-11-09.json` records the current synthetic STRATA-002 smoke run and the bounded Gosset/E8, Sierpinski, and E10/E9 checks.
