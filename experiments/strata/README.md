@@ -8,7 +8,7 @@ From the repository root:
 
 ```bash
 python -m unittest discover -s experiments/strata/tests -v
-python experiments/strata/run_strata_002.py
+PYTHONPATH=. python experiments/strata/run_strata_002.py
 ```
 
 Only the Python standard library is required.
@@ -44,7 +44,7 @@ The STRATA run record schema is `strata-run.schema.json`. The checked-in audit a
 Validate the record with the dependency-free structural validator:
 
 ```bash
-python experiments/strata/validate_run.py
+PYTHONPATH=. python experiments/strata/validate_run.py
 ```
 
 The run record marks the other catalogue geometries and 11D parameter sweep as `not_tested`: the repository currently has no runnable implementations for those items. A valid record verifies structure and provenance fields, not the scientific interpretation.
