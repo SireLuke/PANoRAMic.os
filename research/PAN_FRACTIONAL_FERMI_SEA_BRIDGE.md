@@ -2,9 +2,7 @@
 
 ## Why this is connected to the existing PAN work
 
-The existing ABOM-v8 model already implements a Fermi-Dirac logistic occupation,
-a complementary hole fraction, and a signed contrast. That is a meaningful
-precursor: it gives us an occupation channel and a number-complementary channel.
+The existing ABOM-v8 model implements a Fermi-Dirac logistic occupation, a complementary hole fraction, and a signed contrast. These are useful baseline channels, but they are distinct from the UHFE and UDFE organizational representations. Neither UHFE nor UDFE is Janus Hydra.
 But it is not the newly reported fractional Fermi sea.
 
 The 2026 FFS work describes a different object: a one-dimensional Bose gas
@@ -54,7 +52,7 @@ Suggested observational interface:
 - h: phase/coherence estimator from measured correlations;
 - R: scale dependence of correlation structure;
 - d: entropy production measured independently, not inferred as 1-n;
-- tau: measured state lifetime/persistence;
+- tau: persistence/temporal persistence measured with a declared operational definition and units;
 - s: a declared information/occupation estimator;
 - f: interaction-ramp forcing protocol and cycle count;
 - u and chi: unassigned until a defensible signed observable is defined.

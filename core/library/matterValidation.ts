@@ -14,8 +14,10 @@ function checkV8(node: MatterNode, problems: string[]): void {
     }
     const v = node.v8[k];
     if (v === null) continue;
-    if (typeof v !== "number" || !isFinite(v) || v < 0 || v > 1) {
-      problems.push(`${node.id}: v8.${k}=${v} outside [0, 1]`);
+    const min = k === "chi" ? -1 : 0;
+    const max = 1;
+    if (typeof v !== "number" || !isFinite(v) || v < min || v > max) {
+      problems.push(`${node.id}: v8.${k}=${v} outside [${min}, ${max}]`);
     }
   }
 }
