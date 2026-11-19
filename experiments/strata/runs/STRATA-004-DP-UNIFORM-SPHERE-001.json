@@ -1,0 +1,63 @@
+{
+  "schema_version": "strata-dp-sphere-run-v0.1",
+  "protocol": "STRATA-0.1",
+  "run_id": "STRATA-004-DP-UNIFORM-SPHERE-001",
+  "run_timestamp_utc": "2026-11-18T03:14:38.099341Z",
+  "source": {
+    "repository": "SireLuke/PANoRAMic.os",
+    "ref": "research/strata-v8-dp-audit-001",
+    "commit": "fbdea1a08e340e4ba9a8ec60b68dcd7d94266611",
+    "files": [
+      "experiments/strata/dp_sphere_calibration.py",
+      "tests/test_strata_004_dp_sphere.py"
+    ]
+  },
+  "execution_environment": {
+    "python": "3.13.5",
+    "platform": "Linux x86_64 glibc 2.41",
+    "context": "temporary isolated harness populated from the branch source files; no repository checkout was available"
+  },
+  "commands": [
+    "PYTHONPATH=. python -m unittest tests.test_strata_004_dp_sphere -v",
+    "PYTHONPATH=. python experiments/strata/dp_sphere_calibration.py"
+  ],
+  "tests": {
+    "status": "pass",
+    "run": 4,
+    "passed": 4,
+    "failed": 0
+  },
+  "calibration": {
+    "geometry": "two equal sharp uniform spheres, displacement d=R",
+    "density_difference": "delta_rho = rho_1 - rho_2",
+    "analytic_EG_over_GM2_over_R": 0.31875,
+    "fourier_coarse": {
+      "q_max": 200,
+      "intervals": 400000,
+      "value": 0.31874987987077663
+    },
+    "fourier_fine": {
+      "q_max": 400,
+      "intervals": 800000,
+      "value": 0.31874998512912983
+    },
+    "relative_error_vs_analytic": 4.6653710263214247e-8,
+    "absolute_change_under_refinement": 1.0525835320018828e-7,
+    "dimension_status": {
+      "analytic_overlap_reference": "pass",
+      "independent_fourier_agreement": "pass",
+      "resolution_convergence": "pass",
+      "smearing_and_nuclear_density_model": "not_tested",
+      "empirical_validation": "not_tested",
+      "held_out_prediction": "not_tested"
+    },
+    "overall_status": "pass"
+  },
+  "limitations": [
+    "This execution validates the analytic/numerical sphere calibration code only; it is not a repository-wide or GitHub Actions run.",
+    "No physical smearing kernel or nuclear mass-density model was applied.",
+    "No Donadi exclusion plot or parameter region was recomputed.",
+    "No Taijitu occupancy or Gosset-shell experiment was run.",
+    "No evidence for objective collapse or a new physical law is claimed."
+  ]
+}

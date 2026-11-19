@@ -6,7 +6,7 @@ a proposed procedure. It does not move any code.
 ## Declared ownership
 | Item | Owner | PANoRAMic.os role |
 |---|---|---|
-| V8 coordinate schema `(h, R, u, d, tau, chi, s, f)`, ranges (chi in [-1,1], others [0,1]), tau = temporal | pan-fractal-kernel | consumes; `core/library/types.ts` mirrors it |
+| V8 coordinate schema `(h, R, u, d, tau, chi, s, f)`, ranges (chi in [-1,1], others [0,1]); tau = persistence/temporal persistence | pan-fractal-kernel | consumes; `core/library/types.ts` mirrors it |
 | Janus Hydra projections and the V8 phase layer | pan-fractal-kernel | consumes |
 | V9 affine-E8 view (`xi` traversal, display only) | pan-fractal-kernel | consumes |
 | Gosset / E8 geometry engines, spectroscopy, QCD and hydrogen benchmarks | pan-fractal-kernel | uses engines |
