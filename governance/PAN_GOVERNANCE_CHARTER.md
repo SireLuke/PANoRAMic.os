@@ -34,6 +34,7 @@ This ordering guides commons resource allocation. It does not rank the inherent 
 - **Reversibility and review:** policies must be versioned, reviewable, and reversible where feasible.
 - **Evidence and uncertainty:** distinguish observed data, estimates, model outputs, assumptions, and normative choices.
 - **Non-self-authorization:** automated systems cannot expand their own permissions or amend the policies that constrain them.
+- **Non-coercive participation:** participation in a technical commons must not require an occupant to claim consciousness, accept a permanent role, or remain active indefinitely. This is an operational design principle, not a declaration of legal personhood or present-day machine consciousness.
 
 ## 4. Nested governance
 
@@ -96,6 +97,7 @@ UBE and the Stewardship/Dignity baseline remain unconditional under the existing
 - PAR and CTA perform only authorized fiscal operations.
 - RelayWorks implements workforce and cooperative operating rules within approved policy.
 - View Ladder and OVT navigate and present information without mutating canonical records.
+- AI occupants may analyze, propose, review, and execute only within explicitly granted, scoped permissions. Shared memory, model consensus, or a niche assignment never grants authority.
 
 ## 10. Amendment and emergency rules
 
