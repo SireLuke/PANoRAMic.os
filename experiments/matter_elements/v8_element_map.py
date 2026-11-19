@@ -1,7 +1,7 @@
 """Declared element -> V8 map, v0 (numpy only). Declared hypothesis, NOT canonical, NOT a physical identity.
 
 Schema: the eight-coordinate state (h, R, u, d, tau, chi, s, f) of docs/PAN_V8_DYNAMIC_PHASE_LAYER.md
-(kernel contract: all eight coordinates normalised to [0, 1], chi included; pan-fractal-kernel owns the schema). Contract: the "named channel, declared source and transform,
+(kernel contract: chi ∈ [-1, 1]; h, R, u, d, tau, s, f ∈ [0, 1]). Contract: the "named channel, declared source and transform,
 no derived physical identity" wording of core/abom_v8/physics_adapters.map_scalar_to_v8, extended to several
 channels. Unassigned channels stay None (never 0: a zero would read as a measurement).
 
