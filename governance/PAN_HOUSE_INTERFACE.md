@@ -136,8 +136,12 @@ any other occupant-facing interface.
 
 ## 8. Implementation status — honest fences
 
-- **The House is not implemented.** No board, notepad, rooms, or
-  history view exists as running software or as repo structure.
+- **The House is not implemented as running software.** The Board
+  and Notepad now exist as append-only Markdown repository records
+  under `governance/house/`; they are not a running interface or
+  runtime-enforced service. Discussion Rooms, Decision History,
+  and Contribution / Change History remain specified components,
+  not implemented components.
 - **The wiki is the designated public porch** (cross-map S9) and
   currently contains exactly one default Home page (verified
   2026-11-19). Building it out is a separate act.
