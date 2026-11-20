@@ -1,10 +1,43 @@
 name: Gosset local cell-star and E10 exact audits
 
+# Scoped 2026-11-20 (paths filters, same pattern as
+# celestial-gosset-quasicrystal.yml): these exact audits run only when
+# their own tests, audit scripts, shared geometry substrate, or this
+# workflow change. Docs-only PRs skip them; workflow_dispatch above
+# still runs them on demand at any time.
 on:
   push:
     branches: [main, research/qwave-ci-audit-split-2026-11-10]
+    paths:
+      - "tests/test_gosset_local_cell_star_audit.py"
+      - "tests/test_e10_coxeter_relations_audit.py"
+      - "tests/test_e10_hyperbolic_621_coordinate_audit.py"
+      - "tests/test_qwave.py"
+      - "tests/test_gosset_projection_robustness_audit.py"
+      - "experiments/gosset_local_cell_star_audit_v2.py"
+      - "experiments/e10_coxeter_relations_audit.py"
+      - "experiments/e10_hyperbolic_621_coordinate_audit.py"
+      - "experiments/gosset_projection_robustness_audit.py"
+      - "experiments/gosset_sierpinski_experiment.py"
+      - "core/geometry/e8_root_system.py"
+      - "core/abom_v8/qwave.py"
+      - ".github/workflows/gosset-e10-research-audit.yml"
   pull_request:
     branches: [main]
+    paths:
+      - "tests/test_gosset_local_cell_star_audit.py"
+      - "tests/test_e10_coxeter_relations_audit.py"
+      - "tests/test_e10_hyperbolic_621_coordinate_audit.py"
+      - "tests/test_qwave.py"
+      - "tests/test_gosset_projection_robustness_audit.py"
+      - "experiments/gosset_local_cell_star_audit_v2.py"
+      - "experiments/e10_coxeter_relations_audit.py"
+      - "experiments/e10_hyperbolic_621_coordinate_audit.py"
+      - "experiments/gosset_projection_robustness_audit.py"
+      - "experiments/gosset_sierpinski_experiment.py"
+      - "core/geometry/e8_root_system.py"
+      - "core/abom_v8/qwave.py"
+      - ".github/workflows/gosset-e10-research-audit.yml"
   workflow_dispatch:
 
 # Do not cancel a running exact audit merely because another ref is updated.
