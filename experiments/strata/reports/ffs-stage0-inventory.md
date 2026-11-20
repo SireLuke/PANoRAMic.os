@@ -1,7 +1,9 @@
 # FFS Stage 0 Inventory + Stage 1 Feasibility (interim)
 
-**Status:** Stage 0 COMPLETE; Stage 1 interim signal returned. Workspace
-only; nothing filed to a repo. Performed by Cosmo 2026-11-20, after Lucas
+**Status:** Stage 0 COMPLETE; Stage 1 interim signal returned. Filed
+with the capsule as PANoRAMic.os PR #105 (`experiments/strata/reports/`)
+on 2026-11-20 at Lucas's direction; this workspace copy is the working
+master. Performed by Cosmo 2026-11-20, after Lucas
 authorised the FFS capsule as the fork packet (14:45 CST) and chose the
 sequencing "SEM sensitivity first, Stage 1 feasibility checked in parallel"
 (15:23 CST). Parent document: `ffs-uncertainty-ghd-capsule.md`.
@@ -24,6 +26,30 @@ clears both records for use with attribution. The two records remain
 distinct sources and are still never to be conflated; only the license
 treatment changes.
 
+**Evidence (Zenodo API metadata, retrieved 2026-11-20; fields verbatim):**
+
+- Record 18702729 — doi 10.5281/zenodo.18702729; title "Exotic critical
+  states as fractional Fermi seas in the one-dimensional Bose gas";
+  publication_date 2026-02-19; license.id **cc-by-4.0**; access_right
+  open; file Zenodo.zip, size 175002709, checksum
+  md5:dd22fdd862d4cd8de5fe173761eef60f.
+- Record 18697242 — doi 10.5281/zenodo.18697242; title "Realization of
+  fractional Fermi seas"; publication_date 2026-02-19; license.id
+  **cc-by-4.0**; access_right open; files include figure3B_data.csv
+  (size 400292, checksum md5:2319b4d9cf9114466addc103525cd92d) and
+  figure3C_data.csv (size 399461, checksum
+  md5:b98af0284338f88a4fb39e8ea82972b4).
+
+Reproduce: `GET https://zenodo.org/api/records/<id>` and read
+`metadata.license.id`. Corroboration: OpenAI's PR #105 review
+independently found the theory record's CC BY 4.0 listing in the NLM
+catalog; the experimental record's license field is exposed via the API
+metadata above, not in the indexed page view — the likely reason both
+bench reports missed it. **Redistribution rule:** no data is
+redistributed in PR #105 (docs only); any future reuse of either
+record's data must preserve CC BY 4.0 attribution and license
+information.
+
 ## Stage 0 — Inventory (experimental record 18697242)
 
 Files are served individually (no archive). Downloaded 2026-11-20 to the
@@ -33,6 +59,10 @@ review goal's `hidden_files/ffs-data/`:
 | --- | --- | --- |
 | figure3B_data.csv | 400,292 | 2319b4d9cf9114466addc103525cd92d |
 | figure3C_data.csv | 399,461 | b98af0284338f88a4fb39e8ea82972b4 |
+
+Both MD5s **match the checksums published in the record's own API
+metadata** (see the license evidence block above) — the downloads are
+verified against the source, not merely self-hashed.
 
 Also listed on the record (not downloaded): figure3A_data.csv (164,234 B),
 lifetime_point_C_data.csv (481 B), figure4A_data.csv (195 B),
