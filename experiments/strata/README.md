@@ -9,6 +9,7 @@ From the repository root:
 ```bash
 python -m unittest discover -s experiments/strata/tests -v
 PYTHONPATH=. python experiments/strata/run_strata_002.py
+PYTHONPATH=. python experiments/strata/e8_projection_control.py --seed 20261109 --replicates 5 --tolerance 1e-8
 ```
 
 Only the Python standard library is required.

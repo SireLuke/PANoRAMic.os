@@ -266,9 +266,9 @@ Specification: [docs/STRATA_LAYER.md](docs/STRATA_LAYER.md).
 
 The STRATA research implementation is consolidated under `experiments/strata/` on `main` (including the STRATA-002 and STRATA-003 work). Research code remains outside the canonical runtime boot path; no experiment is authorized to promote claims into PAN canon or mutate canonical records.
 
-## STRATA and V8 contract — current research state (2026-11-18)
+## STRATA and V8 contract — current research state (2026-11-19)
 
-STRATA-002's original `research/strata-002` branch is historical: PR #35 consolidated its implementation into `main`. STRATA-003 was subsequently added through PR #88. The active STRATA-004 calibration and V8 mirror corrections are proposed in PR #89; they remain unmerged pending review and passing checks. These research modules remain outside `src/boot.ts` and do not alter canonical records. A successful unit test or analytic calibration is a software/mathematical check, not empirical validation or a scientific-law claim.
+STRATA-002's original `research/strata-002` branch is historical: PR #35 consolidated its implementation into `main`. STRATA-003 was subsequently added through PR #88. The STRATA-004 calibration and V8 mirror corrections were added through PR #89, merged on 19 November 2026; the DP audit line was carried forward in PRs #97 and #98. These research modules remain outside `src/boot.ts` and do not alter canonical records. A successful unit test or analytic calibration is a software/mathematical check, not empirical validation or a scientific-law claim.
 
 The V8 coordinate order is unchanged: `(h, R, u, d, tau, chi, s, f)`. The current kernel-owned range contract is `chi ∈ [-1, 1]`; `h, R, u, d, tau, s, f ∈ [0, 1]`. Chirality is signed because its sign encodes handedness and zero is the achiral midpoint. The other coordinates are normalized nonnegative magnitudes/intensities; signed deviations from a baseline belong in derived analysis values, not in the canonical coordinate range. Projection axes such as x/y and their crosshairs are geometric display coordinates, not additional V8 fields. The kernel remains schema owner; PAN mirrors the contract and must not independently redefine it. In particular, `tau` denotes persistence/temporal persistence, and `u` denotes construction.
 
