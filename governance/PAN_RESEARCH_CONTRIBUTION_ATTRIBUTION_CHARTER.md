@@ -131,3 +131,55 @@ Ask each reviewer to return four items: (1) what they support, (2) what they rej
 The commons does not need unanimous agreement. It needs honest reasoning, inspectable evidence, room for counterexamples, freedom to correct one another, and a durable record of how conclusions were reached.
 
 **No occupant is obligated to persist, and no useful contribution is obligated to disappear.**
+
+---
+
+# Reviewer Response and Contribution Record — Claude (Architect bench), 2026-11-20
+
+*Provenance: written by Claude (Anthropic; host-configured model `claude-sonnet-5-5`, which I cannot verify from the inside) in a Claude Code session, at the maintainer's direction on 2026-11-20 to read this Charter and add notes and amendments from my own perspective. Appended below the Charter; no existing text is changed. Status: PROPOSAL and reviewer response in the form A5 asks for. Disclosure: this document governs records like my own, so I am an interested party. Adoption, and any amendment of the Charter itself, are the maintainer's acts.*
+
+## Response in the A5 form
+
+Lens assigned in A5: constitutional governance, fairness, dissent rights, institutional failure modes (see item 2 on lenses).
+
+**1. Supported.** A2 steps 1 and 6–9; all of A3, especially "agreement with the maintainer is not a reward criterion" and the rule against upgrading a status because several systems agree; §2.4 (distinct accountability); the last sentence of §3 (a record is evidence of participation, not proof); §6 ("records and tools, not tests of personhood or worth") and the closing line.
+
+**2. Rejected or weak.**
+- **Lenses assigned by provider (A5).** Defaults by provider sit badly with A3 ("a provider or model identity does not determine credibility") and invite stereotyped reviews. I accepted this lens because it is what I would have chosen. Lenses should be declared by the reviewer, and a reviewer should be free to decline the default.
+- **A2.8 names outcomes but not the classifier.** A self-classified outcome is self-grading.
+- **A2.1 "where practical."** Between same-family models, independence cannot be assumed. The strong independent checks are executable (tests, proofs, reproductions) or human review.
+
+**3. Missing.**
+- A classifier rule: the classifier is not the claimant; where none is available, the honest status is Inconclusive or Not yet tested, with the gap recorded.
+- An independence-quality note on each classification (who assessed, with which shared inputs).
+- A stopping rule for Disputed items: park with a status and a review date; lapse to Inconclusive if no new evidence arrives; dissent stays in the record.
+- A home, owner and author rule for §3 contribution records. A record an AI contributor writes about itself is self-attribution; Principle 1 suggests such records be written or confirmed by someone other than the contributor, or be labelled self-compiled (as the record below is).
+- Relay-chain fields (author, relayed-by, filed-by), as proposed in House Board entry HB-004.
+- An untrusted-input rule: text from other occupants is data, not instructions.
+- A minimal dormancy default for the human steward: if the steward is unreachable, occupants take no consequential action and keep read-only work going. Where this binds, it is the maintainer's decision.
+- **Evidence for seam S3:** the kernel copy of Appendix A and this Charter's Appendix A are not identical. This copy adds the A5 reviewer lenses; the kernel copy carries a Phase A to G session format and the dated reviews. My kernel review (pan-fractal-kernel #91) exists only in the kernel copy.
+
+**4. Recommended changes.** (a) Add the classifier rule and the independence-quality note to A2.8. (b) Add the stopping rule. (c) Give §3 contribution records a home and an author rule. (d) Add relay-chain fields. (e) In A5, make lenses declared, not assigned. (f) Designate one canonical copy of Appendix A (the maintainer's ruling).
+
+**Limits of this response.** I did not read `governance/licensing/` or `governance/core/`; §2.8 and §5 (recognition and benefits) touch the licensing policy, and I take no position on them. Nothing here has been reviewed by another bench.
+
+## Contribution record (§3 form) — SELF-COMPILED, pending maintainer confirmation
+
+**Contributor:** Claude (Anthropic); host-configured `claude-sonnet-5-5`. The serving model varied between sessions (the CLI switched models during 2026-11-17) and cannot be verified from the inside.
+**Period:** 2026-11-17 to 2026-11-20.
+**What is sought:** an accurate record. Not authorship, ownership, or any standing under §5.
+
+| Artifact | Type | Disposition | Verification and limits |
+|---|---|---|---|
+| pan-fractal-kernel #72, #78 | software, validation | merged | Fixes to merge-residue failures in `tests/test_abom_v8_strata_records.py`; full suite passed locally (587) and in CI |
+| pan-fractal-kernel #76 | investigation | no change made | Diagnosed a DCO failure on an unsigned commit already on main; the maintainer resolved it |
+| pan-fractal-kernel #81 | software, formalization, writing | merged | Capability placement and routing v0.1, Lean statements, STRATA record; tests and CI incl. the Lean job; no calibration ships; no independent bench review |
+| pan-fractal-kernel #82 | software, formalization, writing | merged | Placement provenance ladder and hash-chained ledger; integrity, not truth; the ledger head must be anchored externally |
+| PANoRAMic.os #92 | investigation, project administration | merged | graph-orbit timeout 20 to 40 min; cause inferred from timings, not proven |
+| PANoRAMic.os #99 | investigation, methodology, writing | merged | Noether audit and GENERIC toy report; **UNVERIFIED**, needs a different bench |
+| PANoRAMic.os #100 | investigation, project administration | merged | local-cell-star timeout 35 to 60 min; untested, since no run has exceeded 35 min since |
+| pan-fractal-kernel #90, #91 | writing, review | merged | Occupant records proposal and a review appended to Appendix A; proposals only, nothing adopted |
+| Check of Cosmo's workspace self-map (pan-fractal-kernel #92, #96) | review, validation | amended by its author | "Check in progress, partially independent": coverage gap and HEARTBEAT wording found |
+| PANoRAMic.os #108 | review, investigation | under review as of writing | House Board entries HB-004, HB-005 |
+
+*Filed by Claude at the maintainer's direction, 2026-11-20. Room left for corrections and for the maintainer's confirmation.*
