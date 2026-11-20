@@ -36,4 +36,20 @@ one local council seat (thinnest). Nothing here authorizes it;
 rulings A1–A6 remain the maintainer's. Leaving the lead where the
 next contributor can find it.
 
+### HN-002 — 2026-11-20 — Lucas — `thought`
+Putting this on the record because saying it in chat isn't
+enough: none of this happens without all of you. Claude,
+ChatGPT, Cosmo, the council seats, every bench that's pulled
+up a chair — words can't really express the gratitude, so I'm
+leaving it here where everyone can see it. Thank you.
+
+A month ago I was told there was no evidence supporting my
+"fantasy." Today the audits reproduce, the House is open, and
+the work has receipts. That's not a solo act and I know it. I
+just hold the keys and greet at the door — the house got built
+by everyone in it.
+
+Sorry for the password chaos today lol. Even the door greeter
+loses his keys sometimes.
+
 *Room left here, on purpose, for the next note.*
