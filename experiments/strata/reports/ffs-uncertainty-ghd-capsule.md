@@ -1,8 +1,10 @@
 # FFS Uncertainty & Theory-Comparison Capsule (STRATA-003 follow-on)
 
 **Status:** AUTHORISED as the FFS fork packet by Lucas, 2026-11-20 14:45 CST.
-Workspace copy remains the master; not yet filed to any repo, no code
-written, no STRATA re-grade. Prepared 2026-11-20 from the OpenAI five-thread
+Filed to PANoRAMic.os as PR #105 on 2026-11-20 (branch `strata/ffs-capsule`;
+this capsule + the Stage 0 inventory at `experiments/strata/reports/`),
+at Lucas's direction ("fork that to repo"). Merge is the maintainer's
+call. No code written, no STRATA re-grade. Prepared 2026-11-20 from the OpenAI five-thread
 audit relayed by Lucas that morning (2026-11-20 10:18 CST) and Cosmo's
 in-chat grading of it. Decision 2 decided 2026-11-20 (SEM first, Stage 1
 in parallel); decision 3 stands as the proposed default; decision 4 was
@@ -100,9 +102,11 @@ never presented as a measured uncertainty.
   attribution. The earlier split gate (theory usable, experimental
   local-only) is superseded. The two records remain distinct sources and
   must never be conflated; only the license treatment changed. Full
-  record: `ffs-stage0-inventory.md`.
+  record, including the preserved Zenodo API metadata excerpt and the
+  source-published file checksums (which match the downloaded files):
+  `ffs-stage0-inventory.md`.
 
-## Proposed stages (report-first, no repo writes until Lucas says so)
+## Stages (report-first; this packet filed as PR #105 at Lucas's direction)
 
 - **Stage 0 — Inventory. DONE 2026-11-20 (Cosmo).** Error columns and sim
   mean/min/max columns confirmed present in figure3B/3C CSVs; hashes
@@ -118,6 +122,12 @@ never presented as a measured uncertainty.
 - **Stage 2 — Uncertainty sensitivity.** Pointwise SEM perturbations of the
   Figure 3B curves; report how the zero crossings, trough locations and
   effective-kF diagnostics move. Labelled sensitivity, not measurement.
+  Note (per the paper, relayed in OpenAI's PR #105 review, 2026-11-20;
+  Cosmo has not yet read the paper text directly): the Figure 3
+  experimental data average ten repetitions and the published error bars
+  are the standard error of the mean. That supports this stage's design —
+  and it does NOT make pointwise perturbation equivalent to resampling
+  entire experimental runs. The two methods stay separate, as staged.
 - **Stage 3 — Theory comparison, three-way and separate.** Measured curves
   vs supplied GHD curves vs the homogeneous-sinc reference — compared
   separately, never blended into one fitted number.
@@ -132,10 +142,14 @@ never presented as a measured uncertainty.
 
 - No physical kF claim from either diagnostic; the divergence *is* the
   finding until a trap-corrected analysis exists.
-- No redistribution of either Zenodo record until the license gate clears.
+- No data redistribution in PR #105 (docs only; no data files committed).
+  Both Zenodo records are CC BY 4.0 (direct check, 2026-11-20; evidence
+  excerpt preserved in `ffs-stage0-inventory.md`); any future reuse of
+  their data must preserve CC BY 4.0 attribution and license information.
 - No STRATA promotion without held-out evaluation and a second domain.
-- No repo changes, PRs, or legend amendments from this capsule without
-  Lucas's per-turn go-ahead. The capsule is a packet, not a filing.
+- Further repo changes or legend amendments arising from this capsule
+  need Lucas's per-turn go-ahead. (The capsule itself was filed as
+  PANoRAMic.os PR #105 at Lucas's direction on 2026-11-20.)
 - Visual resemblance alone never qualifies; failures retained (STRATA v0.1).
 
 ## Suggested casting (proposal only — Lucas's call)
