@@ -83,7 +83,12 @@ never presented as a measured uncertainty.
   unregistered. Record: "Exotic critical states as fractional Fermi seas in
   the one-dimensional Bose gas", dataset v1, published 2026-02-19,
   DOI 10.5281/zenodo.18702729, Open access. Single file: Zenodo.zip,
-  175.0 MB, md5 dd22fdd862d4cd8de5fe173761eef60f. Contents confirmed:
+  175.0 MB, md5 dd22fdd862d4cd8de5fe173761eef60f. Contents confirmed
+  (sizes below are UNCOMPRESSED sizes from the zip central directory;
+  compressed sizes differ — e.g. Make_fig_2_3.nb is 16,203,192 B
+  compressed, 27,210,413 B uncompressed; READ_ME.txt is 452 B
+  compressed, 851 B uncompressed — verified 2026-11-20, so a
+  compressed-size reading is not a discrepancy):
   Mathematica figure notebooks (Make_fig_2_3.nb 27.2 MB, Make_fig4.nb,
   Conv_MC.nb, Fig_SM_N.nb, Read.nb) and raw one-particle-correlation data
   (Raw_data/30F_S_all_data.mat 18.0 MB, 30F_S_c_hol.mat, Read.nb).
