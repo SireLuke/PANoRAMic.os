@@ -1,10 +1,37 @@
 name: Gosset orthoplex graph-orbit audit
 
+# Scoped 2026-11-20 (paths filters, same pattern as
+# celestial-gosset-quasicrystal.yml): these exact audits run only when
+# their own tests, audit scripts, shared geometry substrate, or this
+# workflow change. Docs-only PRs skip them; workflow_dispatch above
+# still runs them on demand at any time.
 on:
   pull_request:
     branches: [main]
+    paths:
+      - "tests/test_gosset_orthoplex_graph_orbit.py"
+      - "tests/test_gosset_graph_incidence_reconciliation.py"
+      - "tests/test_gosset_codim2_link_audit.py"
+      - "experiments/gosset_orthoplex_graph_orbit.py"
+      - "experiments/gosset_graph_incidence_reconciliation.py"
+      - "experiments/gosset_codim2_link_audit.py"
+      - "experiments/gosset_local_cell_star_audit_v2.py"
+      - "core/geometry/e8_root_system.py"
+      - "lean/**"
+      - ".github/workflows/gosset-orthoplex-graph-orbit.yml"
   push:
     branches: [research/gosset-orthoplex-graph-orbit-v0, research/gosset-codim2-link-audit-v0]
+    paths:
+      - "tests/test_gosset_orthoplex_graph_orbit.py"
+      - "tests/test_gosset_graph_incidence_reconciliation.py"
+      - "tests/test_gosset_codim2_link_audit.py"
+      - "experiments/gosset_orthoplex_graph_orbit.py"
+      - "experiments/gosset_graph_incidence_reconciliation.py"
+      - "experiments/gosset_codim2_link_audit.py"
+      - "experiments/gosset_local_cell_star_audit_v2.py"
+      - "core/geometry/e8_root_system.py"
+      - "lean/**"
+      - ".github/workflows/gosset-orthoplex-graph-orbit.yml"
   workflow_dispatch:
 
 jobs:
