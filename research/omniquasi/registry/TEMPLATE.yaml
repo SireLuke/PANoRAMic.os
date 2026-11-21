@@ -1,0 +1,74 @@
+# Copy to experiments/OQ-EXP-YYYY-NNN/manifest.yaml and replace every placeholder.
+schema_version: "0.1"
+experiment_id: "OQ-EXP-YYYY-NNN"
+title: "REPLACE: concise experiment title"
+created: "YYYY-MM-DD"
+updated: "YYYY-MM-DD"
+status: "proposed" # proposed | active | paused | completed | inconclusive | refuted | superseded | abandoned
+maturity: "exploratory" # idea | proposal | exploratory | reproduced | independently-audited | formally-verified | empirically-supported | refuted | inconclusive
+domain:
+  primary: "REPLACE"
+  secondary: []
+claim_class: "numerical_experiment" # formal_proof | proof_assistant_checked | exact_computation | numerical_experiment | empirical_measurement | simulation | software_test | analogy | conjecture
+summary: "REPLACE: one-paragraph scope; do not state more than the evidence supports."
+question: "REPLACE: one bounded research question."
+hypothesis: "REPLACE or null"
+null_hypothesis: "REPLACE or null"
+success_criteria:
+  - "REPLACE: measurable criterion defined before interpreting results"
+controls:
+  - name: "REPLACE"
+    rationale: "REPLACE"
+    method: "REPLACE"
+contributors:
+  - name: "REPLACE"
+    role: "maintainer | researcher | reviewer | implementation | AI_assistance | other"
+    affiliation_or_bench: "REPLACE or null"
+    contribution: "REPLACE"
+    model_or_version: null
+provenance:
+  source_repositories: []
+  source_revisions: []
+  datasets: []
+  licenses_and_access: []
+  preprocessing: "REPLACE or not_applicable"
+method:
+  description: "REPLACE"
+  equations_or_specification: []
+  parameters: {}
+  random_seeds: []
+  environment: "REPLACE: OS, runtime, dependencies, hardware if relevant"
+  commands: []
+  resource_limits: {}
+artifacts:
+  code: []
+  data: []
+  outputs: []
+  logs: []
+  external_references: []
+reproduction:
+  instructions: "REPLACE with exact steps"
+  expected_outputs: "REPLACE"
+  known_blockers: []
+results:
+  summary: "Not yet run."
+  observations: []
+  uncertainty: "Not yet assessed."
+  failures_and_negative_results: []
+interpretation:
+  supported_claims: []
+  unsupported_claims: []
+  limitations: []
+  alternative_explanations: []
+  falsifiers: []
+review:
+  independent_reviewers: []
+  review_status: "not_reviewed" # not_reviewed | in_review | reproduced | independently_audited | disputed
+  review_artifacts: []
+  next_independent_check: "REPLACE"
+history:
+  - date: "YYYY-MM-DD"
+    action: "created"
+    note: "Initial registration."
+    author: "REPLACE"
+    related_pr_or_commit: null
