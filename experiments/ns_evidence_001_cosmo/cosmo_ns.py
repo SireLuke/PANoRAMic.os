@@ -101,6 +101,7 @@ def run_case(n, d, nu=0.01, T=0.1, dt=0.001):
         maxdiv = float(np.max(np.abs(div)))
         return float(E), float(D), float(Om), maxdiv
 
+    steps = int(round(T / dt))
     steps = validate_time_grid(T, dt)
     E0, D0, Om0, _ = diagnostics(uh)
     Ds = [D0]
