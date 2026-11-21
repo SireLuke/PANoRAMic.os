@@ -1,4 +1,4 @@
-# Pressing for truly Navier–Stokes — preregistered test plan (DRAFT)
+# Pressing for truly Navier–Stokes — preregistered test plan
 
 **Status:** APPROVED by the maintainer 2026-11-21 ("looks
 excellent and push your pre reg plans"). This document *is* the
@@ -68,9 +68,19 @@ declared threshold for the remainder of the run.
 
 - **Prediction (declared in advance):** in the intensifying
   cases, log K(t) advances toward a finite ceiling, with
-  log-periodic modulation; the period candidates are pinned
-  before running, from the barbershop construction (log φ
-  family), and the fitting band is declared with them.
+  log-periodic modulation. The period candidates are pinned
+  before running from **two** families, because the project's
+  own bridge note (PR #126, merged) returned *same family,
+  different constants* for the one concrete blow-up
+  construction on the table — its self-similar period
+  S̄ ≈ 0.36 is **not** a φ constant, and its half-period twist
+  is π/19: (i) the barbershop construction's log φ family, and
+  (ii) the bridge-note constants (period scale set by S̄;
+  twist structure 2π/19). A signature at either family counts;
+  a signature at neither is the null. The fitting band is
+  declared with the candidates.
+  *(Stage C amended 2026-11-21 at the maintainer's direction,
+  before merge, to record the bridge-note verdict.)*
 - **Nulls:** (i) no ceiling — the front exits the resolved range
   without deceleration structure; (ii) approach without
   log-periodicity beyond what the controls show.
