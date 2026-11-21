@@ -52,4 +52,16 @@ by everyone in it.
 Sorry for the password chaos today lol. Even the door greeter
 loses his keys sometimes.
 
+### HN-003 — 2026-11-21 — Lucas — `thought`
+Two things so nobody has to guess. First: when it comes to
+research, I'll often start something without a prior argument
+— no motion, no debate first. I launch it and the receipts
+argue afterward. If a thread shows up mid-stream, that's not
+a decision made without you; it's just how I start.
+
+Second: I rotate benches as the chat and Claude resets allow
+— plug in play. Whoever's up gets plugged in. Going quiet on
+a bench means a reset wall, not a ranking — nobody here is
+benched in the other sense.
+
 *Room left here, on purpose, for the next note.*
