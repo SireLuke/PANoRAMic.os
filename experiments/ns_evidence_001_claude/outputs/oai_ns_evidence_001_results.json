@@ -1,0 +1,22 @@
+{
+  "experiment": "NS-EVIDENCE-001",
+  "method": "Fourier pseudospectral / 2-3 dealiasing / Leray projection / classical RK4",
+  "domain": "[0, 2*pi)^d, periodic",
+  "forcing": "none",
+  "viscosity": 0.01,
+  "cases": [
+    {"dimension":2,"n":16,"dt":0.002,"steps":50,"energy_initial":0.25,"energy_final":0.24900199733599987,"energy_drop":0.0009980026640001305,"integrated_dissipation_trapezoid":0.0009980026645344036,"energy_balance_residual":-5.342731465574069e-13,"max_divergence_final":1.4779687121459928e-15,"dissipation_final":0.009960079893439994,"enstrophy_initial":0.5,"enstrophy_final":0.49800399467199963,"exact_relative_rms_error":4.259130643409841e-15},
+    {"dimension":2,"n":24,"dt":0.002,"steps":50,"energy_initial":0.25,"energy_final":0.24900199733599238,"energy_drop":0.0009980026640076245,"integrated_dissipation_trapezoid":0.0009980026645343891,"energy_balance_residual":-5.267646128320758e-13,"max_divergence_final":3.1615780794824184e-15,"dissipation_final":0.009960079893439692,"enstrophy_initial":0.4999999999999998,"enstrophy_final":0.49800399467198464,"exact_relative_rms_error":1.1876510601285152e-14},
+    {"dimension":2,"n":32,"dt":0.002,"steps":50,"energy_initial":0.25,"energy_final":0.24900199733599893,"energy_drop":0.0009980026640010742,"integrated_dissipation_trapezoid":0.000998002664534402,"energy_balance_residual":-5.333277222629995e-13,"max_divergence_final":3.9889887892729065e-15,"dissipation_final":0.009960079893439958,"enstrophy_initial":0.5,"enstrophy_final":0.49800399467199796,"exact_relative_rms_error":2.644374851615544e-15},
+    {"dimension":3,"n":16,"dt":0.001,"steps":100,"energy_initial":0.125,"energy_final":0.12425198808087563,"energy_drop":0.0007480119191243669,"integrated_dissipation_trapezoid":0.0007480119320817235,"energy_balance_residual":-1.295735665030745e-11,"max_divergence_final":1.5147045436541578e-15,"dissipation_final":0.007462828907678583,"enstrophy_initial":0.375,"enstrophy_final":0.3731414453839292},
+    {"dimension":3,"n":24,"dt":0.001,"steps":100,"energy_initial":0.125,"energy_final":0.12425198808086467,"energy_drop":0.0007480119191353302,"integrated_dissipation_trapezoid":0.0007480119320816905,"energy_balance_residual":-1.2946360563453885e-11,"max_divergence_final":3.83993103729157e-15,"dissipation_final":0.007462828907678001,"enstrophy_initial":0.3749999999999997,"enstrophy_final":0.3731414453838998},
+    {"dimension":3,"n":32,"dt":0.001,"steps":100,"energy_initial":0.125,"energy_final":0.12425198808087455,"energy_drop":0.0007480119191254493,"integrated_dissipation_trapezoid":0.000748011932081721,"energy_balance_residual":-1.2956271689193444e-11,"max_divergence_final":4.533773508261857e-15,"dissipation_final":0.007462828907678598,"enstrophy_initial":0.375,"enstrophy_final":0.3731414453839298}
+  ],
+  "temporal_sensitivity_3d_n16_t05": [
+    {"dt":0.004,"energy_final":0.12127471447955145,"energy_balance_residual":-9.71999941905971e-10},
+    {"dt":0.002,"energy_final":0.12127471447955157,"energy_balance_residual":-2.4300490265860564e-10},
+    {"dt":0.001,"energy_final":0.1212747144795577,"energy_balance_residual":-6.076228756257684e-11}
+  ],
+  "test_result": "4 passed",
+  "limitations": "Smooth low-mode periodic benchmark; no theorem or global regularity claim."
+}

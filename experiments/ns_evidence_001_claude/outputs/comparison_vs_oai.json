@@ -1,0 +1,407 @@
+[
+ {
+  "id": "2D_N16_T0.1_dt0.002_convective",
+  "E_final": {
+   "openai": 0.24900199733599987,
+   "claude": 0.24900199733599881,
+   "abs_diff": 1.0547118733938987e-15,
+   "rel_diff": 4.2357566793758886e-15
+  },
+  "enstrophy_final": {
+   "openai": 0.49800399467199963,
+   "claude": 0.49800399467199763,
+   "abs_diff": 1.9984014443252818e-15,
+   "rel_diff": 4.012822117303475e-15
+  },
+  "dissipation_final": {
+   "openai": 0.009960079893439994,
+   "claude": 0.009960079893439952,
+   "abs_diff": 4.163336342344337e-17,
+   "rel_diff": 4.180023038857785e-15
+  },
+  "energy_drop": {
+   "openai": 0.0009980026640001305,
+   "claude": 0.0009980026640011852,
+   "abs_diff": 1.0547118733938987e-15,
+   "rel_diff": 1.0568227034249287e-12
+  },
+  "integrated_dissipation_trapezoid": {
+   "openai": 0.0009980026645344036,
+   "claude": 0.0009980026645344017,
+   "abs_diff": 1.951563910473908e-18,
+   "rel_diff": 1.9554696393364515e-15
+  },
+  "integrated_dissipation_rk4_stages_mine_only": {
+   "openai": null,
+   "claude": 0.0009980026640021339,
+   "abs_diff": null,
+   "rel_diff": null
+  },
+  "balance_residual_trapezoid": {
+   "openai": -5.342731465574069e-13,
+   "claude": -5.332164831201025e-13,
+   "abs_diff": 1.0566634373043726e-15,
+   "rel_diff": 0.001977758837615163
+  },
+  "enstrophy_initial": {
+   "openai": 0.5,
+   "claude": 0.5,
+   "abs_diff": 0.0,
+   "rel_diff": 0.0
+  },
+  "max_div_final": {
+   "openai": 1.4779687121459928e-15,
+   "claude": 1.855420446049569e-15,
+   "abs_diff": 3.7745173390357636e-16,
+   "rel_diff": 0.2553854698016719
+  },
+  "exact_relative_rms_error": {
+   "openai": 4.259130643409841e-15,
+   "claude": 1.9667793868791464e-15,
+   "abs_diff": 2.2923512565306947e-15,
+   "rel_diff": 0.5382204605716082
+  }
+ },
+ {
+  "id": "2D_N24_T0.1_dt0.002_convective",
+  "E_final": {
+   "openai": 0.24900199733599238,
+   "claude": 0.24900199733599848,
+   "abs_diff": 6.106226635438361e-15,
+   "rel_diff": 2.452280182796641e-14
+  },
+  "enstrophy_final": {
+   "openai": 0.49800399467198464,
+   "claude": 0.49800399467199696,
+   "abs_diff": 1.2323475573339238e-14,
+   "rel_diff": 2.4745736390038838e-14
+  },
+  "dissipation_final": {
+   "openai": 0.009960079893439692,
+   "claude": 0.00996007989343994,
+   "abs_diff": 2.480654570646834e-16,
+   "rel_diff": 2.4905970606528393e-14
+  },
+  "energy_drop": {
+   "openai": 0.0009980026640076245,
+   "claude": 0.0009980026640015183,
+   "abs_diff": 6.106226635438361e-15,
+   "rel_diff": 6.1184472303089074e-12
+  },
+  "integrated_dissipation_trapezoid": {
+   "openai": 0.0009980026645343891,
+   "claude": 0.0009980026645344013,
+   "abs_diff": 1.214306433183765e-17,
+   "rel_diff": 1.216736664476032e-14
+  },
+  "integrated_dissipation_rk4_stages_mine_only": {
+   "openai": null,
+   "claude": 0.000998002664002133,
+   "abs_diff": null,
+   "rel_diff": null
+  },
+  "balance_residual_trapezoid": {
+   "openai": -5.267646128320758e-13,
+   "claude": -5.32882982531846e-13,
+   "abs_diff": 6.118369699770199e-15,
+   "rel_diff": 0.011614997573348076
+  },
+  "enstrophy_initial": {
+   "openai": 0.4999999999999998,
+   "claude": 0.5,
+   "abs_diff": 2.220446049250313e-16,
+   "rel_diff": 4.440892098500628e-16
+  },
+  "max_div_final": {
+   "openai": 3.1615780794824184e-15,
+   "claude": 3.3094529487354272e-15,
+   "abs_diff": 1.4787486925300876e-16,
+   "rel_diff": 0.04677248688326475
+  },
+  "exact_relative_rms_error": {
+   "openai": 1.1876510601285152e-14,
+   "claude": 9.662461746484266e-16,
+   "abs_diff": 1.0910264426636725e-14,
+   "rel_diff": 0.9186422504818992
+  }
+ },
+ {
+  "id": "2D_N32_T0.1_dt0.002_convective",
+  "E_final": {
+   "openai": 0.24900199733599893,
+   "claude": 0.24900199733599881,
+   "abs_diff": 1.1102230246251565e-16,
+   "rel_diff": 4.458691241448321e-16
+  },
+  "enstrophy_final": {
+   "openai": 0.49800399467199796,
+   "claude": 0.49800399467199763,
+   "abs_diff": 3.3306690738754696e-16,
+   "rel_diff": 6.688036862172479e-16
+  },
+  "dissipation_final": {
+   "openai": 0.009960079893439958,
+   "claude": 0.009960079893439952,
+   "abs_diff": 5.204170427930421e-18,
+   "rel_diff": 5.22502879857225e-16
+  },
+  "energy_drop": {
+   "openai": 0.0009980026640010742,
+   "claude": 0.0009980026640011852,
+   "abs_diff": 1.1102230246251565e-16,
+   "rel_diff": 1.1124449509725573e-13
+  },
+  "integrated_dissipation_trapezoid": {
+   "openai": 0.000998002664534402,
+   "claude": 0.0009980026645344017,
+   "abs_diff": 2.168404344971009e-19,
+   "rel_diff": 2.1727440437071722e-16
+  },
+  "integrated_dissipation_rk4_stages_mine_only": {
+   "openai": null,
+   "claude": 0.0009980026640021339,
+   "abs_diff": null,
+   "rel_diff": null
+  },
+  "balance_residual_trapezoid": {
+   "openai": -5.333277222629995e-13,
+   "claude": -5.332164831201025e-13,
+   "abs_diff": 1.1123914289701275e-16,
+   "rel_diff": 0.0002085755873049432
+  },
+  "enstrophy_initial": {
+   "openai": 0.5,
+   "claude": 0.5,
+   "abs_diff": 0.0,
+   "rel_diff": 0.0
+  },
+  "max_div_final": {
+   "openai": 3.9889887892729065e-15,
+   "claude": 4.0054860795937716e-15,
+   "abs_diff": 1.6497290320865097e-17,
+   "rel_diff": 0.004135707366545932
+  },
+  "exact_relative_rms_error": {
+   "openai": 2.644374851615544e-15,
+   "claude": 1.9093392302888325e-15,
+   "abs_diff": 7.350356213267116e-16,
+   "rel_diff": 0.2779619617383866
+  }
+ },
+ {
+  "id": "3D_N16_T0.1_dt0.001_convective",
+  "E_final": {
+   "openai": 0.12425198808087563,
+   "claude": 0.12425198808087334,
+   "abs_diff": 2.2898349882893854e-15,
+   "rel_diff": 1.8428960563584153e-14
+  },
+  "enstrophy_final": {
+   "openai": 0.3731414453839292,
+   "claude": 0.37314144538392224,
+   "abs_diff": 6.938893903907228e-15,
+   "rel_diff": 1.8595880971538092e-14
+  },
+  "dissipation_final": {
+   "openai": 0.007462828907678583,
+   "claude": 0.007462828907678445,
+   "abs_diff": 1.3791051634015616e-16,
+   "rel_diff": 1.847965671546598e-14
+  },
+  "energy_drop": {
+   "openai": 0.0007480119191243669,
+   "claude": 0.0007480119191266565,
+   "abs_diff": 2.2896181478548883e-15,
+   "rel_diff": 3.0609380536812124e-12
+  },
+  "integrated_dissipation_trapezoid": {
+   "openai": 0.0007480119320817235,
+   "claude": 0.0007480119320817164,
+   "abs_diff": 7.047314121155779e-18,
+   "rel_diff": 9.42139265284585e-15
+  },
+  "integrated_dissipation_rk4_stages_mine_only": {
+   "openai": null,
+   "claude": 0.0007480119191269638,
+   "abs_diff": null,
+   "rel_diff": null
+  },
+  "balance_residual_trapezoid": {
+   "openai": -1.295735665030745e-11,
+   "claude": -1.2955059876425257e-11,
+   "abs_diff": 2.2967738821932926e-15,
+   "rel_diff": 0.00017725636055088406
+  },
+  "enstrophy_initial": {
+   "openai": 0.375,
+   "claude": 0.375,
+   "abs_diff": 0.0,
+   "rel_diff": 0.0
+  },
+  "max_div_final": {
+   "openai": 1.5147045436541578e-15,
+   "claude": 1.8716545869361576e-15,
+   "abs_diff": 3.569500432819998e-16,
+   "rel_diff": 0.2356565475276608
+  }
+ },
+ {
+  "id": "3D_N24_T0.1_dt0.001_convective",
+  "E_final": {
+   "openai": 0.12425198808086467,
+   "claude": 0.1242519880808735,
+   "abs_diff": 8.826273045769994e-15,
+   "rel_diff": 7.1035266172367e-14
+  },
+  "enstrophy_final": {
+   "openai": 0.3731414453838998,
+   "claude": 0.37314144538392663,
+   "abs_diff": 2.681188604469753e-14,
+   "rel_diff": 7.185448407402883e-14
+  },
+  "dissipation_final": {
+   "openai": 0.007462828907678001,
+   "claude": 0.0074628289076785325,
+   "abs_diff": 5.316927453868914e-16,
+   "rel_diff": 7.124546897221088e-14
+  },
+  "energy_drop": {
+   "openai": 0.0007480119191353302,
+   "claude": 0.0007480119191265039,
+   "abs_diff": 8.826273045769994e-15,
+   "rel_diff": 1.1799642251653944e-11
+  },
+  "integrated_dissipation_trapezoid": {
+   "openai": 0.0007480119320816905,
+   "claude": 0.0007480119320817175,
+   "abs_diff": 2.699663409488906e-17,
+   "rel_diff": 3.609118108551877e-14
+  },
+  "integrated_dissipation_rk4_stages_mine_only": {
+   "openai": null,
+   "claude": 0.0007480119191269647,
+   "abs_diff": null,
+   "rel_diff": null
+  },
+  "balance_residual_trapezoid": {
+   "openai": -1.2946360563453885e-11,
+   "claude": -1.2955213616293315e-11,
+   "abs_diff": 8.853052839430386e-15,
+   "rel_diff": 0.0006838256045812254
+  },
+  "enstrophy_initial": {
+   "openai": 0.3749999999999997,
+   "claude": 0.375,
+   "abs_diff": 2.7755575615628914e-16,
+   "rel_diff": 7.401486830834382e-16
+  },
+  "max_div_final": {
+   "openai": 3.83993103729157e-15,
+   "claude": 3.210651789431562e-15,
+   "abs_diff": 6.292792478600077e-16,
+   "rel_diff": 0.1638777472170071
+  }
+ },
+ {
+  "id": "3D_N32_T0.1_dt0.001_convective",
+  "E_final": {
+   "openai": 0.12425198808087455,
+   "claude": 0.12425198808087336,
+   "abs_diff": 1.1934897514720433e-15,
+   "rel_diff": 9.605397627080309e-15
+  },
+  "enstrophy_final": {
+   "openai": 0.3731414453839298,
+   "claude": 0.3731414453839261,
+   "abs_diff": 3.7192471324942744e-15,
+   "rel_diff": 9.9673922007444e-15
+  },
+  "dissipation_final": {
+   "openai": 0.007462828907678598,
+   "claude": 0.007462828907678521,
+   "abs_diff": 7.719519468096792e-17,
+   "rel_diff": 1.0343958790418043e-14
+  },
+  "energy_drop": {
+   "openai": 0.0007480119191254493,
+   "claude": 0.0007480119191266427,
+   "abs_diff": 1.1933813312547947e-15,
+   "rel_diff": 1.5954041650165904e-12
+  },
+  "integrated_dissipation_trapezoid": {
+   "openai": 0.000748011932081721,
+   "claude": 0.000748011932081717,
+   "abs_diff": 4.0115480381963664e-18,
+   "rel_diff": 5.362946587004579e-15
+  },
+  "integrated_dissipation_rk4_stages_mine_only": {
+   "openai": null,
+   "claude": 0.0007480119191269645,
+   "abs_diff": null,
+   "rel_diff": null
+  },
+  "balance_residual_trapezoid": {
+   "openai": -1.2956271689193444e-11,
+   "claude": -1.295507429631415e-11,
+   "abs_diff": 1.197392879292991e-15,
+   "rel_diff": 9.241801252838125e-05
+  },
+  "enstrophy_initial": {
+   "openai": 0.375,
+   "claude": 0.375,
+   "abs_diff": 0.0,
+   "rel_diff": 0.0
+  },
+  "max_div_final": {
+   "openai": 4.533773508261857e-15,
+   "claude": 4.3890171903188436e-15,
+   "abs_diff": 1.4475631794301312e-16,
+   "rel_diff": 0.031928440553817904
+  }
+ },
+ {
+  "id": "3D_N16_T0.5_dt0.004_convective",
+  "E_final": {
+   "openai": 0.12127471447955145,
+   "claude": 0.12127471447954602,
+   "abs_diff": 5.4262150328554526e-15,
+   "rel_diff": 4.474316889668197e-14
+  },
+  "balance_residual_trapezoid": {
+   "openai": -9.71999941905971e-10,
+   "claude": -9.71994433291573e-10,
+   "abs_diff": 5.508614397964351e-15,
+   "rel_diff": 5.667299102058219e-06
+  }
+ },
+ {
+  "id": "3D_N16_T0.5_dt0.002_convective",
+  "E_final": {
+   "openai": 0.12127471447955157,
+   "claude": 0.12127471447954527,
+   "abs_diff": 6.300515664747763e-15,
+   "rel_diff": 5.195242628924192e-14
+  },
+  "balance_residual_trapezoid": {
+   "openai": -2.4300490265860564e-10,
+   "claude": -2.429985015289793e-10,
+   "abs_diff": 6.401129626354418e-15,
+   "rel_diff": 2.6341565772223454e-05
+  }
+ },
+ {
+  "id": "3D_N16_T0.5_dt0.001_convective",
+  "E_final": {
+   "openai": 0.1212747144795577,
+   "claude": 0.12127471447954657,
+   "abs_diff": 1.1129985821867194e-14,
+   "rel_diff": 9.177499093385444e-14
+  },
+  "balance_residual_trapezoid": {
+   "openai": -6.076228756257684e-11,
+   "claude": -6.075098757385433e-11,
+   "abs_diff": 1.1299988722512921e-14,
+   "rel_diff": 0.00018597042961681585
+  }
+ }
+]
