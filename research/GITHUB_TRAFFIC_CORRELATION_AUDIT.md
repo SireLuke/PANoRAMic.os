@@ -20,7 +20,7 @@ The collector uses only the GitHub API and Python's standard library. API errors
 
 ## Access limitation
 
-GitHub traffic endpoints are restricted to repository owners and collaborators with sufficient access. The first run must confirm that the workflow's `GITHUB_TOKEN` can read `/traffic/clones` and `/traffic/views`. If GitHub rejects those requests, the artifact will preserve the HTTP error. Do not work around this by exposing a personal access token in logs or committing credentials. A repository administrator can decide whether a narrowly scoped secret or manual traffic export is appropriate.
+GitHub traffic endpoints are restricted to repository owners and collaborators with sufficient access. The workflow `GITHUB_TOKEN` is used for commits, pull requests, and Actions data. GitHub documents that traffic endpoints require repository Administration (read) permission for fine-grained tokens. To collect traffic, create a narrowly scoped fine-grained token with Administration: read for this repository and store it as the Actions secret `PAN_TRAFFIC_TOKEN`. The collector uses that token only for the two traffic endpoints. If the secret is absent or lacks access, the artifact records the HTTP error and still collects the other sources. Never print or commit the token.
 
 ## Reading the results
 
