@@ -263,6 +263,16 @@ def build_cases():
     for d, T in ((2, 0.1), (3, 0.1), (3, 0.5)):
         cases.append(dict(d=d, N=32, T=T, dt=0.001, form="rotational", tag="form_check"))
     cases.append(dict(d=3, N=64, T=0.5, dt=0.002, form="convective", tag="reference"))
+    # Added AFTER the first commit (1a54015), once the dt used in PR #130 for 2D was known:
+    # same configuration as the OpenAI 2D rows (dt = 0.002), so quadrature residuals compare like for like.
+    # The N=32 row of this configuration already exists as a "dt_check" case.
+    for N in (16, 24):
+        cases.append(dict(d=2, N=N, T=0.1, dt=0.002, form="convective", tag="oai_match"))
+    # Also added after the first commit: at dt <= 0.004 the temporal differences sit at the roundoff
+    # floor, so the RK4 order cannot be read from them. Larger dt makes the scheme error visible.
+    # Errors are measured against the dt = 0.001 run of the same (d, N, T) configuration.
+    for dt in (0.1, 0.05, 0.025, 0.0125, 0.00625):
+        cases.append(dict(d=3, N=16, T=0.5, dt=dt, form="convective", tag="order_test"))
     return cases
 
 
@@ -335,6 +345,23 @@ def analyze(cases):
                 )
             out["temporal_T0.5"]["N%d" % N] = ent
 
+    # RK4 order test (3D, N = 16, T = 0.5): errors against the dt = 0.001 run
+    base = pick(3, 16, 0.5, 0.001)
+    ladder = [pick(3, 16, 0.5, dt) for dt in (0.1, 0.05, 0.025, 0.0125, 0.00625)]
+    if base and all(ladder):
+        ot = {}
+        for k in ("E_T", "Omega_T", "D_int"):
+            errs = [abs(r[k] - base[k]) for r in ladder]
+            ot[k] = dict(
+                dt=[0.1, 0.05, 0.025, 0.0125, 0.00625],
+                abs_error_vs_dt0p001=errs,
+                observed_order=[
+                    (math.log(errs[i] / errs[i + 1]) / math.log(2.0)) if errs[i + 1] > 0 else None
+                    for i in range(len(errs) - 1)
+                ],
+            )
+        out["rk4_order_test_3D_N16_T0.5"] = ot
+
     # convective vs rotational form
     out["form_check"] = {}
     for d, T in ((2, 0.1), (3, 0.1), (3, 0.5)):
@@ -376,6 +403,17 @@ def main():
         assert max(r["t0_abs_error"].values()) < 1e-13 and max(r3["t0_abs_error"].values()) < 1e-13
         assert r["exact2d_max_abs_error"] < 1e-10, r["exact2d_max_abs_error"]
         assert abs(r3["resid_abs"]) < 1e-9 and r3["maxdiv_max_over_time"] < 1e-10
+        # convective and rotational nonlinear terms must agree on a generic divergence-free field
+        rng = np.random.default_rng(7)
+        for dd in (2, 3):
+            A = PeriodicNS(16, dd, form="convective")
+            B = PeriodicNS(16, dd, form="rotational")
+            uh = A.project(A.to_hat(rng.standard_normal((dd,) + (16,) * dd)))
+            uh[(slice(None),) + (0,) * dd] = 0.0
+            na, nb = A.nonlinear(uh), B.nonlinear(uh)
+            rel = float(np.abs(na - nb).max() / np.abs(na).max())
+            assert rel < 1e-13, rel
+            print("selftest: %dD convective vs rotational nonlinear term, relative difference %.1e" % (dd, rel))
         print("selftest ok")
         return
 
