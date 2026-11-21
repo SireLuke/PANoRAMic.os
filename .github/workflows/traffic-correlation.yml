@@ -1,0 +1,38 @@
+name: Repository traffic and development correlation
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+  administration: read
+
+concurrency:
+  group: traffic-correlation-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  collect-and-correlate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Collect GitHub traffic and development activity
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python tools/traffic_correlation/collect.py
+      - name: Upload dated audit snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: traffic-correlation-${{ github.run_id }}
+          path: traffic-correlation.json
+          if-no-files-found: error
+          retention-days: 30
