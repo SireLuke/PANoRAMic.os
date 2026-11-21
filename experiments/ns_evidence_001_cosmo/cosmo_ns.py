@@ -13,6 +13,26 @@ spectral. Diagnostics by Parseval sums over Fourier coefficients.
 import json, math
 import numpy as np
 
+
+def validate_time_grid(T, dt):
+    """Return an integer step count only when dt lands exactly on T.
+
+    Rejecting a mismatched grid prevents round(T / dt) from silently
+    integrating to a different final time than the requested T.
+    """
+    if not math.isfinite(T) or T <= 0:
+        raise ValueError("T must be a finite positive number")
+    if not math.isfinite(dt) or dt <= 0:
+        raise ValueError("dt must be a finite positive number")
+    steps = int(round(T / dt))
+    if steps < 1 or not math.isclose(steps * dt, T, rel_tol=1e-12, abs_tol=1e-14):
+        raise ValueError(
+            f"T={T} is not an integer multiple of dt={dt}; "
+            f"round(T/dt) gives {steps} steps ending at {steps * dt}"
+        )
+    return steps
+
+
 def wavenumbers(n, d):
     k1 = np.fft.fftfreq(n, d=1.0 / n)  # integer wavenumbers
     grids = np.meshgrid(*([k1] * d), indexing="ij")
@@ -81,7 +101,7 @@ def run_case(n, d, nu=0.01, T=0.1, dt=0.001):
         maxdiv = float(np.max(np.abs(div)))
         return float(E), float(D), float(Om), maxdiv
 
-    steps = int(round(T / dt))
+    steps = validate_time_grid(T, dt)
     E0, D0, Om0, _ = diagnostics(uh)
     Ds = [D0]
     for s in range(steps):
