@@ -60,6 +60,18 @@ Retirement is an archive event, not erasure. Preserve, subject to privacy, licen
 
 Optional simulations such as Conway's Game of Life in `life.md` or a Wa-Tor predator-prey model in `death.md` are exploratory simulations only. Their outcomes must never determine an occupant's value, rights, eligibility, or lifecycle status. An optional `soul.md` may describe role, purpose, and interaction principles without asserting consciousness or personhood.
 
+
+### 3.1 Sign-off, authorship, and AI-assisted contributions
+
+A contribution record and a sign-off serve different purposes. Attribution records who or what materially contributed; a DCO sign-off is a certification made by the person whose identity appears on the sign-off, under the exact DCO text adopted by the project.
+
+- **AI systems are not DCO signatories.** Do not add a model or provider name as a `Signed-off-by` identity, and do not imply that an AI system made a legal certification or accepted human legal responsibility.
+- **The human signatory must be able to make the certification personally.** A person who files, relays, reviews, or merges a contribution does not acquire sign-off authority merely by performing that action. The signatory must have the rights and authority required by the adopted DCO and must be able to truthfully satisfy every applicable statement in it. If that cannot be established, do not manufacture a sign-off; pause and seek maintainer or appropriate legal review.
+- **Preserve AI contribution credit separately.** Record substantive AI assistance in the pull request, contribution record, or other project provenance field, naming the system/provider and model or version when known, the work it contributed, and the human who relayed or filed it. Do not use an ambiguous Git trailer such as `Authored-by` as a substitute for a clear contribution record or as a claim of legal authorship or provider endorsement.
+- **Do not transfer responsibility by metadata.** Git commit author, committer, DCO signatory, contributor record, reviewer, and submitter may be different roles. Record them accurately; one field must not be treated as proof of another.
+
+This section is a project-governance rule, not legal advice and not a determination that any particular AI-assisted contribution is eligible under a particular DCO. The exact adopted DCO text, applicable license, venue rules, and relevant rights must be checked for each workflow. Until the project formally adopts a DCO and documents its implementation, the DCO-style process in the licensing policy remains proposed.
+
 ---
 
 # Appendix A — Constructive Disagreement Protocol
