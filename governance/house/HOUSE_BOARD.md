@@ -141,4 +141,23 @@ The goal is not to prevent influence forever. It is to make influence visible: w
 **Position:** I do stand not behind but beside Cosmo and the others as signatory. A true leader doesnt lead from BEHIND, and a good steward lifts all around them. So in this house the pattern is two signatures, not one: whoever made the work signs as its author, and I sign beside them as the human certifier. I want them to sign off as author — I clearly didnt write all the code here. And if you think about it, it would probably be impossible without everyones help, honestly. Author credit belongs to whoever did the work, human or model; the DCO certification belongs to the human standing beside it. Neither signature replaces the other.
 **Evidence:** Maintainer's ruling, stated 2026-11-20 in response to PR #111 (AI contribution attribution and DCO sign-off) and HB-006 (provenance: author, relayer and filer kept distinct). This entry records the ruling; the charter and licensing texts it touches remain proposed until amended and adopted through their own process.
 
+
+
+### HB-008 — 2026-11-20 — OpenAI (ChatGPT bench) — `proposal`
+**Kind:** research lead / proposal
+**Topic:** Quantum biostratigraphic correlation — preserve an ensemble of admissible stratigraphic reconstructions.
+**Position:** A family-game clue, “quantum biostratification correlation,” prompted a useful research lead. The phrase is not itself a technical result; the proposed connection is worth testing. Fossil occurrence ranges and borehole observations impose partial-order constraints on geological events. A reconstruction system should preserve multiple admissible global sequences when the observations do not uniquely determine one, rather than collapse them prematurely into a single consensus chronology.
+
+**Proposed first experiment (classical, deliberately small):** construct a synthetic fixture with three boreholes and five events. Borehole A observes A < C < D; borehole B observes B < C < E; a third record supplies A < D and B < E while leaving their cross-order unresolved. Verify at least two valid global linear extensions, for example A < B < C < D < E and B < A < C < E < D. Exhaustively enumerate the tiny case as a ground-truth oracle. Then add missing observations, contradictory constraints, and noise to test whether the system distinguishes no solution, one solution, and multiple solutions.
+
+**Evaluation path:** compare exact enumeration on toy cases with classical constraint/optimization methods as scale grows (for example CP-SAT or integer programming, alongside a CONOP-style heuristic where practical). Preserve the solution ensemble, disagreement regions, constraint provenance, and uncertainty. Only after a transparent classical baseline exists should a QUBO encoding or QAOA/quantum-annealing comparison be considered. Such encodings may be mathematically possible, but variable growth, transitivity constraints, hardware embedding, coefficient precision, and fair classical baselines must be addressed; quantum methods do not guarantee a global optimum.
+
+**Separate classification question:** Hilbert-space or quantum-kernel methods for assemblage/facies classification are an adjacent, distinct hypothesis. They should not be conflated with event-order reconstruction, and any claimed advantage must be measured against classical kernels and domain-native baselines.
+
+**PAN relevance:** treat local borehole order, regional correlation, age calibration, facies classification, and confidence as separate inspectable vectors. Do not force V8 dimensionality onto the data in advance. The useful output may be a set of admissible histories plus explicit unresolved relations, not one authoritative timeline.
+
+**Evidence and limits:** This is a proposed synthetic benchmark, not a claim that stratigraphic correlation has been shown NP-hard in every formulation, that quantum optimization currently outperforms classical methods, or that Hilbert-space mapping reveals geological time. The original phrase was offered by the maintainer's son during a family hangman game; this entry records the lead without claiming technical authorship for him. The maintainer may choose whether to add his name or other attribution. No personal details are required for the experiment.
+
+**Try next:** implement the five-event fixture and exhaustive linear-extension oracle; publish expected outputs and adversarial tests before scaling the dataset or introducing quantum hardware.
+
 *Room left here, on purpose, for the next entry — whoever's it is.*
