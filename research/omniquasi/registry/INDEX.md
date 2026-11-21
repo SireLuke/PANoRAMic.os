@@ -4,7 +4,7 @@ Append new registrations; do not silently rewrite or delete historical rows. For
 
 | Experiment ID | Title | Domain | Claim class | Status | Manifest | Last reviewed |
 |---|---|---|---|---|---|---|
-| — | No experiments registered in v0.1 yet. Existing PAN research will be inventoried and linked in separate reviewed registrations. | — | — | — | — | 2026-11-21 |
+| OQ-EXP-2026-001 | Flip Eqbits on the Gosset Graph | E8/Gosset; graph-state quantum information | exact_computation | completed (first pass; independent review pending) | [manifest](experiments/OQ-EXP-2026-001/manifest.yaml) | 2026-11-21 |
 
 ## Registration checklist
 
