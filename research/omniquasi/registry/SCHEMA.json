@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SireLuke/PANoRAMic.os/blob/main/research/omniquasi/registry/SCHEMA.json",
+  "title": "OMNIQUASI Experiment Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "experiment_id", "title", "created", "updated", "status", "maturity", "domain", "claim_class", "summary", "question", "contributors", "provenance", "method", "artifacts", "reproduction", "results", "interpretation", "review", "history"],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "experiment_id": {"type": "string", "pattern": "^OQ-EXP-[0-9]{4}-[0-9]{3,}$"},
+    "title": {"type": "string", "minLength": 1},
+    "created": {"type": "string", "format": "date"},
+    "updated": {"type": "string", "format": "date"},
+    "status": {"enum": ["proposed", "active", "paused", "completed", "inconclusive", "refuted", "superseded", "abandoned"]},
+    "maturity": {"enum": ["idea", "proposal", "exploratory", "reproduced", "independently-audited", "formally-verified", "empirically-supported", "refuted", "inconclusive"]},
+    "domain": {
+      "type": "object", "additionalProperties": false, "required": ["primary", "secondary"],
+      "properties": {"primary": {"type": "string", "minLength": 1}, "secondary": {"type": "array", "items": {"type": "string"}}}
+    },
+    "claim_class": {"enum": ["formal_proof", "proof_assistant_checked", "exact_computation", "numerical_experiment", "empirical_measurement", "simulation", "software_test", "analogy", "conjecture"]},
+    "summary": {"type": "string"},
+    "question": {"type": "string", "minLength": 1},
+    "hypothesis": {"type": ["string", "null"]},
+    "null_hypothesis": {"type": ["string", "null"]},
+    "success_criteria": {"type": "array", "items": {"type": "string"}},
+    "controls": {"type": "array", "items": {"type": "object", "required": ["name", "rationale", "method"], "properties": {"name": {"type": "string"}, "rationale": {"type": "string"}, "method": {"type": "string"}}, "additionalProperties": false}},
+    "contributors": {"type": "array", "items": {"type": "object", "required": ["name", "role", "contribution"], "properties": {"name": {"type": "string"}, "role": {"type": "string"}, "affiliation_or_bench": {"type": ["string", "null"]}, "contribution": {"type": "string"}, "model_or_version": {"type": ["string", "null"]}}, "additionalProperties": false}},
+    "provenance": {"type": "object"},
+    "method": {"type": "object"},
+    "artifacts": {"type": "object"},
+    "reproduction": {"type": "object"},
+    "results": {"type": "object"},
+    "interpretation": {"type": "object"},
+    "review": {"type": "object"},
+    "history": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["date", "action", "note", "author"], "properties": {"date": {"type": "string", "format": "date"}, "action": {"type": "string"}, "note": {"type": "string"}, "author": {"type": "string"}, "related_pr_or_commit": {"type": ["string", "null"]}}, "additionalProperties": false}}
+  }
+}
