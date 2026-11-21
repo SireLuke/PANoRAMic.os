@@ -61,7 +61,7 @@ def main():
     sources = {
         "clones": collect("clones", base + "/traffic/clones"),
         "views": collect("views", base + "/traffic/views"),
-        "commits": collect("commits", base + f"/commits?since={encoded_since}&per_page=100", "items"),
+        "commits": collect("commits", base + f"/commits?since={encoded_since}&per_page=100", None),
         "pull_requests": collect("pull_requests", base + "/pulls?state=all&sort=updated&direction=desc&per_page=100", None),
         "workflow_runs": collect("workflow_runs", base + f"/actions/runs?created=%3E%3D{encoded_since}&per_page=100", "workflow_runs"),
     }
