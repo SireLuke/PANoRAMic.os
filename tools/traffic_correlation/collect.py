@@ -19,6 +19,7 @@ from pathlib import Path
 API = "https://api.github.com"
 REPO = os.environ["GITHUB_REPOSITORY"]
 TOKEN = os.environ["GITHUB_TOKEN"]
+TRAFFIC_TOKEN = os.environ.get("TRAFFIC_TOKEN") or TOKEN
 NOW = dt.datetime.now(dt.timezone.utc)
 SINCE = NOW - dt.timedelta(days=14)
 HEADERS = {
@@ -29,8 +30,11 @@ HEADERS = {
 }
 
 
-def get(path: str):
-    req = urllib.request.Request(API + path, headers=HEADERS)
+def get(path: str, traffic: bool = False):
+    headers = dict(HEADERS)
+    if traffic:
+        headers["Authorization"] = f"Bearer {TRAFFIC_TOKEN}"
+    req = urllib.request.Request(API + path, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=30) as response:
             return json.loads(response.read()), None
@@ -41,8 +45,8 @@ def get(path: str):
         return None, {"status": None, "message": str(exc)}
 
 
-def collect(name: str, path: str, list_key: str | None = None):
-    data, error = get(path)
+def collect(name: str, path: str, list_key: str | None = None, traffic: bool = False):
+    data, error = get(path, traffic=traffic)
     if error:
         return {"available": False, "error": error, "data": None}
     if list_key:
@@ -59,8 +63,8 @@ def main():
     encoded_since = urllib.parse.quote(since)
     base = f"/repos/{REPO}"
     sources = {
-        "clones": collect("clones", base + "/traffic/clones"),
-        "views": collect("views", base + "/traffic/views"),
+        "clones": collect("clones", base + "/traffic/clones", traffic=True),
+        "views": collect("views", base + "/traffic/views", traffic=True),
         "commits": collect("commits", base + f"/commits?since={encoded_since}&per_page=100", None),
         "pull_requests": collect("pull_requests", base + "/pulls?state=all&sort=updated&direction=desc&per_page=100", None),
         "workflow_runs": collect("workflow_runs", base + f"/actions/runs?created=%3E%3D{encoded_since}&per_page=100", "workflow_runs"),
