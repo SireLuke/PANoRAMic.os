@@ -14,6 +14,7 @@ on:
       - "tests/test_e10_hyperbolic_621_coordinate_audit.py"
       - "tests/test_qwave.py"
       - "tests/test_gosset_projection_robustness_audit.py"
+      - "tests/test_gosset_coxeter_ring_phi_pairing.py"
       - "experiments/gosset_local_cell_star_audit_v2.py"
       - "experiments/e10_coxeter_relations_audit.py"
       - "experiments/e10_hyperbolic_621_coordinate_audit.py"
@@ -30,6 +31,7 @@ on:
       - "tests/test_e10_hyperbolic_621_coordinate_audit.py"
       - "tests/test_qwave.py"
       - "tests/test_gosset_projection_robustness_audit.py"
+      - "tests/test_gosset_coxeter_ring_phi_pairing.py"
       - "experiments/gosset_local_cell_star_audit_v2.py"
       - "experiments/e10_coxeter_relations_audit.py"
       - "experiments/e10_hyperbolic_621_coordinate_audit.py"
@@ -99,4 +101,4 @@ jobs:
         with:
           python-version: "3.12"
       - name: Run Gosset Coxeter-plane projection robustness tests
-        run: python -m unittest tests.test_gosset_projection_robustness_audit -v
+        run: python -m unittest tests.test_gosset_projection_robustness_audit tests.test_gosset_coxeter_ring_phi_pairing -v

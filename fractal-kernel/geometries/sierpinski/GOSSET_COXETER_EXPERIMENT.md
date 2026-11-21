@@ -133,6 +133,30 @@ The IFS therefore generates a new, scale-recursive geometry overlaid on a
 Gosset-derived triangular seed; it does not reveal a pre-existing Sierpiński
 sub-polytope inside the finite 240-vertex set.
 
+### Golden-ratio pairing of the ring radii (observation, 2026-11-21)
+
+The eight radii above split into four pairs in which the outer radius is the
+inner radius times the golden ratio φ = (1 + √5)/2:
+
+| Inner | Outer |
+|---:|---:|
+| 0.238235 | 0.385473 |
+| 0.473861 | 0.766723 |
+| 0.572925 | 0.927011 |
+| 0.704294 | 1.139572 |
+
+Each outer/inner ratio agrees with φ to within 2.6e-9, consistent with the
+12-decimal rounding of the checked-in projection matrix. This is checked by
+`tests/test_gosset_coxeter_ring_phi_pairing.py` (standard library only).
+
+It is consistent with the known two-nested-600-cell (120 + 120) structure of
+the E8 roots under the icosian / H4 folding, which this experiment does not
+itself test. It does not show that the pairing holds in other projections, and
+the "halo" or "crown" look of the picture has no physical meaning here.
+Observation prompted by the maintainer's reading of the projection as a halo
+or crown; numbers computed by Claude (Architect bench). Not independently
+verified by another bench.
+
 ## Controls and limitations
 
 - A random orthonormal 2D projection was used as a control and did not preserve
