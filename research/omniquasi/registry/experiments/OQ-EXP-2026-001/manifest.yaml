@@ -1,0 +1,145 @@
+schema_version: "0.1"
+experiment_id: "OQ-EXP-2026-001"
+title: "Flip Eqbits on the Gosset Graph"
+created: "2026-11-21"
+updated: "2026-11-21"
+status: "completed"
+maturity: "exploratory"
+domain:
+  primary: "E8/Gosset graph geometry"
+  secondary: ["graph states and stabilizer algebra", "quantum information representation", "V8/Fermi yin-yang cartography"]
+claim_class: "exact_computation"
+summary: "A preregistered exact-arithmetic investigation of whether antipodal pairs in the E8 Gosset graph provide natural two-level flip systems, and how graph-state adjacency contributes stabilizer phase and entanglement. The narrow graph and GF(2) computations are reported as reproducible patterns; the broader 'flip eqbit' computing interpretation remains an analogy."
+question: "Can an antipodal pair {alpha, -alpha} of the E8 Gosset graph be treated as a two-level flip system, and what additional structure does graph adjacency contribute?"
+hypothesis: "Antipodal flips form a commuting two-level register; the Gosset adjacency graph supplies non-commuting stabilizer phase and a measurable graph-state entanglement structure."
+null_hypothesis: "The antipodal flips alone provide no non-commuting operation; any observed non-commutation must arise from the graph-state adjacency/stabilizer structure."
+success_criteria:
+  - "Reproduce the 240-root Gosset graph contract: degree 56, 6720 edges, BFS shells 1/56/182/1, diameter 3, and 120 antipodal pairs."
+  - "Verify all 120 antipodal flips are involutions and commute pairwise."
+  - "Verify 240 graph-state stabilizers commute pairwise and have tableau rank 240 over GF(2)."
+  - "Compute the antipodal-cut adjacency rank over GF(2) exactly."
+  - "Compute symplectic commutation counts for antipodal double-flips against graph-state stabilizers."
+controls:
+  - name: "One seeded random balanced 120|120 cut (first pass)"
+    rationale: "Provides a single contrast for the antipodal-cut rank; it is not a distribution or proof of extremality."
+    method: "Compute GF(2) rank of the corresponding cross-cut adjacency matrix; first-pass reported rank 95."
+  - name: "Random antipodal transversals and arbitrary balanced 120|120 cuts (follow-up audit)"
+    rationale: "Broader cut-rank controls reduce dependence on one comparison cut."
+    method: "PR #118 adds deterministic seeded sampling and audit tests; its PR description says the tests and 1000-sample audit still require CI execution."
+contributors:
+  - name: "Lucas"
+    role: "maintainer"
+    affiliation_or_bench: "PANoRAMic.os"
+    contribution: "Originated the flip-eqbit research question and Fermi yin-yang representation; identified the antipodal-pair mapping and open gap design question."
+    model_or_version: null
+  - name: "Cosmo"
+    role: "implementation"
+    affiliation_or_bench: "Memory bench"
+    contribution: "Prepared the preregistered specification and first-pass exact-arithmetic computation."
+    model_or_version: null
+  - name: "OpenAI (ChatGPT bench)"
+    role: "AI_assistance"
+    affiliation_or_bench: "OMNIQUASI registry"
+    contribution: "Registered the existing experiment and preserved its stated claim boundaries and follow-up audit status."
+    model_or_version: "GPT-6"
+provenance:
+  source_repositories:
+    - "https://github.com/SireLuke/PANoRAMic.os"
+  source_revisions:
+    - "PR #117: https://github.com/SireLuke/PANoRAMic.os/pull/117"
+    - "PR #118: https://github.com/SireLuke/PANoRAMic.os/pull/118"
+  datasets: []
+  licenses_and_access: ["Repository artifacts; observe repository license and access terms."]
+  preprocessing: "E8 roots represented in scaled integer coordinates (coordinates multiplied by 2) for exact arithmetic; no external dataset reported."
+method:
+  description: "Construct the 240 E8 roots and Gosset graph with adjacency defined by inner product 1. Define antipodal pairs {alpha,-alpha}; construct one graph-state qubit per root and stabilizers K_v = X_v product_{u adjacent v} Z_u. Verify geometry, flip group, stabilizer symplectic commutation and tableau rank, antipodal-cut GF(2) rank, and double-flip/stabilizer commutation."
+  equations_or_specification:
+    - "E8 roots: 240 norm-squared-2 vectors: 112 integer-type and 128 half-integer-type."
+    - "Gosset adjacency: alpha ~ beta iff inner_product(alpha,beta)=1."
+    - "Graph-state stabilizer: K_v = X_v product_{u~v} Z_u."
+    - "Antipodal cut entanglement: log2(Schmidt rank) = rank_GF(2)(Gamma_AB)."
+    - "Antipodal double-flip: A_v = X_v X_{-v}."
+  parameters:
+    vertices: 240
+    degree: 56
+    edges: 6720
+    antipodal_pairs: 120
+    graph_state_stabilizers: 240
+    antipodal_cut_rank_ebits: 112
+    random_balanced_cut_rank_first_pass: 95
+    double_flip_stabilizer_noncommuting_pairings: 26880
+    total_double_flip_stabilizer_pairings: 57600
+    noncommuting_fraction_percent: 46.7
+  random_seeds: ["First-pass random balanced cut was seeded; exact seed not specified in the combined packet."]
+  environment: "Exact integer arithmetic reported; full runtime/environment details are not specified in the combined packet."
+  commands:
+    - "PR #118 requests: python -m unittest tests.test_flip_qubit_cut_rank -v"
+    - "PR #118 documents a 1000-sample cut-rank audit; execution status must be checked in CI."
+  resource_limits: {}
+artifacts:
+  code:
+    - "https://github.com/SireLuke/PANoRAMic.os/pull/118"
+    - "First-pass script location described in source results as hidden_files/flip-qubit/run.py; not a stable public path in the experiment packet."
+  data:
+    - "First-pass raw output described as hidden_files/flip-qubit/results.json; not a stable public path in the experiment packet."
+  outputs:
+    - "experiments/flip_qubit/flip-qubit-combined.md"
+    - "experiments/flip_qubit/flip-qubit-experiment-spec.md"
+    - "experiments/flip_qubit/flip-qubit-experiment-results.md"
+    - "experiments/flip_qubit/flip-eqbit-yinyang-sketch.svg"
+  logs: []
+  external_references:
+    - "PR #117 — first-pass spec and results: https://github.com/SireLuke/PANoRAMic.os/pull/117"
+    - "PR #118 — cut-rank controls and QWAVE boundary: https://github.com/SireLuke/PANoRAMic.os/pull/118"
+reproduction:
+  instructions: "Review the preregistered specification and first-pass result packet in experiments/flip_qubit/. The source packet describes a retained script and raw output in hidden_files/flip-qubit/ in its review workspace; confirm whether those artifacts are available in the public repository before attempting an exact rerun. For the follow-up audit, use the PR #118 test command and documented 1000-sample procedure after verifying the merged file paths and dependencies."
+  expected_outputs: "Reproduce the E8/Gosset graph contract, flip-group commutativity, stabilizer commutation/rank, antipodal-cut GF(2) rank 112, and double-flip/stabilizer non-commutation count 26880/57600. Follow-up sampling should report full distributions and sampling details, not only a single contrast."
+  known_blockers:
+    - "First-pass packet points to hidden_files/flip-qubit/ for script and raw output; public availability/path has not been confirmed from the reviewed files."
+    - "PR #118 description states tests and the 1000-sample audit still require CI execution; current CI status was not independently checked during registration."
+    - "An independent rerun by another bench remains outstanding in the source packet."
+results:
+  summary: "First-pass narrow computational checks reported as passing/reproducible pattern. Broader computing interpretation remains analogy."
+  observations:
+    - "E1 geometry gate: 240 roots, degree 56, 6720 edges, BFS shells 1/56/182/1, diameter 3, 120 antipodal pairs, and no root adjacent to its antipode."
+    - "E2: 120 antipodal flips are involutions and pairwise commuting; generated group is (Z/2)^120, hence classical by themselves."
+    - "E3: all 240 weight-57 graph-state stabilizers commute pairwise; tableau rank is 240 over GF(2)."
+    - "E4: antipodal cut rank is 112 ebits out of maximum 120, with 2240 crossing edges; one seeded random balanced cut reported rank 95."
+    - "E5: antipodal double-flips fail to commute with 26880 of 57600 stabilizer pairings (46.7%); source packet attributes the non-commutation entirely to adjacency."
+    - "Representation: Fermi yin-yang lobes represent alpha and -alpha; occupancy is proposed as a state dial; stretched lobes represent antipodal separation. The narrowing gap is explicitly an open design question."
+  uncertainty: "The first-pass exact arithmetic is reported, but an independent rerun remains outstanding. A single random cut of rank 95 is only a contrast; it does not establish the distribution or extremality of rank 112."
+  failures_and_negative_results:
+    - "Flips alone are abelian and do not constitute a non-commuting quantum operation; this is a preregistered scope boundary, not a failed test."
+interpretation:
+  supported_claims:
+    - "The reported finite E8/Gosset graph contract and exact finite graph-state computations, subject to independent reproduction."
+    - "Antipodal flips alone form a commuting classical register."
+    - "The adjacency-defined graph state has the reported stabilizer and cut-rank properties."
+  unsupported_claims:
+    - "A useful encoded qubit or operational qubit implementation."
+    - "A gate set, universality, quantum advantage, error correction, noise tolerance, or quantum-computing hardware."
+    - "Physical dynamics, Hamiltonian, energy scale, or new physics."
+    - "That 112 is the maximum or extremal balanced-cut rank."
+    - "That the Fermi yin-yang drawing is a physical mechanism."
+  limitations:
+    - "No gate set, universality, noise model, error correction, dynamics, or hardware was tested."
+    - "V8 remains cartography, not a dynamics engine; Janus remains a translator."
+    - "QWAVE is limited here to SI photon relations and measurement metadata, not a quantum solver."
+    - "First-pass comparison includes only one seeded random balanced cut."
+  alternative_explanations:
+    - "The high antipodal-cut rank may be a property of this particular graph partition; broader seeded controls are needed to characterize it."
+  falsifiers:
+    - "Failure to independently reproduce the E8/Gosset graph contract or any preregistered exact result."
+    - "A correct independent implementation yielding different stabilizer, cut-rank, or commutation results under the stated definitions."
+review:
+  independent_reviewers: []
+  review_status: "in_review"
+  review_artifacts:
+    - "PR #118 adds an independent exact E8/Gosset reconstruction and GF(2) cut-rank audit, with seeded control families and focused tests."
+  next_independent_check: "Run the merged PR #118 tests and 1000-sample audit in CI; inspect the resulting cut-rank distributions for random antipodal transversals and arbitrary balanced cuts; obtain an independent rerun from a separate bench and record exact source revision, environment, and outputs."
+history:
+  - date: "2026-11-21"
+    action: "registered_existing_experiment"
+    note: "Registered the first-pass flip-eqbit experiment from PR #117 and its cut-rank/QWAVE follow-up from PR #118. No results were rerun or upgraded during registration."
+    author: "OpenAI (ChatGPT bench)"
+    related_pr_or_commit: "https://github.com/SireLuke/PANoRAMic.os/pull/117; https://github.com/SireLuke/PANoRAMic.os/pull/118"
