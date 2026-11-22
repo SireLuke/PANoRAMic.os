@@ -96,6 +96,51 @@ def local_relation_census(gram: np.ndarray, adjacency: np.ndarray) -> dict:
            for a in relation_dots for b in relation_dots):
         raise AssertionError("relation algebra is not commutative")
 
+    # Exact simultaneous eigenvectors of the five-dimensional relation algebra.
+    # Vector coordinates are [I, R16, R8, R0, R-16].
+    eigenmatrix = [
+        [891, 2816, 891, 1],
+        [297, 0, -297, -1],
+        [63, -128, 63, 1],
+        [-9, 16, -9, 1],
+        [-3, 0, 3, -1],
+    ]
+    multiplicities = [1, 23, 275, 2024, 2277]
+    if sum(multiplicities) != gram.shape[0]:
+        raise AssertionError("spectral multiplicities do not sum to 4600")
+
+    # Multiplication operator M_i acts on relation-basis coefficient vectors.
+    relation_basis = [None, *relation_dots]
+    for relation_index, relation_dot in enumerate(relation_dots):
+        multiplication = [[0] * 5 for _ in range(5)]
+        multiplication[0][relation_index + 1] = 1  # A_i * I = A_i
+        for row_index, other_dot in enumerate(relation_dots, start=1):
+            multiplication[row_index][0] = (
+                valencies[str(relation_dot)] if relation_dot == other_dot else 0
+            )
+            for column_index, target_dot in enumerate(relation_dots, start=1):
+                multiplication[row_index][column_index] = table[str(relation_dot)][str(other_dot)][str(target_dot)]
+
+        for eigenspace, eigenvalues in enumerate(eigenmatrix):
+            vector = [1, *eigenvalues]
+            eigenvalue = eigenvalues[relation_index]
+            product = [
+                sum(multiplication[row][column] * vector[column] for column in range(5))
+                for row in range(5)
+            ]
+            if product != [eigenvalue * entry for entry in vector]:
+                raise AssertionError(
+                    f"spectral eigenvector mismatch for relation {relation_dot}, "
+                    f"eigenspace {eigenspace}"
+                )
+
+    for relation_index in range(4):
+        if sum(
+            multiplicities[eigenspace] * eigenmatrix[eigenspace][relation_index]
+            for eigenspace in range(5)
+        ) != 0:
+            raise AssertionError("spectral trace/multiplicity identity failed")
+
     # Diagonal coefficient p_ij^0: valency k_i when i=j, otherwise zero.
     diagonal = {
         str(a): {
@@ -112,6 +157,10 @@ def local_relation_census(gram: np.ndarray, adjacency: np.ndarray) -> dict:
         "diagonal_intersection_numbers_p_ij_0": diagonal,
         "commutative": True,
         "all_16_relation_products_have_constant_intersection_numbers": True,
+        "simultaneous_eigenmatrix_rows_relation_order_16_8_0_minus16": eigenmatrix,
+        "primitive_idempotent_multiplicities": multiplicities,
+        "spectral_eigenvectors_verified_exactly_over_integers": True,
+        "spectral_trace_identities_verified": True,
         "scope": (
             "Full all-pairs closure verified for this one reference neighborhood. "
             "Three-family common-neighbor census is separate; transport to every "
