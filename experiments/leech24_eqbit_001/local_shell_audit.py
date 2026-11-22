@@ -361,6 +361,24 @@ def run() -> dict:
         if not np.all(within_degrees == 891):
             raise AssertionError(f"{family}: local induced graph degree mismatch")
 
+        # Genuine cut-rank: GF(2) rank of the bipartite adjacency block
+        # across each construction-family partition of this local graph.
+        neighbor_indices = np.flatnonzero(dots == 16)
+        local_families = np.where(
+            neighbor_indices < FAMILY_STARTS["B"], 0,
+            np.where(neighbor_indices < FAMILY_STARTS["C"], 1, 2)
+        )
+        family_cut_ranks = {}
+        for family_id, family_name in enumerate(("A", "B", "C")):
+            left = np.flatnonzero(local_families == family_id)
+            right = np.flatnonzero(local_families != family_id)
+            cut_block = within[np.ix_(left, right)]
+            family_cut_ranks[family_name] = {
+                "partition_sizes": [int(len(left)), int(len(right))],
+                "gf2_cut_rank": gf2_rank_bool(cut_block),
+                "cut_matrix_shape": [int(len(left)), int(len(right))],
+            }
+
         # Exact common-neighbor census for every unordered pair in N(r).
         # Packed row intersections avoid a cubic dense matrix multiplication.
         packed_within = np.packbits(within, axis=1, bitorder="little")
@@ -402,6 +420,7 @@ def run() -> dict:
             "inner_product_histogram_integer_dot": histogram,
             "histogram_sha256": sha256_bytes(histogram_bytes),
             "neighbor_count": int(len(neighbors)),
+            "construction_family_cut_ranks": family_cut_ranks,
             "cross_cut": {
                 "matrix_shape": [4600, 4600],
                 "ones": int(cross.sum()),
