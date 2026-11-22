@@ -176,6 +176,129 @@ def local_relation_census(gram: np.ndarray, adjacency: np.ndarray) -> dict:
     }
 
 
+def global_association_scheme_audit(shell: np.ndarray, reference_index: int = 0,
+                                    sample_count: int = 20) -> dict:
+    """Audit all seven Leech-shell inner-product relations from representative pairs.
+
+    For each relation class around a fixed reference, compare the complete
+    7x7 joint inner-product table for several deterministic representatives.
+    This is a reproducible finite audit, not a replacement for the published
+    Co0 orbit-transitivity theorem.
+    """
+    relation_dots = (32, 16, 8, 0, -8, -16, -32)
+    reference = shell[reference_index].astype(np.int32)
+    reference_dots = shell.astype(np.int32) @ reference
+    observed_histogram = Counter(map(int, reference_dots))
+    expected_valencies = {
+        32: 1, 16: 4600, 8: 47104, 0: 93150,
+        -8: 47104, -16: 4600, -32: 1,
+    }
+    if dict(observed_histogram) != expected_valencies:
+        raise AssertionError("global Leech shell relation valencies mismatch")
+
+    relation_tables = {}
+    representatives_checked = {}
+    for target_dot in relation_dots:
+        indices = np.flatnonzero(reference_dots == target_dot)
+        if len(indices) == 1:
+            chosen = indices
+        else:
+            count = min(sample_count, len(indices))
+            chosen = indices[np.linspace(0, len(indices) - 1, count, dtype=int)]
+
+        signatures = []
+        for index in chosen:
+            y_dots = shell.astype(np.int32) @ shell[int(index)].astype(np.int32)
+            counts = Counter(zip(map(int, reference_dots), map(int, y_dots)))
+            matrix = [
+                [int(counts.get((left, right), 0)) for right in relation_dots]
+                for left in relation_dots
+            ]
+            signatures.append(matrix)
+
+        first = signatures[0]
+        if any(matrix != first for matrix in signatures[1:]):
+            raise AssertionError(
+                f"global joint relation table varies for target dot {target_dot}"
+            )
+        if any(first[i][j] != first[j][i]
+               for i in range(len(relation_dots))
+               for j in range(len(relation_dots))):
+            raise AssertionError("global intersection table is not symmetric")
+
+        for row_index, row in enumerate(first):
+            if sum(row) != expected_valencies[relation_dots[row_index]]:
+                raise AssertionError("global intersection table row sum mismatch")
+        relation_tables[str(target_dot)] = first
+        representatives_checked[str(target_dot)] = len(chosen)
+
+    # Exact first eigenmatrix, with columns ordered I, R16, R8, R0, R-8, R-16, R-32.
+    eigenmatrix = [
+        [1, 4600, 47104, 93150, 47104, 4600, 1],
+        [1, 2300, 11776, 0, -11776, -2300, -1],
+        [1, 1000, 1024, -4050, 1024, 1000, 1],
+        [1, 350, -704, 0, 704, -350, -1],
+        [1, 76, -320, 486, -320, 76, 1],
+        [1, -10, 16, 0, -16, 10, -1],
+        [1, -20, 64, -90, 64, -20, 1],
+    ]
+    multiplicities = [1, 24, 299, 2576, 17250, 95680, 80730]
+    if sum(multiplicities) != shell.shape[0]:
+        raise AssertionError("global primitive multiplicities do not sum to shell size")
+
+    # Multiplication matrices M_i have row j, column k equal to p_{ij}^k.
+    for relation_index, relation_dot in enumerate(relation_dots[1:], start=1):
+        multiplication = [[0] * 7 for _ in range(7)]
+        multiplication[0][relation_index] = 1
+        for row_index, other_dot in enumerate(relation_dots[1:], start=1):
+            multiplication[row_index][0] = (
+                expected_valencies[relation_dot] if relation_dot == other_dot else 0
+            )
+            for column_index, target_dot in enumerate(relation_dots[1:], start=1):
+                joint = relation_tables[str(target_dot)]
+                multiplication[row_index][column_index] = joint[
+                    relation_dots.index(relation_dot)
+                ][relation_dots.index(other_dot)]
+        for eigenspace, row in enumerate(eigenmatrix):
+            product = [
+                sum(multiplication[r][c] * row[c] for c in range(7))
+                for r in range(7)
+            ]
+            eigenvalue = row[relation_index]
+            if product != [eigenvalue * value for value in row]:
+                raise AssertionError(
+                    f"global eigenmatrix fails relation {relation_dot}, "
+                    f"eigenspace {eigenspace}"
+                )
+
+    for relation_index in range(1, 7):
+        if sum(multiplicities[i] * eigenmatrix[i][relation_index]
+               for i in range(7)) != 0:
+            raise AssertionError("global spectral trace identity failed")
+
+    return {
+        "status": "COMPUTED_GLOBAL_SEVEN_RELATION_SCHEME_AUDIT",
+        "reference_index": reference_index,
+        "relation_order_integer_dot": list(relation_dots),
+        "valencies": {str(k): v for k, v in expected_valencies.items()},
+        "representatives_checked_per_target_relation": representatives_checked,
+        "all_sampled_joint_intersection_tables_identical_within_relation": True,
+        "all_intersection_table_rows_sum_to_relation_valencies": True,
+        "first_eigenmatrix_columns_I_16_8_0_minus8_minus16_minus32": eigenmatrix,
+        "primitive_multiplicities": multiplicities,
+        "multiplication_eigenvectors_verified_exactly": True,
+        "spectral_trace_identities_verified": True,
+        "adjacency_R16_eigenvalues": [row[1] for row in eigenmatrix],
+        "scope": (
+            "The finite code checks deterministic representatives from each "
+            "inner-product class around one reference. Global uniformity is "
+            "supported by the established Co0 orbit/association-scheme theory; "
+            "this sample audit alone is not a proof of pair-orbit transitivity."
+        ),
+        "global_adjacency_matrix_materialized": False,
+    }
+
+
 def run() -> dict:
     shell = np.asarray(leech_minimal_vectors(), dtype=np.int8)
     if shell.shape != (196560, 24):
@@ -184,7 +307,7 @@ def run() -> dict:
         raise AssertionError("minimal shell contains duplicate vectors")
 
     output = {
-        "schema": "pan.leech24_local_eqbit_audit.v1",
+        "schema": "pan.leech24_local_eqbit_audit.v2",
         "status": "COMPUTED_LOCAL_EXACT_AUDIT",
         "geometry": {
             "rank": 24,
@@ -203,6 +326,8 @@ def run() -> dict:
         },
         "reference_results": {},
     }
+
+    output["global_association_scheme"] = global_association_scheme_audit(shell)
 
     for family, index in FAMILY_STARTS.items():
         ref = shell[index].astype(np.int16)
