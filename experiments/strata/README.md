@@ -42,7 +42,7 @@ The runner compares the analytic overlap expression against an independent Fouri
 
 The STRATA run record schema is `strata-run.schema.json`. The checked-in audit at `runs/STRATA-002-GEOMETRY-AUDIT-2026-11-09.json` records the current synthetic STRATA-002 smoke run and the bounded Gosset/E8, Sierpinski, and E10/E9 checks.
 
-Validate the record with the dependency-free structural validator:
+Validate the record with the dependency-free STRATA v0.1 validator (all twelve required dimensions, unique names, valid statuses, provenance SHAs, and E8 invariants):
 
 ```bash
 PYTHONPATH=. python experiments/strata/validate_run.py
@@ -71,8 +71,7 @@ Kernel's Gerono transport curve is a separate geometry experiment.
 
 The Zeng et al. Figure 3 CSVs are fetched at run time, checked against the
 MD5 digests published by Zenodo, and assigned SHA-256 digests in the run
-output. The accessible Zenodo record does not declare a dataset license;
-the files are not bundled or redistributed. This is descriptive empirical
+output. The runner queries the Zenodo record API on every run and accepts CC BY 4.0 only when DOI, version, publication date, and license metadata match the registered source. An unavailable or mismatched API response is inconclusive. Files are fetched transiently and are not bundled. This is descriptive empirical
 data ingestion, not held-out prediction, GHD reproduction, or cross-domain
 validation. See `datasets/manifest.yaml` for provenance and preprocessing.
 
