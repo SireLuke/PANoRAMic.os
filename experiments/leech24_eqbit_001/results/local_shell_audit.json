@@ -1,0 +1,61 @@
+{
+  "schema": "pan.leech24_local_eqbit_audit.v1",
+  "status": "COMPUTED_LOCAL_EXACT_AUDIT",
+  "provenance": {
+    "method": "Independent in-session NumPy reconstruction of the repository three-family extended-Golay minimal-shell algorithm",
+    "coordinate_dtype": "int8",
+    "dot_products": "int16 exact integer arithmetic",
+    "gf2_rank": "packed-row exact XOR elimination",
+    "repository_source_commit_recorded_by_valdora": "e3b987ab1cbf1a36c39a27610dbd7d469e34fb2d",
+    "source_files_current_main": {
+      "experiments/moonshine_sierpinski/leech_golay_construction.py": "737ab7b2a2f40cb89c039dce6753527f1879ba48",
+      "experiments/moonshine_sierpinski/leech_unimodular_basis.py": "fed99ec93c305cac4f14c8250304dbf33386d5dc"
+    },
+    "important": "This result was computed independently in the analysis runtime, not by executing the newly committed repository runner. Re-run the runner from the recorded source to establish reproducibility."
+  },
+  "geometry": {
+    "rank": 24,
+    "minimal_vectors": 196560,
+    "family_counts": {"A": 1104, "B": 97152, "C": 98304},
+    "integral_coordinate_norm_squared": 32,
+    "coordinate_scale": "1/sqrt(8)",
+    "global_adjacency_materialized": false
+  },
+  "reference_results": {
+    "A": {
+      "reference_index": 0,
+      "reference_vector": [-4,-4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      "histogram_integer_dot": {"-32":1,"-16":4600,"-8":47104,"0":93150,"8":47104,"16":4600,"32":1},
+      "histogram_sha256": "a374826bed68944e3041f9aaf1109d8ec79bce1c731701501eb55d9806d9bb2e",
+      "neighbors": 4600,
+      "cross_cut": {"edges":4600,"row_degree_min":1,"row_degree_max":1,"symmetric":true,"zero_diagonal":true,"fixed_points":0,"partner_involution":true,"rank_gf2":4600,"sha256":"6902f7ff4e97a8335232c7309e6a360119068b59a24cce6c4e33a30fe1a5e3d6"},
+      "within_neighbor_graph": {"vertices":4600,"edges":2049300,"degree_min":891,"degree_max":891,"regular_degree":891,"sha256":"a0ce78bdf2b53718ba0f86684df75860261e212bd0e7de1336607052782ae5ed"}
+    },
+    "B": {
+      "reference_index": 1104,
+      "reference_vector": [-2,-2,0,0,0,-2,-2,-2,0,-2,0,-2,0,0,0,0,0,0,0,0,0,0,0,-2],
+      "histogram_integer_dot": {"-32":1,"-16":4600,"-8":47104,"0":93150,"8":47104,"16":4600,"32":1},
+      "histogram_sha256": "a374826bed68944e3041f9aaf1109d8ec79bce1c731701501eb55d9806d9bb2e",
+      "neighbors": 4600,
+      "cross_cut": {"edges":4600,"row_degree_min":1,"row_degree_max":1,"symmetric":true,"zero_diagonal":true,"fixed_points":0,"partner_involution":true,"rank_gf2":4600,"sha256":"9b0a10e4734cd5141770688a85168bf0a4a7231aebc130c4880a0536321a5832"},
+      "within_neighbor_graph": {"vertices":4600,"edges":2049300,"degree_min":891,"degree_max":891,"regular_degree":891,"sha256":"0f0a5974263def61b8c73651f295b01f2fcd79a9fed397619854d8d0d32fc3f2"}
+    },
+    "C": {
+      "reference_index": 98256,
+      "reference_vector": [-3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      "histogram_integer_dot": {"-32":1,"-16":4600,"-8":47104,"0":93150,"8":47104,"16":4600,"32":1},
+      "histogram_sha256": "a374826bed68944e3041f9aaf1109d8ec79bce1c731701501eb55d9806d9bb2e",
+      "neighbors": 4600,
+      "cross_cut": {"edges":4600,"row_degree_min":1,"row_degree_max":1,"symmetric":true,"zero_diagonal":true,"fixed_points":0,"partner_involution":true,"rank_gf2":4600,"sha256":"775f506595e99a84bb5ff4230a0f7f1de4fca0f35bdd2d0f200ed32abd11da72"},
+      "within_neighbor_graph": {"vertices":4600,"edges":2049300,"degree_min":891,"degree_max":891,"regular_degree":891,"sha256":"43fa33c31a4a4eae65ea6001b585ead28e859bd8f97b06687019bd42d3774683"}
+    }
+  },
+  "acceptance": {
+    "three_family_shell_censuses_match": true,
+    "all_local_shells_have_4600_neighbors": true,
+    "all_cross_cuts_are_fixed_point_free_perfect_matchings": true,
+    "all_cross_cut_ranks_are_full_4600": true,
+    "all_within_neighbor_graphs_are_891_regular": true,
+    "scope_limit": "Three deterministic representatives checked; this run does not prove Co0 transitivity or every-root local incidence."
+  }
+}
