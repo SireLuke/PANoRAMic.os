@@ -1,0 +1,126 @@
+{
+  "tag": "re1600_n128",
+  "stage_a": {
+    "eps_max": 0.013758530251495716,
+    "t_eps": 8.9,
+    "ref_eps": 0.01286,
+    "ref_t": 8.97,
+    "ratio": 1.069870159525328,
+    "gate": "+10%/-5% eps, +-0.4 t",
+    "verdict": "PASS"
+  },
+  "stage_b": {
+    "bkm_int_0_10": 188.35966439942806,
+    "expected": "180-210",
+    "wmax_peak": 44.23573572979413,
+    "om_peak": 11.006824201196572
+  },
+  "K_series": {
+    "t": [
+      0.0,
+      0.5,
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      3.5,
+      4.0,
+      4.5,
+      5.0,
+      5.5,
+      6.0,
+      6.5,
+      7.0,
+      7.5,
+      8.0,
+      8.5,
+      9.0,
+      9.5,
+      10.0,
+      10.5,
+      11.0,
+      11.5,
+      12.0
+    ],
+    "K": [
+      2,
+      3,
+      4,
+      6,
+      7,
+      9,
+      12,
+      16,
+      23,
+      34,
+      41,
+      44,
+      45,
+      49,
+      51,
+      51,
+      53,
+      55,
+      57,
+      58,
+      57,
+      56,
+      56,
+      55,
+      55
+    ]
+  },
+  "ceiling_test": {
+    "interval": [
+      4.0,
+      8.5
+    ],
+    "n": 10,
+    "rms_saturating": 0.03130306710677667,
+    "tau": 0.945138544308577,
+    "rms_no_ceiling": 0.07318052550325388,
+    "ratio": 0.42775132989971243,
+    "verdict": "PASS"
+  },
+  "log_periodicity": {
+    "winning_model": "(i) saturating",
+    "resid_std": 0.03130306710677667,
+    "candidates": {
+      "log phi/2": {
+        "candidate": 0.2406,
+        "peak_period": 0.22124265698788825,
+        "amplitude": 0.016176606634505215,
+        "amp_over_resid_std": 0.5167738541186979
+      },
+      "2pi/19 (twist)": {
+        "candidate": 0.3306939635357677,
+        "peak_period": 0.29823811079335033,
+        "amplitude": 0.013628597108568726,
+        "amp_over_resid_std": 0.43537577522613846
+      },
+      "S-bar": {
+        "candidate": 0.36,
+        "peak_period": 0.32574810838181945,
+        "amplitude": 0.011109978620542351,
+        "amp_over_resid_std": 0.35491661512418377
+      },
+      "log phi": {
+        "candidate": 0.4812,
+        "peak_period": 0.5274257139352327,
+        "amplitude": 0.025917353121932673,
+        "amp_over_resid_std": 0.8279493199029668
+      },
+      "2 log phi": {
+        "candidate": 0.9624,
+        "peak_period": 0.8715323012319595,
+        "amplitude": 0.0191261938061224,
+        "amp_over_resid_std": 0.6110006326498867
+      }
+    },
+    "global_best_period": 0.5839494537636459,
+    "global_best_amp": 0.02691818630645746,
+    "verdict": "PENDING CONTROLS"
+  },
+  "controls_status": "phase-shuffled control and nu=0.01 baseline not yet run"
+}
