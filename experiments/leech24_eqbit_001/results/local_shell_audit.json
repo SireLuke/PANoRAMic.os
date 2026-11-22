@@ -272,7 +272,8 @@
     "all_within_neighbor_graphs_are_891_regular": true,
     "scope_limit": "Three deterministic representatives were computed. The perfect-matching/full-rank conclusion is universal by the norm identity proof; the measured 891-regular induced-neighborhood statistics are computed for three representatives and are not promoted to a universal theorem here.",
     "universal_local_matching_and_rank_proved": true,
-    "exact_common_neighbor_census_all_pairs": true
+    "exact_common_neighbor_census_all_pairs": true,
+    "local_four_class_association_scheme_verified_for_reference_A": true
   },
   "exact_local_matching_theorem": {
     "status": "PROVED_FROM_NORM_AND_INNER_PRODUCT_IDENTITIES",
@@ -316,5 +317,155 @@
     },
     "conclusion": "The induced graph is not strongly regular: nonadjacent pairs split into three distinct common-neighbor counts (0, 42, 162). The four inner-product relations are candidate association-scheme classes; closure/intersection-number axioms have not yet been fully tested.",
     "method": "All 10,577,700 unordered pairs classified; common neighbors counted by exact packed-bitset intersections of the 4,600x4,600 adjacency matrix."
+  },
+  "local_association_scheme": {
+    "status": "VERIFIED_FOR_REFERENCE_FAMILY_A_REPRESENTATIVE",
+    "relation_order": [
+      16,
+      8,
+      0,
+      -16
+    ],
+    "valencies": {
+      "0": 891,
+      "8": 2816,
+      "16": 891,
+      "-16": 1
+    },
+    "off_diagonal_intersection_numbers_p_ij_k": {
+      "0": {
+        "0": {
+          "0": 42,
+          "8": 162,
+          "16": 336,
+          "-16": 0
+        },
+        "8": {
+          "0": 512,
+          "8": 567,
+          "16": 512,
+          "-16": 0
+        },
+        "16": {
+          "0": 336,
+          "8": 162,
+          "16": 42,
+          "-16": 891
+        },
+        "-16": {
+          "0": 0,
+          "8": 0,
+          "16": 1,
+          "-16": 0
+        }
+      },
+      "8": {
+        "0": {
+          "0": 512,
+          "8": 567,
+          "16": 512,
+          "-16": 0
+        },
+        "8": {
+          "0": 1792,
+          "8": 1680,
+          "16": 1792,
+          "-16": 2816
+        },
+        "16": {
+          "0": 512,
+          "8": 567,
+          "16": 512,
+          "-16": 0
+        },
+        "-16": {
+          "0": 0,
+          "8": 1,
+          "16": 0,
+          "-16": 0
+        }
+      },
+      "16": {
+        "0": {
+          "0": 336,
+          "8": 162,
+          "16": 42,
+          "-16": 891
+        },
+        "8": {
+          "0": 512,
+          "8": 567,
+          "16": 512,
+          "-16": 0
+        },
+        "16": {
+          "0": 42,
+          "8": 162,
+          "16": 336,
+          "-16": 0
+        },
+        "-16": {
+          "0": 1,
+          "8": 0,
+          "16": 0,
+          "-16": 0
+        }
+      },
+      "-16": {
+        "0": {
+          "0": 0,
+          "8": 0,
+          "16": 1,
+          "-16": 0
+        },
+        "8": {
+          "0": 0,
+          "8": 1,
+          "16": 0,
+          "-16": 0
+        },
+        "16": {
+          "0": 1,
+          "8": 0,
+          "16": 0,
+          "-16": 0
+        },
+        "-16": {
+          "0": 0,
+          "8": 0,
+          "16": 0,
+          "-16": 0
+        }
+      }
+    },
+    "diagonal_intersection_numbers_p_ij_0": {
+      "0": {
+        "0": 891,
+        "8": 0,
+        "16": 0,
+        "-16": 0
+      },
+      "8": {
+        "0": 0,
+        "8": 2816,
+        "16": 0,
+        "-16": 0
+      },
+      "16": {
+        "0": 0,
+        "8": 0,
+        "16": 891,
+        "-16": 0
+      },
+      "-16": {
+        "0": 0,
+        "8": 0,
+        "16": 0,
+        "-16": 1
+      }
+    },
+    "commutative": true,
+    "closure": "All 16 products of the four nontrivial relation matrices have constant intersection numbers across all pairs in each relation class; symmetric relation matrices and constant valencies complete the 4-class symmetric association-scheme check.",
+    "provenance": "Independent analysis-runtime calculation over all 10,577,700 unordered pairs for one deterministic Family A reference neighborhood. Updated repository runner now reproduces and asserts the full table; CI run pending."
   }
 }
