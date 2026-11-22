@@ -52,6 +52,75 @@ def gf2_rank_bool(matrix: np.ndarray) -> int:
     return len(pivots)
 
 
+def local_relation_census(gram: np.ndarray, adjacency: np.ndarray) -> dict:
+    """Exact pair census for the four nontrivial inner-product relations."""
+    relation_dots = (16, 8, 0, -16)
+    per_vertex = {
+        str(dot): (gram == dot).sum(axis=1)
+        for dot in relation_dots
+    }
+    valencies = {
+        str(dot): {
+            "min": int(values.min()),
+            "max": int(values.max()),
+            "value": int(values[0]),
+        }
+        for dot, values in ((d, per_vertex[str(d)]) for d in relation_dots)
+    }
+    if any(v["min"] != v["max"] for v in valencies.values()):
+        raise AssertionError("local inner-product relation valencies vary by vertex")
+
+    row_bits = []
+    for row in adjacency:
+        bits = 0
+        for j in np.flatnonzero(row):
+            bits |= 1 << int(j)
+        row_bits.append(bits)
+
+    pair_counts = Counter()
+    common_counts = {str(dot): Counter() for dot in relation_dots}
+    n = gram.shape[0]
+    for i in range(n):
+        left = row_bits[i]
+        for j in range(i + 1, n):
+            dot = int(gram[i, j])
+            if dot not in relation_dots:
+                raise AssertionError(f"unexpected off-diagonal dot product: {dot}")
+            common = (left & row_bits[j]).bit_count()
+            pair_counts[str(dot)] += 1
+            common_counts[str(dot)][str(common)] += 1
+
+    expected_pairs = {"16": 2049300, "8": 6476800, "0": 2049300, "-16": 2300}
+    expected_common = {
+        "16": {"336": 2049300},
+        "8": {"162": 6476800},
+        "0": {"42": 2049300},
+        "-16": {"0": 2300},
+    }
+    actual_common = {
+        dot: dict(sorted(counts.items(), key=lambda item: int(item[0])))
+        for dot, counts in common_counts.items()
+    }
+    if dict(pair_counts) != expected_pairs:
+        raise AssertionError(f"local relation pair counts mismatch: {dict(pair_counts)}")
+    if actual_common != expected_common:
+        raise AssertionError(f"local common-neighbor census mismatch: {actual_common}")
+
+    return {
+        "relation_partition": "identity plus four exact off-diagonal inner-product relations",
+        "inner_product_units": "integer coordinate dot product; divide by 8 for lattice inner product",
+        "per_vertex_valencies": valencies,
+        "unordered_pair_counts": dict(pair_counts),
+        "common_neighbor_counts_by_relation": actual_common,
+        "strongly_regular": False,
+        "interpretation": (
+            "The adjacency relation alone is not strongly regular: nonadjacent "
+            "pairs have three distinct common-neighbor counts. Full association-"
+            "scheme closure has not yet been tested."
+        ),
+    }
+
+
 def run() -> dict:
     shell = np.asarray(leech_minimal_vectors(), dtype=np.int8)
     if shell.shape != (196560, 24):
@@ -115,6 +184,11 @@ def run() -> dict:
         histogram_bytes = json.dumps(
             histogram, sort_keys=True, separators=(",", ":")
         ).encode()
+        if family == "A":
+            output["local_relation_census"] = local_relation_census(
+                neighbor_gram, within
+            )
+
         output["reference_results"][family] = {
             "reference_index": index,
             "reference_vector": shell[index].astype(int).tolist(),
