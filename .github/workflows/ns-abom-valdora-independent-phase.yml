@@ -1,0 +1,57 @@
+name: NS-ABOM-E8-Leech-EQBIT independent phase
+
+on:
+  pull_request:
+    paths:
+      - "experiments/ns_abom_e8_leech_eqbit_002_valdora/**"
+      - "experiments/ns_evidence_001_cosmo/cosmo_results.json"
+      - "core/abom_v8/abom_v8_model.py"
+      - "core/geometry/e8_root_system.py"
+      - "experiments/flip_qubit/**"
+      - "experiments/moonshine_sierpinski/leech_*.py"
+      - "tests/test_ns_abom_e8_leech_eqbit_002_valdora.py"
+      - ".github/workflows/ns-abom-valdora-independent-phase.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  valdora-independent-phase:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out exact tested commit
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Record environment and commit
+        run: |
+          python --version
+          python -c "import platform; print(platform.platform())"
+          git rev-parse HEAD
+
+      - name: Run focused Valdora regression suite
+        run: python -m unittest tests.test_ns_abom_e8_leech_eqbit_002_valdora -v
+
+      - name: Execute all six preregistered ablations and full certificates
+        run: |
+          python -m experiments.ns_abom_e8_leech_eqbit_002_valdora.runner \
+            --samples-per-seed 1000 \
+            --seed-count 10 \
+            --seed 20261121 \
+            --rewire-attempts 25000 \
+            --output experiments/ns_abom_e8_leech_eqbit_002_valdora/results.json
+
+      - name: Upload immutable run result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ns-abom-valdora-phase-${{ github.sha }}
+          path: experiments/ns_abom_e8_leech_eqbit_002_valdora/results.json
+          if-no-files-found: warn
+          retention-days: 90
