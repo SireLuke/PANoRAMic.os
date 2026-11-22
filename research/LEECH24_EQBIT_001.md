@@ -140,3 +140,83 @@ No result JSON is to be committed with the preregistration.
 - Existing PAN certificate: `research/LEECH_UNIMODULAR_BASIS_CERTIFICATE.md`.
 
 Authored-by: OpenAI (ChatGPT bench)
+
+
+## 10. Valdora phase-two evidence and Leech-specific design refinement
+
+This section incorporates the completed artifact
+`experiments/ns_abom_e8_leech_eqbit_002_claude/outputs/phase2/valdora_results.json`
+(`NS-ABOM-E8-LEECH-EQBIT-002-VALDORA`). It refines the next experiment; it does not transfer E8 numerical results to Leech geometry.
+
+### 10.1 What Valdora actually establishes
+
+The recorded Valdora run reports:
+
+- Leech: rank 24; 24 basis columns satisfy the Golay congruences; coordinate determinant and index-derived covolume both (2^{36}); scaled Gram determinant 1; integral, even, positive definite; minimum norm 4 attained by 196,560 vectors.
+- E8/Gosset EQBIT: 240 vertices, degree 56, 6,720 edges; exact E8-root/Gosset-vertex bijection; antipodal map is a fixed-point-free involutive graph automorphism.
+- E8/Gosset cut-rank: canonical antipodal rank 112; 10,000 random antipodal transversals have mean 118.433 (range 114–120); 10,000 arbitrary balanced cuts have mean 96.9364 (range 78–106). A degree-preserving rewired null gives rank 119 for the fixed original cut.
+- The E8 result is independently consistent with Claude's phase-two run. It sharpens interpretation: rank 112 is lower than every sampled antipodal transversal but higher than every sampled arbitrary balanced cut. Do not call it globally maximal or simply “more entangling than a typical cut.”
+- The Leech and EQBIT outputs have separate hashes. The ablation explicitly reports `NOT_DEFINED_BY_CURRENT_MODULE_CONTRACTS` for a shared observable. No measured Leech–EQBIT coupling exists in this run.
+
+The Leech certificate is an exact algebraic/software result. The E8 cut-rank distributions are graph-specific sampled statistics. Neither gives a numerical prediction for the Leech kissing graph's cut ranks.
+
+### 10.2 Exact Leech parity prediction for antipodal-transversal cuts
+
+There is, however, a structural prediction that transfers by proof rather than by numerical analogy.
+
+Let (u_1,\ldots,u_m) be one chosen representative from each of (m) antipodal pairs in a selected Leech subset, and put the (u_i) on the left and (-u_i) on the right. Under the kissing-graph adjacency rule, the cut matrix over GF(2) is
+
+\[
+B_{ij}=\mathbf 1[\langle u_i,-u_j\rangle=2]
+      =\mathbf 1[\langle u_i,u_j\rangle=-2].
+\]
+
+The matrix is symmetric because the lattice inner product is symmetric. Its diagonal is zero because \(\langle u_i,u_i\rangle=4\), not (-2). Therefore (B) is an alternating matrix over GF(2), and its rank is **even**.
+
+This predicts even cut rank for every antipodal transversal under this graph definition, for every sample size—not a particular rank value. The test must verify symmetry and zero diagonal before reporting parity. This is a useful exact Leech analogue of the E8 alternating-matrix explanation, not evidence that the two rank distributions coincide.
+
+### 10.3 Add a structured full-neighborhood tier
+
+The original global 120-pair sample remains a useful smoke test, but a uniformly selected 240-vertex induced subgraph is expected to be sparse: its mean induced degree is approximately
+
+\[
+239\cdot\frac{4600}{196559}\approx 5.59.
+\]
+
+That is appropriate for testing sampling, hashing, and rank code, but weak as the sole probe of local Leech incidence.
+
+Add a preregistered local tier around one deterministic reference vector (r):
+
+1. Enumerate its complete neighbor shell (N(r)=\{v:\langle r,v\rangle=2\}), expected size 4,600, using exact integer dot products.
+2. Verify the full inner-product census from Section 4, not only the degree.
+3. Form the paired vertex set (N(r)\cup -N(r)), containing 9,200 vertices and 4,600 antipodal pairs.
+4. Compute the full 4,600-by-4,600 cut matrix between (N(r)) and (-N(r)) using the exact predicate \(\langle v_i,v_j\rangle=-2\).
+5. Verify symmetry, zero diagonal, even GF(2) rank, and deterministic digest. Record the exact rank and row/column ordering.
+6. Separately compute the induced graphs within (N(r)) and within (-N(r)), preserving them as distinct outputs. Do not infer their spectra or common-neighbor parameters from the E8 run.
+
+This local tier uses the full 4,600-neighbor incidence structure rather than extrapolating from a global random sample. It is still a local shell experiment, not a materialization of all 452,088,000 kissing edges.
+
+### 10.4 Resource projection and implementation guardrails
+
+Valdora reports a full-orchestration peak of 60,530,407 Python-managed bytes and 104.48 seconds, versus 2,267,873 bytes when the Leech adapter is omitted. The corresponding run without flip-EQBIT reports 60,327,100 bytes and 8.84 seconds. These are `tracemalloc` peaks, not RSS, and the configuration differences are not clean isolated microbenchmarks; they nevertheless flag the Leech shell materialization as a memory-sensitive stage and the sampled EQBIT stage as a runtime-sensitive stage.
+
+Consequently:
+
+- Do not build the full Leech adjacency matrix or full edge list.
+- Avoid Python object-heavy adjacency sets for the 9,200-vertex local tier if a compact bitset/packed-row representation suffices.
+- Prefer a streaming minimal-vector iterator and signed-byte coordinate storage (all current integral shell coordinates fit in int8) so the 196,560 Python tuple objects need not remain resident.
+- Measure wall time, peak traced Python heap, and process RSS separately where available.
+- Cache the exact shell once per run; do not regenerate it independently for every reference vector.
+- Keep the first implementation as a correctness-first reference path and compare any optimized packed implementation against its exact outputs.
+
+### 10.5 Revised priority order
+
+1. Reproduce Valdora's Leech certificate from the frozen source hashes and capture the source commit in the new artifact.
+2. Add and test the exact reference-vector inner-product census.
+3. Prove in code the alternating-matrix invariant for arbitrary sampled antipodal transversals.
+4. Implement the full 4,600-neighbor local tier and its 9,200-vertex paired cut.
+5. Retain the original 120-pair global sample as a secondary sampling/control path.
+6. Add randomized transversals and balanced cuts only after the exact local result is frozen.
+7. Compare E8 and Leech only at the level of declared graph invariants and protocol behavior; report dimension, graph construction, degree, and cut family separately.
+
+No E8 rank value, ratio, tail probability, or ABOM/Fermi channel value is a prior for the Leech result. The next Leech rank is to be measured, not guessed.
