@@ -19,6 +19,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Run STRATA-002 unit tests
+        run: python -m unittest discover -s experiments/strata/tests -v
+      - name: Run STRATA-002 synthetic smoke runner
+        run: PYTHONPATH=. python experiments/strata/run_strata_002.py > strata-002-run.json
+      - name: Run STRATA-002 randomized E8 projection control
+        run: PYTHONPATH=. python experiments/strata/e8_projection_control.py --seed 20261109 --replicates 5 --tolerance 1e-8
+      - name: Validate historical STRATA-002 evidence record
+        run: PYTHONPATH=. python experiments/strata/validate_run.py
       - name: Run STRATA Fermi disk-partition tests
         run: python -m unittest tests.test_strata_003_fermi_disk_partition -v
       - name: Run fractional Fermi sea reference tests
