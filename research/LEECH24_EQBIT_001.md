@@ -303,3 +303,39 @@ Therefore the cross-cut partner map is exactly
 for every (r\) and every (v\in N(r)). It is fixed-point-free and involutive because applying it twice returns (v), and (r-v=v) would imply (r=2v), incompatible with both vectors having norm squared 4 and inner product 2. Consequently the local cross-cut matrix is a permutation matrix with 2-by-2 swap blocks and has full GF(2) rank 4,600 for every reference vector—not merely the three sampled representatives.
 
 This proof upgrades the matching/rank conclusion from a three-representative computational observation to an exact local theorem under the stated Leech norm and adjacency contract. The 891-regular within-neighborhood graph remains a computational result at this stage; its global uniformity and any stronger association-scheme classification require separate proof.
+
+
+## 12. Valdora second local result: exact common-neighbor classification
+
+**Status:** computed exactly for all unordered pairs in each of the three deterministic 4,600-vertex neighborhoods. The updated runner performs packed-bitset intersections and asserts the full census. Raw results are in `experiments/leech24_eqbit_001/results/local_shell_audit.json`.
+
+For each reference vector (r), let (N(r)) be its 4,600 Leech kissing neighbors and let (H_r) be the induced graph on (N(r)), with adjacency when the lattice inner product is 2 (integral dot product 16). The graph is 891-regular with 2,049,300 edges.
+
+The exact pair census is:
+
+| Integer dot (x\cdot y) | Lattice inner product | Pair count | Common neighbors in (H_r) |
+|---:|---:|---:|---:|
+| -16 | -2 | 2,300 | 0 |
+| 0 | 0 | 2,049,300 | 42 |
+| 8 | 1 | 6,476,800 | 162 |
+| 16 | 2 (adjacent) | 2,049,300 | 336 |
+
+These classes account for all (inom{4600}{2}=10,577,700) unordered pairs. The census was computed for every pair, not estimated from a sample, and it matched for the three reference representatives from the three Golay construction families.
+
+### 12.1 Consequences
+
+The 891-regular local graph is **not strongly regular**: its nonadjacent pairs do not share a single common-neighbor count. They split into three classes with counts 0, 42, and 162.
+
+The four inner-product relations (-2,0,1,2) are natural candidate relations for a 4-class association scheme. The pair census is consistent with that richer structure, but it is not by itself a proof of an association scheme. We have not yet checked all intersection numbers (p_{ij}^k), closure of the relation algebra, or the required uniformity for every relation class.
+
+The relation at inner product (-2) is precisely the fixed-point-free matching (v\mapsto r-v) proved in Section 11.4. Its 2,300 edges partition the 4,600 local vertices into antipodal-within-shell pairs.
+
+### 12.2 Next mathematical gate
+
+Compute the full intersection-number table for the four relations and verify that every (A_iA_j) is a constant linear combination of the four relation matrices. If this closes with nonnegative integer intersection numbers and the standard symmetry/identity conditions, then we can identify the local structure as a symmetric association scheme (or record exactly which axiom fails).
+
+Do not label it an association scheme until this gate passes. Do not infer eigenvalues, automorphism groups, or a Leech-to-E8 relationship from the common-neighbor census alone.
+
+### 12.3 Reproduction note
+
+The runner was updated to compute the common-neighbor count for all 10,577,700 unordered vertex pairs using packed bitset intersections. It asserts the complete pair-class census above. The stored numbers were independently computed in the analysis runtime; the CI run must execute the updated runner to establish repository-runner reproduction. The existing Leech/VOA/basis workflow success does not substitute for that run.
