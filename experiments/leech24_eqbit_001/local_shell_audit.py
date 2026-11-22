@@ -53,70 +53,69 @@ def gf2_rank_bool(matrix: np.ndarray) -> int:
 
 
 def local_relation_census(gram: np.ndarray, adjacency: np.ndarray) -> dict:
-    """Exact pair census for the four nontrivial inner-product relations."""
+    """Verify the complete four-class association-scheme intersection table."""
     relation_dots = (16, 8, 0, -16)
-    per_vertex = {
-        str(dot): (gram == dot).sum(axis=1)
-        for dot in relation_dots
-    }
-    valencies = {
-        str(dot): {
-            "min": int(values.min()),
-            "max": int(values.max()),
-            "value": int(values[0]),
+    relation_mats = []
+    valencies = {}
+    for dot in relation_dots:
+        matrix = gram == dot
+        np.fill_diagonal(matrix, False)
+        degrees = matrix.sum(axis=1)
+        if int(degrees.min()) != int(degrees.max()):
+            raise AssertionError(f"relation {dot} has nonconstant valency")
+        valencies[str(dot)] = int(degrees[0])
+        relation_mats.append(matrix)
+
+    packed = [
+        np.packbits(matrix, axis=1, bitorder="little")
+        for matrix in relation_mats
+    ]
+    popcount = np.array([int(x).bit_count() for x in range(256)], dtype=np.uint8)
+    table = {}
+    for a, dot_a in enumerate(relation_dots):
+        table[str(dot_a)] = {}
+        for b, dot_b in enumerate(relation_dots):
+            by_pair_class = {dot: set() for dot in relation_dots}
+            for i in range(gram.shape[0] - 1):
+                intersections = np.bitwise_and(packed[a][i], packed[b][i + 1:])
+                counts = popcount[intersections].sum(axis=1, dtype=np.uint16)
+                pair_dots = gram[i, i + 1:]
+                for pair_dot, count in zip(pair_dots.tolist(), counts.tolist()):
+                    by_pair_class[int(pair_dot)].add(int(count))
+            if any(len(values) != 1 for values in by_pair_class.values()):
+                raise AssertionError(
+                    f"intersection number varies for R{dot_a}*R{dot_b}: "
+                    f"{by_pair_class}"
+                )
+            table[str(dot_a)][str(dot_b)] = {
+                str(pair_dot): next(iter(by_pair_class[pair_dot]))
+                for pair_dot in relation_dots
+            }
+
+    if any(table[str(a)][str(b)] != table[str(b)][str(a)]
+           for a in relation_dots for b in relation_dots):
+        raise AssertionError("relation algebra is not commutative")
+
+    # Diagonal coefficient p_ij^0: valency k_i when i=j, otherwise zero.
+    diagonal = {
+        str(a): {
+            str(b): (valencies[str(a)] if a == b else 0)
+            for b in relation_dots
         }
-        for dot, values in ((d, per_vertex[str(d)]) for d in relation_dots)
+        for a in relation_dots
     }
-    if any(v["min"] != v["max"] for v in valencies.values()):
-        raise AssertionError("local inner-product relation valencies vary by vertex")
-
-    row_bits = []
-    for row in adjacency:
-        bits = 0
-        for j in np.flatnonzero(row):
-            bits |= 1 << int(j)
-        row_bits.append(bits)
-
-    pair_counts = Counter()
-    common_counts = {str(dot): Counter() for dot in relation_dots}
-    n = gram.shape[0]
-    for i in range(n):
-        left = row_bits[i]
-        for j in range(i + 1, n):
-            dot = int(gram[i, j])
-            if dot not in relation_dots:
-                raise AssertionError(f"unexpected off-diagonal dot product: {dot}")
-            common = (left & row_bits[j]).bit_count()
-            pair_counts[str(dot)] += 1
-            common_counts[str(dot)][str(common)] += 1
-
-    expected_pairs = {"16": 2049300, "8": 6476800, "0": 2049300, "-16": 2300}
-    expected_common = {
-        "16": {"336": 2049300},
-        "8": {"162": 6476800},
-        "0": {"42": 2049300},
-        "-16": {"0": 2300},
-    }
-    actual_common = {
-        dot: dict(sorted(counts.items(), key=lambda item: int(item[0])))
-        for dot, counts in common_counts.items()
-    }
-    if dict(pair_counts) != expected_pairs:
-        raise AssertionError(f"local relation pair counts mismatch: {dict(pair_counts)}")
-    if actual_common != expected_common:
-        raise AssertionError(f"local common-neighbor census mismatch: {actual_common}")
-
     return {
-        "relation_partition": "identity plus four exact off-diagonal inner-product relations",
-        "inner_product_units": "integer coordinate dot product; divide by 8 for lattice inner product",
+        "status": "VERIFIED_FOUR_CLASS_SYMMETRIC_ASSOCIATION_SCHEME_FOR_REFERENCE",
+        "relation_order": [str(dot) for dot in relation_dots],
         "per_vertex_valencies": valencies,
-        "unordered_pair_counts": dict(pair_counts),
-        "common_neighbor_counts_by_relation": actual_common,
-        "strongly_regular": False,
-        "interpretation": (
-            "The adjacency relation alone is not strongly regular: nonadjacent "
-            "pairs have three distinct common-neighbor counts. Full association-"
-            "scheme closure has not yet been tested."
+        "off_diagonal_intersection_numbers_p_ij_k": table,
+        "diagonal_intersection_numbers_p_ij_0": diagonal,
+        "commutative": True,
+        "all_16_relation_products_have_constant_intersection_numbers": True,
+        "scope": (
+            "Full all-pairs closure verified for this one reference neighborhood. "
+            "Three-family common-neighbor census is separate; transport to every "
+            "reference vector requires a Co0-transitivity argument or further tests."
         ),
     }
 
