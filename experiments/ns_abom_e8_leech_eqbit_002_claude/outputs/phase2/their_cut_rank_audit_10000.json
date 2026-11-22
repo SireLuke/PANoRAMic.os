@@ -1,0 +1,46 @@
+{
+ "antipodal_cut": {
+  "crossing_edges": 2240,
+  "rank_gf2": 112
+ },
+ "empirical_comparisons": {
+  "antipodal_rank_at_least_arbitrary_balanced_fraction": 1.0,
+  "antipodal_rank_at_least_transversal_fraction": 0.0,
+  "note": "Seeded empirical fractions, not exact tail probabilities."
+ },
+ "geometry": {
+  "antipodal_pairs": 120,
+  "degree_max": 56,
+  "degree_min": 56,
+  "edges": 6720,
+  "vertices": 240
+ },
+ "interpretation": [
+  "Cut rank is an exact graph-state entanglement measure for the specified graph state and bipartition.",
+  "Random transversals split every antipodal pair and test orientation effects.",
+  "Arbitrary balanced cuts control for the antipodal-pair structure itself.",
+  "Finite samples do not establish a global maximum or population-wide typical value.",
+  "This is graph-state mathematics, not evidence of physical quantum dynamics or hardware."
+ ],
+ "random_balanced_cuts": {
+  "max": 107,
+  "mean": 96.9077,
+  "median": 97.0,
+  "min": 82,
+  "n": 10000,
+  "p05": 92,
+  "p95": 102
+ },
+ "random_transversal_cuts": {
+  "max": 120,
+  "mean": 118.4448,
+  "median": 118.0,
+  "min": 114,
+  "n": 10000,
+  "p05": 116,
+  "p95": 120
+ },
+ "samples_per_control": 10000,
+ "schema": "pan.flip_eqbit_cut_rank_audit.v1",
+ "seed": 20261121
+}
