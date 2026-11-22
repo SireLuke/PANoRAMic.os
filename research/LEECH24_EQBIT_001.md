@@ -220,3 +220,57 @@ Consequently:
 7. Compare E8 and Leech only at the level of declared graph invariants and protocol behavior; report dimension, graph construction, degree, and cut family separately.
 
 No E8 rank value, ratio, tail probability, or ABOM/Fermi channel value is a prior for the Leech result. The next Leech rank is to be measured, not guessed.
+
+
+
+## 11. Valdora follow-up: first local-shell computation
+
+**Status:** computed in an independent analysis runtime; repository-runner reproduction is still pending. The raw summary is stored at `experiments/leech24_eqbit_001/results/local_shell_audit.json`, and the reproducible runner is `experiments/leech24_eqbit_001/local_shell_audit.py`.
+
+The current-main three-family shell construction was independently reconstructed using signed 8-bit coordinate storage and exact signed 16-bit dot products. The 196,560-vector shell and family counts (1,104 / 97,152 / 98,304) matched the expected construction. For the first deterministic vector from each family, the full exact integer-dot histogram was identical:
+
+| Integer dot product | Count |
+|---:|---:|
+| -32 | 1 |
+| -16 | 4,600 |
+| -8 | 47,104 |
+| 0 | 93,150 |
+| 8 | 47,104 |
+| 16 | 4,600 |
+| 32 | 1 |
+
+Dividing the dot products by 8 gives the lattice inner products. The histogram digest was identical for all three representatives:
+`a374826bed68944e3041f9aaf1109d8ec79bce1c731701501eb55d9806d9bb2e`.
+
+### 11.1 Local shell results
+
+For each of the three representatives, the exact 4,600-neighbor set was built. The 4,600-by-4,600 matrix
+`B[i,j] = 1 iff dot(N[i], N[j]) == -16`
+had:
+
+- exactly 4,600 ones;
+- every row and column degree equal to 1;
+- symmetry and zero diagonal;
+- no fixed points, and a fixed-point-free involutive partner map;
+- exact GF(2) rank **4,600**.
+
+Therefore this particular antipodal cut is not merely even-rank: it is a permutation matrix consisting of 2-by-2 swap blocks, so it is nonsingular and has full rank. This is a stronger, observed local result for the three deterministic representatives. The general alternating-matrix argument still predicts even rank for any antipodal transversal, but does not imply full rank for arbitrary transversals.
+
+The induced graph on each (N(r)) was also computed. Each has 4,600 vertices, exactly 2,049,300 edges, and is 891-regular. The three order-sensitive adjacency digests are retained in the JSON artifact.
+
+### 11.2 Interpretation and boundaries
+
+The local cut has 4,600 crossing edges arranged as a perfect matching, while the within-neighbor graph is dense and 891-regular. This is a strong local incidence pattern, not yet a global Leech kissing-graph cut-rank distribution. It does not establish the spectrum, strong-regularity parameters, full automorphism group, or all-root uniformity by software enumeration.
+
+The three reference vectors are deterministic representatives of the three construction families. Their matching histograms and local statistics are consistent with the known symmetry of the Leech minimal shell, but the computation itself has not enumerated the Co0 action or proved transitivity.
+
+The raw result records that it was computed in an independent analysis runtime from a reconstruction of current-main source logic. It was **not** produced by running the newly committed repository runner. The next acceptance step is to execute that runner from the PR branch, compare every digest and statistic, then have a second bench reproduce it.
+
+### 11.3 Updated next questions
+
+1. Prove the perfect-matching map (v\mapsto w\) defined by (v,w\in N(r)) and (⟨v,w⟩=-2) from the lattice incidence identities, rather than relying only on three computed shells.
+2. Determine the strongly regular / association-scheme parameters of the 891-regular graph induced on (N(r)), using exact integer common-neighbor counts and independent combinatorial derivation.
+3. Establish whether the local matching and induced graph are canonically equivalent across all 196,560 choices of (r) under Co0.
+4. Only then proceed to the global sampled Leech kissing-graph cut-rank distributions and compare protocol behavior with E8/Gosset.
+
+No physical quantum or hardware claim follows from these graph-state cut-rank computations.
