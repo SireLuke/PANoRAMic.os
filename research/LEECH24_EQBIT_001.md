@@ -383,3 +383,30 @@ This exact closure calculation was performed for one deterministic Family A refe
 The updated repository runner now computes the 16 products using packed bitset intersections and asserts the complete table. The workflow has been updated to execute the runner and GF(2) fixtures. The CI execution is still pending; the numerical table above was first obtained in an independent analysis runtime.
 
 No E8/Gosset association-scheme parameters have been imported. No physical quantum interpretation is implied.
+
+
+## 14. Valdora fourth local result: exact spectrum and multiplicities
+
+The 5-dimensional relation algebra (identity plus the four nontrivial relations) has the following simultaneous eigenmatrix. Rows are primitive eigenspaces; columns are ordered (I,R_{16},R_8,R_0,R_{-16}):
+
+| Eigenspace | (I) | (R_{16}) | (R_8) | (R_0) | (R_{-16}) | Multiplicity |
+|---|---:|---:|---:|---:|---:|---:|
+| 0 | 1 | 891 | 2,816 | 891 | 1 | 1 |
+| 1 | 1 | 297 | 0 | −297 | −1 | 23 |
+| 2 | 1 | 63 | −128 | 63 | 1 | 275 |
+| 3 | 1 | −9 | 16 | −9 | 1 | 2,024 |
+| 4 | 1 | −3 | 0 | 3 | −1 | 2,277 |
+
+The multiplicities sum to 4,600. For every nonidentity relation, the multiplicity-weighted eigenvalue sum is zero, agreeing with the zero trace of its adjacency matrix. The repository runner now checks each common eigenvector against all four exact integer multiplication operators and checks these trace identities.
+
+The spectrum is notably integral. In particular the 891-valency relation has eigenvalues (891,297,63,-9,-3), while the matching relation (R_{-16}) has eigenvalues (+1) and (-1), with the displayed eigenspace pattern.
+
+### 14.1 Symmetry transport
+
+The full automorphism group (Co_0=2.Co_1) acts transitively on the 196,560 minimal Leech vectors; the stabilizer of one such vector is (Co_2). Since (Co_0) preserves the lattice inner product, it maps (N(r)) and every inner-product relation on that neighborhood to the corresponding relations around any other minimal vector. Consequently, once the local association scheme is verified for one reference neighborhood, its intersection numbers and spectrum transport to every reference minimal vector.
+
+This is a standard group-action theorem, not a numerical inference from the three sampled representatives. The three-family computations remain valuable as independent construction-level checks that the implementation's A/B/C enumerations agree.
+
+### 14.2 Evidence boundary
+
+The scheme and its spectrum describe the 4,600 neighbors of one minimal Leech vector, with global uniformity supplied by (Co_0)-transitivity. They do not by themselves determine the full 196,560-vertex global kissing graph spectrum, a Leech/E8 embedding, a quantum code, or physical quantum behavior.
