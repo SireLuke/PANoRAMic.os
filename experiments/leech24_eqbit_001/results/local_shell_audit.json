@@ -82,7 +82,27 @@
         "degree_min": 891,
         "degree_max": 891,
         "regular_degree": 891,
-        "sha256": "a0ce78bdf2b53718ba0f86684df75860261e212bd0e7de1336607052782ae5ed"
+        "sha256": "a0ce78bdf2b53718ba0f86684df75860261e212bd0e7de1336607052782ae5ed",
+        "common_neighbor_census_by_integer_dot": {
+          "0": {
+            "42": 2049300
+          },
+          "8": {
+            "162": 6476800
+          },
+          "16": {
+            "336": 2049300
+          },
+          "-16": {
+            "0": 2300
+          }
+        },
+        "is_strongly_regular": false,
+        "distinct_nonadjacent_common_neighbor_counts": [
+          0,
+          42,
+          162
+        ]
       }
     },
     "B": {
@@ -141,7 +161,27 @@
         "degree_min": 891,
         "degree_max": 891,
         "regular_degree": 891,
-        "sha256": "0f0a5974263def61b8c73651f295b01f2fcd79a9fed397619854d8d0d32fc3f2"
+        "sha256": "0f0a5974263def61b8c73651f295b01f2fcd79a9fed397619854d8d0d32fc3f2",
+        "common_neighbor_census_by_integer_dot": {
+          "0": {
+            "42": 2049300
+          },
+          "8": {
+            "162": 6476800
+          },
+          "16": {
+            "336": 2049300
+          },
+          "-16": {
+            "0": 2300
+          }
+        },
+        "is_strongly_regular": false,
+        "distinct_nonadjacent_common_neighbor_counts": [
+          0,
+          42,
+          162
+        ]
       }
     },
     "C": {
@@ -200,7 +240,27 @@
         "degree_min": 891,
         "degree_max": 891,
         "regular_degree": 891,
-        "sha256": "43fa33c31a4a4eae65ea6001b585ead28e859bd8f97b06687019bd42d3774683"
+        "sha256": "43fa33c31a4a4eae65ea6001b585ead28e859bd8f97b06687019bd42d3774683",
+        "common_neighbor_census_by_integer_dot": {
+          "0": {
+            "42": 2049300
+          },
+          "8": {
+            "162": 6476800
+          },
+          "16": {
+            "336": 2049300
+          },
+          "-16": {
+            "0": 2300
+          }
+        },
+        "is_strongly_regular": false,
+        "distinct_nonadjacent_common_neighbor_counts": [
+          0,
+          42,
+          162
+        ]
       }
     }
   },
@@ -211,7 +271,8 @@
     "all_cross_cut_ranks_are_full_4600": true,
     "all_within_neighbor_graphs_are_891_regular": true,
     "scope_limit": "Three deterministic representatives were computed. The perfect-matching/full-rank conclusion is universal by the norm identity proof; the measured 891-regular induced-neighborhood statistics are computed for three representatives and are not promoted to a universal theorem here.",
-    "universal_local_matching_and_rank_proved": true
+    "universal_local_matching_and_rank_proved": true,
+    "exact_common_neighbor_census_all_pairs": true
   },
   "exact_local_matching_theorem": {
     "status": "PROVED_FROM_NORM_AND_INNER_PRODUCT_IDENTITIES",
@@ -221,5 +282,39 @@
       "Conversely, if w is in N(r) and <v,w>=-2, then v+w has norm squared 4 and <r,v+w>=4; equality in Cauchy-Schwarz forces v+w=r"
     ],
     "consequence": "For every reference minimal vector r, the antipodal cut between N(r) and -N(r) is a fixed-point-free perfect matching permutation matrix and has GF(2) rank 4600."
+  },
+  "local_graph_classification": {
+    "status": "COMPUTED_EXACT_ALL_UNORDERED_PAIRS_FOR_THREE_REFERENCE_FAMILIES",
+    "vertex_count": 4600,
+    "regular_degree": 891,
+    "unordered_pair_count": 10577700,
+    "pair_classes_by_integer_dot": {
+      "0": {
+        "pairs": 2049300,
+        "common_neighbors": {
+          "42": 2049300
+        }
+      },
+      "8": {
+        "pairs": 6476800,
+        "common_neighbors": {
+          "162": 6476800
+        }
+      },
+      "16": {
+        "pairs": 2049300,
+        "common_neighbors": {
+          "336": 2049300
+        }
+      },
+      "-16": {
+        "pairs": 2300,
+        "common_neighbors": {
+          "0": 2300
+        }
+      }
+    },
+    "conclusion": "The induced graph is not strongly regular: nonadjacent pairs split into three distinct common-neighbor counts (0, 42, 162). The four inner-product relations are candidate association-scheme classes; closure/intersection-number axioms have not yet been fully tested.",
+    "method": "All 10,577,700 unordered pairs classified; common neighbors counted by exact packed-bitset intersections of the 4,600x4,600 adjacency matrix."
   }
 }
