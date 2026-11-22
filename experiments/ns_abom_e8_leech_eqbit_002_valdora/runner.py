@@ -18,6 +18,8 @@ import random
 import statistics
 import subprocess
 import sys
+import time
+import tracemalloc
 from fractions import Fraction
 from pathlib import Path
 from typing import Any, Iterable
@@ -116,6 +118,44 @@ def _root_payload(roots: Iterable[Iterable[Any]]) -> list[list[str]]:
     return [list(map(str, root)) for root in sorted(_fraction_root(r) for r in roots)]
 
 
+def _exactify_adapter_roots(raw_roots: Iterable[Iterable[Any]]) -> tuple[tuple[Fraction, ...], ...]:
+    """Convert the float compatibility view without rounding away discrepancies."""
+    converted = []
+    for index, root in enumerate(raw_roots):
+        coordinates = tuple(root)
+        if len(coordinates) != 8:
+            raise ValueError(f"ABOM E8 root {index} must have exactly eight coordinates")
+        exact = []
+        for coordinate in coordinates:
+            value = float(coordinate)
+            if not math.isfinite(value):
+                raise ValueError(f"ABOM E8 root {index} contains a non-finite coordinate")
+            # Decimal round-trip preserves the adapter's represented value. It does
+            # not snap near-roots onto the nearest integer/half-integer.
+            exact.append(Fraction(str(value)))
+        converted.append(tuple(exact))
+    return tuple(converted)
+
+
+def _e8_abom_comparison() -> dict[str, Any]:
+    exact_roots = tuple(_fraction_root(root) for root in e8_roots_exact())
+    raw_adapter_roots = tuple(abom_e8_roots())
+    adapter_roots = _exactify_adapter_roots(raw_adapter_roots)
+    exact_set, adapter_set = set(exact_roots), set(adapter_roots)
+    exact_hash = _object_hash(_root_payload(exact_set))
+    adapter_hash = _object_hash(_root_payload(adapter_set))
+    exact_norms = all(sum(x * x for x in r) == 2 for r in exact_set)
+    adapter_norms = all(sum(x * x for x in r) == 2 for r in adapter_set)
+    return {
+        "rank": 8,
+        "expected_roots": 240,
+        "exact_root_count": len(exact_roots),
+        "exact_unique_root_count": len(exact_set),
+        "abom_adapter_root_count": len(adapter_set),
+        "abom_adapter_raw_root_count": len(raw_adapter_roots),
+        "abom_adapter_unique_root_count": len(adapter_set),
+        "all_exact_norm_squared_two": exact_norms,
+        "all_adapter_norm_squared_two": adapter_norms,
 def _e8_abom_comparison() -> dict[str, Any]:
     exact_roots = tuple(_fraction_root(root) for root in e8_roots_exact())
     adapter_roots = tuple(
@@ -135,6 +175,7 @@ def _e8_abom_comparison() -> dict[str, Any]:
         "exact_root_set_sha256": exact_hash,
         "abom_root_set_sha256": adapter_hash,
         "symmetric_difference_count": len(exact_set ^ adapter_set),
+        "adapter_coordinate_policy": "exact decimal round-trip; no denominator limiting or nearest-root snapping",
         "comparison": "canonical exact root set versus ABOM floating compatibility view",
     }
 
@@ -408,6 +449,171 @@ def _abom_probe_controls(cases: list[dict[str, Any]], *, seed: int) -> dict[str,
     }
 
 
+def _ns_snapshot_output(ns_payload: dict[str, Any], ns_source_path: Path) -> dict[str, Any]:
+    cases = ns_payload["cases"]
+    return {
+        "case_count": len(cases),
+        "dimensions": sorted({int(case["d"]) for case in cases}),
+        "frozen_snapshot_sha256": _file_hash(ns_source_path),
+        "snapshot_payload_sha256": _object_hash(ns_payload),
+        "cases": [
+            {key: case[key] for key in
+             ("n", "d", "nu", "T", "dt", "steps", "ET", "OmT", "max_div_T")}
+            for case in cases
+        ],
+        "status": "frozen finite-time benchmark data; Navier-Stokes regularity not tested",
+    }
+
+
+def _execute_configuration(name: str, included_modules: tuple[str, ...],
+                           ns_payload: dict[str, Any], ns_source_path: Path, *,
+                           samples_per_seed: int, seed_count: int, seed: int,
+                           rewire_attempts: int) -> dict[str, Any]:
+    """Execute one ablation configuration; omitted adapters are never invoked."""
+    started = time.perf_counter()
+    tracemalloc.start()
+    outputs: dict[str, Any] = {
+        "NS": _ns_snapshot_output(ns_payload, ns_source_path),
+    }
+    checks: dict[str, str] = {"NS.snapshot_schema_and_time_grid": "PASS"}
+    try:
+        if "ABOM" in included_modules:
+            abom = _abom_probe_controls(ns_payload["cases"], seed=seed)
+            family_names = set(abom["control_families"])
+            expected_families = {
+                "frozen_ET_baseline", "zero_probe", "seeded_permutation",
+                "seeded_shuffle", "range_matched_uniform_random",
+            }
+            if family_names != expected_families:
+                raise AssertionError("ABOM control family set is incomplete")
+            if any(len(row["fermi"]) != len(ns_payload["cases"])
+                   for row in abom["control_families"].values()):
+                raise AssertionError("ABOM channel output length mismatch")
+            outputs["ABOM"] = abom
+            checks["ABOM.probe_controls_and_channel_lengths"] = "PASS"
+
+        if "E8_COMPARISON" in included_modules:
+            e8 = _e8_abom_comparison()
+            if (e8["exact_root_count"] != 240
+                    or e8["exact_unique_root_count"] != 240
+                    or e8["abom_adapter_raw_root_count"] != 240
+                    or e8["abom_adapter_unique_root_count"] != 240
+                    or not e8["all_exact_norm_squared_two"]
+                    or not e8["all_adapter_norm_squared_two"]
+                    or not e8["root_sets_equal"]):
+                raise AssertionError("ABOM/E8 exact root-set comparison failed")
+            outputs["E8_COMPARISON"] = e8
+            checks["E8.exact_root_set_count_norm_and_hash"] = "PASS"
+
+        if "LEECH" in included_modules:
+            leech = leech_unimodular_basis_audit()
+            if (leech.get("rank") != 24
+                    or not leech.get("even_unimodular")
+                    or leech.get("basis_columns_checked") != 24
+                    or leech.get("minimum_norm_attained") != 4
+                    or leech.get("minimal_vectors_at_minimum") != 196560):
+                raise AssertionError("full Leech basis/Golay/minimal-shell audit failed")
+            outputs["LEECH"] = leech
+            checks["LEECH.rank_basis_even_unimodular_minimal_shell"] = "PASS"
+
+        if "EQBIT" in included_modules:
+            graph_summary, roots, adjacency, pairs, anti_left, anti_right, anti_map = _graph_contract()
+            partition_controls = _partition_controls(
+                adjacency, pairs, anti_left, anti_right,
+                samples_per_seed=samples_per_seed, seed_count=seed_count, seed=seed,
+            )
+            relabel_control = _relabel_control(
+                adjacency, anti_left, anti_right, seed ^ 0x4E534142
+            )
+            if not relabel_control["invariant"]:
+                raise AssertionError("cut rank changed under vertex relabeling")
+            graph_null = _degree_preserving_rewire(
+                adjacency, attempts=rewire_attempts, seed=seed ^ 0x7A11C0DE,
+                anti_left=anti_left, anti_right=anti_right,
+            )
+            if (not graph_null["degree_sequence_preserved"]
+                    or graph_null["rewired_edge_count"] != graph_null["original_edge_count"]):
+                raise AssertionError("degree-preserving graph-null contract failed")
+            outputs["EQBIT"] = {
+                "graph": graph_summary,
+                "partition_controls": partition_controls,
+                "vertex_relabeling_control": relabel_control,
+                "degree_preserving_graph_null": graph_null,
+                "alternative_valid_involutions": {
+                    "status": "NOT_SEARCHED",
+                    "reason": "the preregistered optional secondary comparison is not implemented",
+                },
+                "graph_state_boundary": (
+                    "exact graph-state cut-rank mathematics for a specified graph and cut; "
+                    "no physical quantum dynamics, hardware, or quantum advantage claim"
+                ),
+            }
+            checks["EQBIT.graph_partition_relabel_and_degree_null"] = "PASS"
+
+        current_bytes, peak_bytes = tracemalloc.get_traced_memory()
+    finally:
+        if tracemalloc.is_tracing():
+            _, peak_bytes = tracemalloc.get_traced_memory()
+            tracemalloc.stop()
+
+    elapsed = time.perf_counter() - started
+    hashes = {key: _object_hash(value) for key, value in outputs.items()}
+    return {
+        "configuration": name,
+        "included_modules": list(included_modules),
+        "outputs": outputs,
+        "output_sha256": hashes,
+        "validation_checks": checks,
+        "measurement": {
+            "runtime_seconds": elapsed,
+            "peak_python_heap_bytes": peak_bytes,
+            "memory_method": "tracemalloc peak; Python-managed allocations only, not process RSS or native-library allocations",
+        },
+    }
+
+
+def _ablation_report(executions: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    full = executions["full_orchestration"]
+    full_hashes = full["output_sha256"]
+    rows: dict[str, Any] = {}
+    for name, execution in executions.items():
+        present = execution["included_modules"]
+        omitted = [key for key in ("ABOM", "E8_COMPARISON", "LEECH", "EQBIT")
+                   if key not in present]
+        unchanged = [
+            key for key, digest in execution["output_sha256"].items()
+            if key in full_hashes and full_hashes[key] == digest
+        ]
+        changed = [
+            key for key, digest in execution["output_sha256"].items()
+            if key in full_hashes and full_hashes[key] != digest
+        ]
+        rows[name] = {
+            "present_modules": present,
+            "omitted_modules": omitted,
+            "output_sha256": execution["output_sha256"],
+            "unchanged_output_hashes_vs_full": unchanged,
+            "changed_output_hashes_vs_full": changed,
+            "validation_checks_executed": execution["validation_checks"],
+            "runtime_seconds": execution["measurement"]["runtime_seconds"],
+            "peak_python_heap_bytes": execution["measurement"]["peak_python_heap_bytes"],
+            "memory_method": execution["measurement"]["memory_method"],
+            "shared_measured_observable_changes": [],
+            "interpretation": (
+                "This configuration independently executed only its listed adapters. "
+                "The current modules expose no preregistered shared cross-module observable; "
+                "omission therefore changes output availability, not a fabricated aggregate score."
+            ),
+        }
+    return {
+        "execution_mode": "independent_reexecution_per_configuration",
+        "configurations": rows,
+        "common_frozen_ns_snapshot_sha256": full_hashes["NS"],
+        "shared_observable_status": "NOT_DEFINED_BY_CURRENT_MODULE_CONTRACTS",
+        "acceptance_note": (
+            "Every configuration is executed separately on the same frozen NS input and "
+            "fixed seeds. Hash comparisons apply only to modules present in both runs."
+        ),
 def _ablation_table(outputs: dict[str, Any]) -> dict[str, Any]:
     """Report output-removal ablations without fabricating a shared score."""
     full_keys = ("NS", "ABOM", "E8_COMPARISON", "LEECH", "EQBIT")
@@ -463,6 +669,35 @@ def run(*, ns_results: str | Path = DEFAULT_NS_RESULTS,
         seed: int = DEFAULT_SEED, rewire_attempts: int = 25000) -> dict[str, Any]:
     if samples_per_seed < 1 or seed_count < 1:
         raise ValueError("samples_per_seed and seed_count must be positive")
+    if rewire_attempts < 0:
+        raise ValueError("rewire_attempts must be nonnegative")
+    ns_source_path = Path(ns_results)
+    ns_payload = load_ns_snapshot(ns_source_path)
+    full_modules = ("NS", "ABOM", "E8_COMPARISON", "LEECH", "EQBIT")
+    configurations = {
+        "full_orchestration": full_modules,
+        "minus_ABOM_adapter": ("NS", "E8_COMPARISON", "LEECH", "EQBIT"),
+        "minus_E8_comparison_adapter": ("NS", "ABOM", "LEECH", "EQBIT"),
+        "minus_Leech_audit_adapter": ("NS", "ABOM", "E8_COMPARISON", "EQBIT"),
+        "minus_flip_eqbit_adapter": ("NS", "ABOM", "E8_COMPARISON", "LEECH"),
+        "NS_snapshot_only": ("NS",),
+    }
+    executions = {
+        name: _execute_configuration(
+            name, modules, ns_payload, ns_source_path,
+            samples_per_seed=samples_per_seed, seed_count=seed_count,
+            seed=seed, rewire_attempts=rewire_attempts,
+        )
+        for name, modules in configurations.items()
+    }
+    full_execution = executions["full_orchestration"]
+    outputs = full_execution["outputs"]
+    hashes = full_execution["output_sha256"]
+    return {
+        "schema": "pan.ns_abom_e8_leech_eqbit_002_valdora.v2",
+        "experiment_id": "NS-ABOM-E8-LEECH-EQBIT-002-VALDORA",
+        "seat": "Valdora (OpenAI / ChatGPT bench)",
+        "mode": "independent_preregistered_ablation_execution",
     ns_payload = load_ns_snapshot(ns_results)
     cases = ns_payload["cases"]
 
@@ -533,10 +768,18 @@ def run(*, ns_results: str | Path = DEFAULT_NS_RESULTS,
             "seed_schedule": [seed + i * 10007 for i in range(seed_count)],
             "rewire_attempts": rewire_attempts,
             "base_seed": seed,
+            "configuration_count": len(configurations),
         },
         "provenance": _source_provenance(),
         "module_outputs": outputs,
         "module_output_sha256": hashes,
+        "ablation": _ablation_report(executions),
+        "configuration_measurements": {
+            name: execution["measurement"] for name, execution in executions.items()
+        },
+        "pairwise_status": {
+            "NS_ABOM": "DIMENSIONLESS_PROBE_SENSITIVITY_ONLY",
+            "ABOM_E8": "EXACT_ROOT_SET_EQUALITY_CHECKED_WITHOUT_SNAPPING",
         "ablation": _ablation_table(outputs),
         "pairwise_status": {
             "NS_ABOM": "DIMENSIONLESS_PROBE_SENSITIVITY_ONLY",
@@ -567,11 +810,14 @@ def run(*, ns_results: str | Path = DEFAULT_NS_RESULTS,
         },
         "interpretation": [
             "The ABOM control family measures sensitivity to declared dimensionless probe sequences only.",
+            "The E8/ABOM check compares canonical root sets without rounding near-roots onto exact roots.",
             "The E8/ABOM check compares canonical root sets, not just cardinalities.",
             "The E8/Gosset check supplies an explicit root-to-vertex coordinate bijection.",
             "The antipodal map is checked as a fixed-point-free involutive graph automorphism.",
             "The Leech result is an independent rank-24 lattice certificate; no E8-to-Leech embedding is proposed.",
             "The graph-null preserves degree by double-edge switches; no spectral preservation is claimed.",
+            "Each ablation configuration re-executes only the adapters it includes; no shared scalar is invented.",
+            "Alternative valid fixed-point-free involutions are explicitly NOT_SEARCHED.",
             "Ablations remove module outputs; disconnected modules are not assigned a synthetic coupling score.",
             "No numerical or software result here establishes Navier-Stokes regularity or blow-up.",
         ],

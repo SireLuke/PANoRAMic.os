@@ -4,12 +4,17 @@ import unittest
 from experiments.ns_abom_e8_leech_eqbit_002_valdora.runner import (
     DEFAULT_NS_RESULTS,
     _build_gosset_graph,
+    _degree_preserving_rewire,
+    _e8_abom_comparison,
+    _exactify_adapter_roots,
+    _execute_configuration,
     _e8_abom_comparison,
     _graph_contract,
     _partition_controls,
     _rank_summary,
     load_ns_snapshot,
 )
+from experiments.moonshine_sierpinski.leech_unimodular_basis import leech_unimodular_basis_audit
 
 
 class ValdoraNSABOME8LeechEqbitTests(unittest.TestCase):
@@ -71,6 +76,38 @@ class ValdoraNSABOME8LeechEqbitTests(unittest.TestCase):
         self.assertEqual(len(roots), 240)
         self.assertEqual(len(adjacency), 240)
         self.assertTrue(all(len(neighbors) == 56 for neighbors in adjacency))
+
+    def test_e8_adapter_conversion_does_not_snap_near_roots(self):
+        converted = _exactify_adapter_roots([(0.5000000000000001, 0, 0, 0, 0, 0, 0, 0)])
+        self.assertNotEqual(converted[0][0], 0.5)
+
+    def test_ablation_configuration_executes_only_included_adapters(self):
+        payload = load_ns_snapshot(DEFAULT_NS_RESULTS)
+        result = _execute_configuration(
+            "NS_snapshot_only", ("NS",), payload, DEFAULT_NS_RESULTS,
+            samples_per_seed=1, seed_count=1, seed=123, rewire_attempts=0,
+        )
+        self.assertEqual(set(result["outputs"]), {"NS"})
+        self.assertEqual(set(result["validation_checks"]), {"NS.snapshot_schema_and_time_grid"})
+        self.assertGreaterEqual(result["measurement"]["runtime_seconds"], 0.0)
+        self.assertGreaterEqual(result["measurement"]["peak_python_heap_bytes"], 0)
+
+    def test_degree_preserving_rewire_keeps_every_vertex_degree(self):
+        _, _, adjacency, pairs, left, right, _ = _graph_contract()
+        result = _degree_preserving_rewire(
+            adjacency, attempts=500, seed=8675309,
+            anti_left=left, anti_right=right,
+        )
+        self.assertTrue(result["degree_sequence_preserved"])
+        self.assertEqual(result["original_edge_count"], result["rewired_edge_count"])
+
+    def test_leech_certificate_checks_basis_and_minimal_shell(self):
+        result = leech_unimodular_basis_audit()
+        self.assertEqual(result["rank"], 24)
+        self.assertTrue(result["even_unimodular"])
+        self.assertEqual(result["basis_columns_checked"], 24)
+        self.assertEqual(result["minimum_norm_attained"], 4)
+        self.assertEqual(result["minimal_vectors_at_minimum"], 196560)
 
 
 if __name__ == "__main__":

@@ -24,7 +24,7 @@ Separate homes for domain-specific work, with shared experimental standards. Boa
 
 ## Existing work to map
 
-Start with existing Gosset/E8 audits, Menger geometry and wave-coupling experiments, STRATA protocols, FGHCL/Azabith work, and QWAVE boundary documentation. Mapping is additive: do not move, rename, or rewrite existing records as part of this index.
+Start with existing Gosset/E8 audits, Menger geometry and wave-coupling experiments, STRATA protocols, FGHCL/Abazith work, and QWAVE boundary documentation. Mapping is additive: do not move, rename, or rewrite existing records as part of this index.
 
 All boards in this first edition are proposed organizational homes. Their existence does not imply experiments have been run or research questions answered.
 

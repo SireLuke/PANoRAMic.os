@@ -16,6 +16,7 @@ The experiment reports separate typed outputs and hashes, rather than a syntheti
 - Existing Gosset graph reconstruction and GF(2) cut-rank primitives.
 - Existing Leech basis, Golay, and minimal-shell certificate.
 - Merged NS–ABOM–E8–LEECH–EQBIT-002 preregistration.
+- Supporting contracts in pan-fractal-kernel and the FGHCL/Abazith repository reinforce the V8 coordinate order (h,R,u,d,tau,chi,s,f), typed state/normalization boundaries, and the distinction between V8 and E8.
 - Supporting contracts in pan-fractal-kernel and the FGHCL/Azabith repository reinforce the V8 coordinate order (h,R,u,d,tau,chi,s,f), typed state/normalization boundaries, and the distinction between V8 and E8.
 
 ## Controls implemented
@@ -24,6 +25,9 @@ The experiment reports separate typed outputs and hashes, rather than a syntheti
 2. Fixed-point-free antipodal involution and graph-automorphism checks before the antipodal split is accepted.
 3. Vertex-relabeling invariance check.
 4. Degree-preserving double-edge-switch graph null, explicitly not assumed to preserve spectrum or Gosset incidence.
+5. Six independently executed configurations: full, minus ABOM, minus E8 comparison, minus Leech, minus flip-eqbit, and NS-only. Each configuration invokes only its included adapters against the same frozen NS input and seed schedule. Runtime, Python-managed peak allocation, validation checks, and output hashes are recorded. No shared measurable observable currently links all modules.
+6. ABOM input controls: frozen dimensionless ET probe sequence, zero probe, two independently seeded reorderings of the same ET multiset, and range-matched uniform random sequence. The two reorderings are treated as realizations of one control family, not distinct null hypotheses. Outputs are retained channel-by-channel.
+7. Exact E8 root-set hash equality between the canonical Fraction implementation and ABOM's floating compatibility view. Float coordinates are decimal-round-tripped into rationals; no denominator limiting or nearest-root snapping is allowed. Raw/unique counts, dimensions, and squared norms are checked.
 5. Module-removal configurations: full, minus ABOM, minus E8 comparison, minus Leech, minus flip-eqbit, and NS-only. These are output-availability ablations; no shared measurable observable currently links all modules.
 6. ABOM input controls: frozen dimensionless ET probe sequence, zero probe, seeded permutation, independent seeded shuffle, and range-matched uniform random sequence. Outputs are retained channel-by-channel.
 7. Exact E8 root-set hash equality between the canonical Fraction implementation and ABOM's floating compatibility view; explicit E8-root/Gosset-vertex bijection rather than count equality alone.
@@ -51,6 +55,7 @@ The default randomized partition stage stores 20,000 raw cut-rank samples. The L
 
 ## Evidence state
 
+Implementation and regression tests are provided here. The runner executes all six configurations independently; a repository checkout and the actual commands above must run before a result file or validation claim is added. Alternative fixed-point-free automorphisms remain explicitly NOT_SEARCHED. Cosmo's phase-two results, once their immutable artifact/commit is identified, should be compared only after this seat's outputs are frozen.
 Implementation and tests are provided here. A repository checkout and the actual commands above must run before a result file or validation claim is added. Cosmo's phase-two results, once their immutable artifact/commit is identified, should be compared only after this seat's outputs are frozen.
 
 Authored-by: OpenAI (ChatGPT bench)
