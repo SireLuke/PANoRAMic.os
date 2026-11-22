@@ -339,3 +339,47 @@ Do not label it an association scheme until this gate passes. Do not infer eigen
 ### 12.3 Reproduction note
 
 The runner was updated to compute the common-neighbor count for all 10,577,700 unordered vertex pairs using packed bitset intersections. It asserts the complete pair-class census above. The stored numbers were independently computed in the analysis runtime; the CI run must execute the updated runner to establish repository-runner reproduction. The existing Leech/VOA/basis workflow success does not substitute for that run.
+
+
+## 13. Valdora third local result: four-class symmetric association scheme
+
+**Status:** the full intersection-number closure test passed for the Family A reference neighborhood. This upgrades the previous candidate to a verified local classification for that reference graph.
+
+Let (R_{16},R_8,R_0,R_{-16}) be the four symmetric relations on the 4,600 vertices, classified by integral coordinate dot product. Their valencies are respectively (891,2816,891,1). Together with the identity relation, they partition all ordered vertex pairs.
+
+For every ordered pair of nontrivial relations (R_i,R_j), the computation checked every unordered pair ((x,y)) in each of the four relation classes and counted
+[
+p_{ij}^{,k}=|\{z:xR_i z\text{ and }zR_j y\}|.
+]
+All 16 relation products had a single constant value within each target relation class. The resulting off-diagonal intersection table is below; columns are the target relation (k).
+
+| Product | (k=16) | (k=8) | (k=0) | (k=-16) |
+|---|---:|---:|---:|---:|
+| (16\cdot16) | 336 | 162 | 42 | 0 |
+| (16\cdot8) | 512 | 567 | 512 | 0 |
+| (16\cdot0) | 42 | 162 | 336 | 891 |
+| (16\cdot(-16)) | 0 | 0 | 1 | 0 |
+| (8\cdot16) | 512 | 567 | 512 | 0 |
+| (8\cdot8) | 1,792 | 1,680 | 1,792 | 2,816 |
+| (8\cdot0) | 512 | 567 | 512 | 0 |
+| (8\cdot(-16)) | 0 | 1 | 0 | 0 |
+| (0\cdot16) | 42 | 162 | 336 | 891 |
+| (0\cdot8) | 512 | 567 | 512 | 0 |
+| (0\cdot0) | 336 | 162 | 42 | 0 |
+| (0\cdot(-16)) | 1 | 0 | 0 | 0 |
+| ((-16)\cdot16) | 0 | 0 | 1 | 0 |
+| ((-16)\cdot8) | 0 | 1 | 0 | 0 |
+| ((-16)\cdot0) | 1 | 0 | 0 | 0 |
+| ((-16)\cdot(-16)) | 0 | 0 | 0 | 0 |
+
+The diagonal coefficients (p_{ij}^{,0}) are (k_i) when (i=j), and zero otherwise: (891,2816,891,1) for the four diagonal products. In particular (R_{-16}) is a perfect matching, so (A_{-16}^2=I).
+
+The relation matrices are symmetric, regular, disjoint, and exhaustive off the diagonal; the intersection numbers are constant, and the table is symmetric in (i,j). Thus the four nontrivial relations together with identity form a **4-class symmetric (commutative) association scheme on this 4,600-vertex local neighborhood**.
+
+### 13.1 Scope
+
+This exact closure calculation was performed for one deterministic Family A reference vector. The complete common-neighbor census was also computed for deterministic representatives from Families B and C, but the full 16-product closure table has not yet been independently repeated for those two representatives, nor proven transportable to every Leech minimal vector by an explicit Co\(_0\) action. Therefore the classification is presently local to the audited reference graph; global uniformity remains a separate theorem/reproduction task.
+
+The updated repository runner now computes the 16 products using packed bitset intersections and asserts the complete table. The workflow has been updated to execute the runner and GF(2) fixtures. The CI execution is still pending; the numerical table above was first obtained in an independent analysis runtime.
+
+No E8/Gosset association-scheme parameters have been imported. No physical quantum interpretation is implied.
