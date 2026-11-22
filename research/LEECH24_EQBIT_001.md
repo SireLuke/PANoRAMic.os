@@ -274,3 +274,32 @@ The raw result records that it was computed in an independent analysis runtime f
 4. Only then proceed to the global sampled Leech kissing-graph cut-rank distributions and compare protocol behavior with E8/Gosset.
 
 No physical quantum or hardware claim follows from these graph-state cut-rank computations.
+
+
+### 11.4 Exact explanation of the local perfect matching
+
+The computed perfect matching has a direct lattice proof. Fix any minimal vector (r) and any (v\in N(r)), so
+\[
+\langle r,r\rangle=\langle v,v\rangle=4,
+\qquad \langle r,v\rangle=2.
+\]
+Define (w=r-v). Then
+\[
+\langle w,w\rangle=4+4-2(2)=4,
+\qquad \langle r,w\rangle=4-2=2,
+\qquad \langle v,w\rangle=2-4=-2.
+\]
+Thus (w\in N(r)), and (w) is the unique cross-cut neighbor of (v). Conversely, if (w\in N(r)) and \(\langle v,w\rangle=-2\), then
+\[
+\langle v+w,v+w\rangle=4+4-4=4,
+\qquad \langle r,v+w\rangle=2+2=4.
+\]
+Since (r) and (v+w) both have norm squared 4, equality in Cauchy–Schwarz forces (v+w=r), hence (w=r-v).
+
+Therefore the cross-cut partner map is exactly
+\[
+\boxed{\;v\longmapsto r-v\;}
+\]
+for every (r\) and every (v\in N(r)). It is fixed-point-free and involutive because applying it twice returns (v), and (r-v=v) would imply (r=2v), incompatible with both vectors having norm squared 4 and inner product 2. Consequently the local cross-cut matrix is a permutation matrix with 2-by-2 swap blocks and has full GF(2) rank 4,600 for every reference vector—not merely the three sampled representatives.
+
+This proof upgrades the matching/rank conclusion from a three-representative computational observation to an exact local theorem under the stated Leech norm and adjacency contract. The 891-regular within-neighborhood graph remains a computational result at this stage; its global uniformity and any stronger association-scheme classification require separate proof.
