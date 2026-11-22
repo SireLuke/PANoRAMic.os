@@ -1,0 +1,104 @@
+{
+ "T": 1.0,
+ "cases": {
+  "2D": {
+   "large_N_reference_error": 1.639361593761201e-07,
+   "reference_N": 48,
+   "rows": {
+    "16": {
+     "A_two_thirds": 1.6831639283899715e-07,
+     "A_two_thirds_excess_vs_largeN_A": 0.026719141643592126,
+     "B_band_aliased": 1.6461657717849274e-07,
+     "B_band_aliased_excess_vs_largeN_A": 0.004150504714530712,
+     "C_band_alias_free": 1.6433987037549284e-07,
+     "C_band_alias_free_excess_vs_largeN_A": 0.0024626110609708984,
+     "secs": 0.03898606999999288
+    },
+    "20": {
+     "A_two_thirds": 1.6336006220198042e-07,
+     "A_two_thirds_excess_vs_largeN_A": -0.00351415560991597,
+     "B_band_aliased": 1.640886026037349e-07,
+     "B_band_aliased_excess_vs_largeN_A": 0.0009298938574318072,
+     "C_band_alias_free": 1.6400281087900197e-07,
+     "C_band_alias_free_excess_vs_largeN_A": 0.0004065698692437003,
+     "secs": 0.047340899000005265
+    },
+    "24": {
+     "A_two_thirds": 1.6382911485325392e-07,
+     "A_two_thirds_excess_vs_largeN_A": -0.0006529646862141192,
+     "B_band_aliased": 1.639579028613402e-07,
+     "B_band_aliased_excess_vs_largeN_A": 0.00013263385761153046,
+     "C_band_alias_free": 1.6394241573255972e-07,
+     "C_band_alias_free_excess_vs_largeN_A": 3.816337081108401e-05,
+     "secs": 0.056678496999992944
+    },
+    "32": {
+     "A_two_thirds": 1.639335243294895e-07,
+     "A_two_thirds_excess_vs_largeN_A": -1.6073614513278933e-05,
+     "B_band_aliased": 1.6393702178726116e-07,
+     "B_band_aliased_excess_vs_largeN_A": 5.260652343741512e-06,
+     "C_band_alias_free": 1.6393625125639314e-07,
+     "C_band_alias_free_excess_vs_largeN_A": 5.604637403067159e-07,
+     "secs": 0.07136831100000052
+    },
+    "48": {
+     "A_two_thirds": 1.639361593761201e-07,
+     "A_two_thirds_excess_vs_largeN_A": 0.0,
+     "B_band_aliased": 1.639361101730116e-07,
+     "B_band_aliased_excess_vs_largeN_A": -3.001357886667222e-07,
+     "C_band_alias_free": null,
+     "C_band_alias_free_excess_vs_largeN_A": null,
+     "secs": 0.057656331999993427
+    }
+   }
+  },
+  "3D": {
+   "large_N_reference_error": 3.69314029115626e-07,
+   "reference_N": 32,
+   "rows": {
+    "16": {
+     "A_two_thirds": 3.7046642676377714e-07,
+     "A_two_thirds_excess_vs_largeN_A": 0.003120373333530546,
+     "B_band_aliased": 3.6940531389315804e-07,
+     "B_band_aliased_excess_vs_largeN_A": 0.0002471738692153558,
+     "C_band_alias_free": 3.694025308080399e-07,
+     "C_band_alias_free_excess_vs_largeN_A": 0.0002396380463147718,
+     "secs": 1.1519150669999902
+    },
+    "20": {
+     "A_two_thirds": 3.6912849086297294e-07,
+     "A_two_thirds_excess_vs_largeN_A": -0.0005023861484421133,
+     "B_band_aliased": 3.6931533672245626e-07,
+     "B_band_aliased_excess_vs_largeN_A": 3.5406367675516748e-06,
+     "C_band_alias_free": 3.693158699684006e-07,
+     "C_band_alias_free_excess_vs_largeN_A": 4.984518944484151e-06,
+     "secs": 2.4841001459999887
+    },
+    "24": {
+     "A_two_thirds": 3.6932883631754683e-07,
+     "A_two_thirds_excess_vs_largeN_A": 4.0093797563756084e-05,
+     "B_band_aliased": 3.693128873231001e-07,
+     "B_band_aliased_excess_vs_largeN_A": -3.0916576027051335e-06,
+     "C_band_alias_free": 3.693128096912197e-07,
+     "C_band_alias_free_excess_vs_largeN_A": -3.301863211735423e-06,
+     "secs": 2.894360523000003
+    },
+    "32": {
+     "A_two_thirds": 3.69314029115626e-07,
+     "A_two_thirds_excess_vs_largeN_A": 0.0,
+     "B_band_aliased": 3.6931222673086544e-07,
+     "B_band_aliased_excess_vs_largeN_A": -4.880358227543624e-06,
+     "C_band_alias_free": 3.693122272225835e-07,
+     "C_band_alias_free_excess_vs_largeN_A": -4.879026791360097e-06,
+     "secs": 10.428204659000002
+    }
+   }
+  }
+ },
+ "dt": 0.05,
+ "id": "NS-EVIDENCE-001-ADDENDUM-02",
+ "sanity_padded_vs_frozen_d2_N24_kmax8": 0.09746307593299681,
+ "sanity_padded_vs_frozen_d2_N25_kmax8": 5.051335855317647e-16,
+ "sanity_padded_vs_frozen_d3_N24_kmax8": 0.39350065382426114,
+ "sanity_padded_vs_frozen_d3_N25_kmax8": 5.186633836931634e-16
+}
