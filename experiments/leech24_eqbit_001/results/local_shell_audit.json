@@ -466,6 +466,48 @@
     },
     "commutative": true,
     "closure": "All 16 products of the four nontrivial relation matrices have constant intersection numbers across all pairs in each relation class; symmetric relation matrices and constant valencies complete the 4-class symmetric association-scheme check.",
-    "provenance": "Independent analysis-runtime calculation over all 10,577,700 unordered pairs for one deterministic Family A reference neighborhood. Updated repository runner now reproduces and asserts the full table; CI run pending."
+    "provenance": "Independent analysis-runtime calculation over all 10,577,700 unordered pairs for one deterministic Family A reference neighborhood. Updated repository runner now reproduces and asserts the full table; CI run pending.",
+    "simultaneous_eigenmatrix_rows_relation_order_16_8_0_minus16": [
+      [
+        891,
+        2816,
+        891,
+        1
+      ],
+      [
+        297,
+        0,
+        -297,
+        -1
+      ],
+      [
+        63,
+        -128,
+        63,
+        1
+      ],
+      [
+        -9,
+        16,
+        -9,
+        1
+      ],
+      [
+        -3,
+        0,
+        3,
+        -1
+      ]
+    ],
+    "primitive_idempotent_multiplicities": [
+      1,
+      23,
+      275,
+      2024,
+      2277
+    ],
+    "spectral_eigenvectors_verified_exactly_over_integers": true,
+    "spectral_trace_identities_verified": true,
+    "spectral_provenance": "Exact integer multiplication-matrix calculation; repository runner includes exact common-eigenvector and trace-identity assertions."
   }
 }
