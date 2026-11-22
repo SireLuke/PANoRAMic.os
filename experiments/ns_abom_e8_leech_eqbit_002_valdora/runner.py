@@ -659,6 +659,7 @@ def run(*, ns_results: str | Path = DEFAULT_NS_RESULTS,
         raise ValueError("samples_per_seed and seed_count must be positive")
     if rewire_attempts < 0:
         raise ValueError("rewire_attempts must be nonnegative")
+
     ns_source_path = Path(ns_results)
     ns_payload = load_ns_snapshot(ns_source_path)
     full_modules = ("NS", "ABOM", "E8_COMPARISON", "LEECH", "EQBIT")
@@ -681,6 +682,7 @@ def run(*, ns_results: str | Path = DEFAULT_NS_RESULTS,
     full_execution = executions["full_orchestration"]
     outputs = full_execution["outputs"]
     hashes = full_execution["output_sha256"]
+
     return {
         "schema": "pan.ns_abom_e8_leech_eqbit_002_valdora.v2",
         "experiment_id": "NS-ABOM-E8-LEECH-EQBIT-002-VALDORA",
