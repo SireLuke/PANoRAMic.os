@@ -16,7 +16,7 @@ The experiment reports separate typed outputs and hashes, rather than a syntheti
 - Existing Gosset graph reconstruction and GF(2) cut-rank primitives.
 - Existing Leech basis, Golay, and minimal-shell certificate.
 - Merged NS–ABOM–E8–LEECH–EQBIT-002 preregistration.
-- Supporting contracts in pan-fractal-kernel and the FGHCL/Azabith repository reinforce the V8 coordinate order (h,R,u,d,tau,chi,s,f), typed state/normalization boundaries, and the distinction between V8 and E8.
+- Supporting contracts in pan-fractal-kernel and the FGHCL/Abazith repository reinforce the V8 coordinate order (h,R,u,d,tau,chi,s,f), typed state/normalization boundaries, and the distinction between V8 and E8.
 
 ## Controls implemented
 
