@@ -320,7 +320,7 @@ def run() -> dict:
             "reference_families": list(FAMILY_STARTS),
             "local_neighbors_per_reference": 4600,
             "local_vertex_set": "N(r) union -N(r), 9200 vertices",
-            "cut_matrix": "B[i,j] = 1 iff dot(N[i], N[j]) == -16",
+            "antipodal_relation_matrix": "B[i,j] = 1 iff dot(N[i], N[j]) == -16",
             "gf2_rank": "packed-row exact XOR elimination",
             "global_adjacency_materialized": False,
         },
@@ -421,7 +421,7 @@ def run() -> dict:
             "histogram_sha256": sha256_bytes(histogram_bytes),
             "neighbor_count": int(len(neighbors)),
             "construction_family_cut_ranks": family_cut_ranks,
-            "cross_cut": {
+            "antipodal_relation": {
                 "matrix_shape": [4600, 4600],
                 "ones": int(cross.sum()),
                 "degree_min": int(row_degrees.min()),
@@ -452,8 +452,8 @@ def run() -> dict:
     output["acceptance"] = {
         "three_family_shell_censuses_match": True,
         "all_local_shells_have_4600_neighbors": True,
-        "all_cross_cuts_are_fixed_point_free_perfect_matchings": True,
-        "all_cross_cut_ranks_are_full_4600": True,
+        "all_antipodal_relations_are_fixed_point_free_perfect_matchings": True,
+        "all_antipodal_relation_matrix_ranks_are_full_4600": True,
         "all_within_neighbor_graphs_are_891_regular": True,
         "scope_limit": (
             "Three deterministic reference representatives were checked; "
