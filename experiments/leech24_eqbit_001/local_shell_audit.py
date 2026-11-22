@@ -77,10 +77,17 @@ def local_relation_census(gram: np.ndarray, adjacency: np.ndarray) -> dict:
         for b, dot_b in enumerate(relation_dots):
             by_pair_class = {dot: set() for dot in relation_dots}
             for i in range(gram.shape[0] - 1):
-                intersections = np.bitwise_and(packed[a][i], packed[b][i + 1:])
-                counts = popcount[intersections].sum(axis=1, dtype=np.uint16)
+                # Count both orientations of every unordered pair. This is
+                # essential when i != j: symmetry of the relation matrices
+                # alone does not establish p_ij^k == p_ji^k.
+                forward = np.bitwise_and(packed[a][i], packed[b][i + 1:])
+                reverse = np.bitwise_and(packed[a][i + 1:], packed[b][i])
+                forward_counts = popcount[forward].sum(axis=1, dtype=np.uint16)
+                reverse_counts = popcount[reverse].sum(axis=1, dtype=np.uint16)
                 pair_dots = gram[i, i + 1:]
-                for pair_dot, count in zip(pair_dots.tolist(), counts.tolist()):
+                for pair_dot, count in zip(pair_dots.tolist(), forward_counts.tolist()):
+                    by_pair_class[int(pair_dot)].add(int(count))
+                for pair_dot, count in zip(pair_dots.tolist(), reverse_counts.tolist()):
                     by_pair_class[int(pair_dot)].add(int(count))
             if any(len(values) != 1 for values in by_pair_class.values()):
                 raise AssertionError(
