@@ -15,7 +15,7 @@ import sys
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
@@ -181,6 +181,33 @@ def run() -> dict:
         if not np.all(within_degrees == 891):
             raise AssertionError(f"{family}: local induced graph degree mismatch")
 
+        # Exact common-neighbor census for every unordered pair in N(r).
+        # Packed row intersections avoid a cubic dense matrix multiplication.
+        packed_within = np.packbits(within, axis=1, bitorder="little")
+        popcount = np.array([int(x).bit_count() for x in range(256)], dtype=np.uint8)
+        common_counts: dict[int, Counter] = {}
+        for i in range(len(neighbors) - 1):
+            intersections = np.bitwise_and(packed_within[i], packed_within[i + 1:])
+            counts = popcount[intersections].sum(axis=1, dtype=np.uint16)
+            pair_dots = neighbor_gram[i, i + 1:]
+            for dot, count in zip(pair_dots.tolist(), counts.tolist()):
+                common_counts.setdefault(int(dot), Counter())[int(count)] += 1
+
+        expected_pair_classes = {
+            -16: {0: 2300},
+            0: {42: 2049300},
+            8: {162: 6476800},
+            16: {336: 2049300},
+        }
+        observed_pair_classes = {
+            dot: dict(sorted(counter.items()))
+            for dot, counter in sorted(common_counts.items())
+        }
+        if observed_pair_classes != expected_pair_classes:
+            raise AssertionError(
+                f"{family}: common-neighbor census mismatch: {observed_pair_classes}"
+            )
+
         histogram_bytes = json.dumps(
             histogram, sort_keys=True, separators=(",", ":")
         ).encode()
@@ -214,6 +241,12 @@ def run() -> dict:
                 "degree_max": int(within_degrees.max()),
                 "regular_degree": 891,
                 "sha256": sha256_bytes(within.tobytes(order="C")),
+                "common_neighbor_census_by_integer_dot": {
+                    str(dot): {str(count): pairs for count, pairs in sorted(counter.items())}
+                    for dot, counter in sorted(common_counts.items())
+                },
+                "is_strongly_regular": False,
+                "distinct_nonadjacent_common_neighbor_counts": [0, 42, 162],
             },
         }
 
