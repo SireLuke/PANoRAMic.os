@@ -43,7 +43,8 @@
         "ref",
         "commit",
         "evidence_repository",
-        "evidence_commit"
+        "evidence_commit",
+        "additional_control_commit"
       ],
       "properties": {
         "repository": {
@@ -244,7 +245,9 @@
                   }
                 },
                 "additionalProperties": false
-              }
+              },
+              "minItems": 12,
+              "description": "Must contain all 12 STRATA v0.1 dimensions with unique names; validate exact membership in validate_run.py."
             },
             "limitations": {
               "type": "array",
