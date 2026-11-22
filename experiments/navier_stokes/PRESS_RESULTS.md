@@ -70,6 +70,13 @@ at which the front separates from k_d is the next instrument iteration
 ## Files
 - Main run: `press_data/re1600_n128.json`, `press_data/stage_c_results.json`
 - Shuffle control: `press_data/re1600_n128_shuffle.json`, `press_data/stage_c_shuffle_results.json`
-- Baseline: `press_data/re001_nu001.json` (appended on landing)
+- Baseline: `press_data/re001_nu001.json`, `press_data/stage_c_baseline_results.json`
+  (appended on landing, 2026-11-21: front peak K = 12 vs the main run's
+  58; eps_max 0.012975 at t = 4.9; BKM 36.48. The ceiling and periodicity
+  legs are degenerate on this control - K is constant (= 12) across the
+  whole intensification interval, so both fits are exact and the
+  periodicity ratios are undefined (NaN) rather than detections. The
+  decaying control develops no front and yields no signature, as a
+  control should; the degeneracy is recorded, not laundered.)
 - OMNIQUASI registration: OQ-EXP-2026-002, filed in this same change,
   as a negative result.
