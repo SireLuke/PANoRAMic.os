@@ -8,7 +8,6 @@ from experiments.ns_abom_e8_leech_eqbit_002_valdora.runner import (
     _e8_abom_comparison,
     _exactify_adapter_roots,
     _execute_configuration,
-    _e8_abom_comparison,
     _graph_contract,
     _partition_controls,
     _rank_summary,
@@ -32,6 +31,9 @@ class ValdoraNSABOME8LeechEqbitTests(unittest.TestCase):
         result = _e8_abom_comparison()
         self.assertEqual(result["exact_root_count"], 240)
         self.assertEqual(result["abom_adapter_root_count"], 240)
+        self.assertEqual(result["abom_adapter_raw_root_count"], 240)
+        self.assertEqual(result["abom_adapter_unique_root_count"], 240)
+        self.assertTrue(result["all_adapter_norm_squared_two"])
         self.assertTrue(result["all_exact_norm_squared_two"])
         self.assertTrue(result["root_sets_equal"])
         self.assertEqual(result["symmetric_difference_count"], 0)

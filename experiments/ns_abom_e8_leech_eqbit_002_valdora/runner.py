@@ -156,21 +156,6 @@ def _e8_abom_comparison() -> dict[str, Any]:
         "abom_adapter_unique_root_count": len(adapter_set),
         "all_exact_norm_squared_two": exact_norms,
         "all_adapter_norm_squared_two": adapter_norms,
-def _e8_abom_comparison() -> dict[str, Any]:
-    exact_roots = tuple(_fraction_root(root) for root in e8_roots_exact())
-    adapter_roots = tuple(
-        tuple(Fraction(float(value)).limit_denominator(2) for value in root)
-        for root in abom_e8_roots()
-    )
-    exact_set, adapter_set = set(exact_roots), set(adapter_roots)
-    exact_hash = _object_hash(_root_payload(exact_set))
-    adapter_hash = _object_hash(_root_payload(adapter_set))
-    return {
-        "rank": 8,
-        "expected_roots": 240,
-        "exact_root_count": len(exact_set),
-        "abom_adapter_root_count": len(adapter_set),
-        "all_exact_norm_squared_two": all(sum(x * x for x in r) == 2 for r in exact_set),
         "root_sets_equal": exact_set == adapter_set,
         "exact_root_set_sha256": exact_hash,
         "abom_root_set_sha256": adapter_hash,
