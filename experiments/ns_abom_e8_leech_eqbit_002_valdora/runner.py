@@ -151,6 +151,7 @@ def _e8_abom_comparison() -> dict[str, Any]:
         "expected_roots": 240,
         "exact_root_count": len(exact_roots),
         "exact_unique_root_count": len(exact_set),
+        "abom_adapter_root_count": len(adapter_set),
         "abom_adapter_raw_root_count": len(raw_adapter_roots),
         "abom_adapter_unique_root_count": len(adapter_set),
         "all_exact_norm_squared_two": exact_norms,

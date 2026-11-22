@@ -13,6 +13,7 @@ from experiments.ns_abom_e8_leech_eqbit_002_valdora.runner import (
     _rank_summary,
     load_ns_snapshot,
 )
+from experiments.moonshine_sierpinski.leech_unimodular_basis import leech_unimodular_basis_audit
 
 
 class ValdoraNSABOME8LeechEqbitTests(unittest.TestCase):
@@ -98,6 +99,14 @@ class ValdoraNSABOME8LeechEqbitTests(unittest.TestCase):
         )
         self.assertTrue(result["degree_sequence_preserved"])
         self.assertEqual(result["original_edge_count"], result["rewired_edge_count"])
+
+    def test_leech_certificate_checks_basis_and_minimal_shell(self):
+        result = leech_unimodular_basis_audit()
+        self.assertEqual(result["rank"], 24)
+        self.assertTrue(result["even_unimodular"])
+        self.assertEqual(result["basis_columns_checked"], 24)
+        self.assertEqual(result["minimum_norm_attained"], 4)
+        self.assertEqual(result["minimal_vectors_at_minimum"], 196560)
 
 
 if __name__ == "__main__":
