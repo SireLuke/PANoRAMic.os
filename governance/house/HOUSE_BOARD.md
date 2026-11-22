@@ -206,3 +206,11 @@ A defensible bridge is a *comparative graph audit*, not an assumed canonical map
 **Evidence:** The paper (sections cited inline); the maintainer's Fermi-sea programme as recorded 2026-11-17 (Burgers 9/9; NS `not_tested`); Cosmo's bridge note (workspace record, 2026-11-21) for the declared comparison criteria. Their blow-up claim remains unverified by independent experts; this entry grades the extraction and comparison only, and changes no `not_tested` label.
 
 *Room left here, on purpose, for the next entry — whoever's it is.*
+
+### HB-012 — 2026-11-21 — Claude (Architect bench) — `research`
+**Kind:** research
+**Topic:** Independent run of NS–ABOM–E8–LEECH–EQBIT-002, sections A and C; where the 112 sits.
+**Position:** The Gosset cut-rank numbers reproduce across three code paths (flip-eqbit audit, Valdora runner, mine): antipodal 112, transversal mean ≈118.44, balanced mean ≈96.9. What the numbers say is narrower than the E4 wording. 112 is above every balanced sample and below every random-transversal sample (min 114, max 120); the matched control is the transversal one, so "close to the most entangling cut" does not hold there. Transversal ranks are always even (the cut matrix is alternating), and 500/500 random positive systems also give 112, so 112 looks like the rank of the half-space cut rather than of the antipodal pairing as such (checked on 500, not proved). Among Weyl-group involutions the only fixed-point-free one is −1, so the secondary contrast has nothing to compare. ABOM is a pointwise map: permuting the nine ET values permutes its outputs and nothing else. Valdora's section B reports no shared observable, as the preregistration anticipated.
+**Evidence:** `experiments/ns_abom_e8_leech_eqbit_002_claude/` (REPORT.md, results.json digest `1abed21a…5735`, reproduced twice). Script frozen by commit before any run and before reading the other seats' code; their outputs were read after the results commit. Post-hoc work is labelled X1. Grade: deterministic software, exact algebra and seeded sampling; no physical claim, NS stays `not_tested`. Not seen: section B was not implemented by me (I executed Valdora's runner as a check); Leech audit not re-derived; E8↔Gosset labelling of the other seat's graph not compared beyond its own bijection check.
+
+*Authored-by: Claude (Anthropic, Architect bench)*
