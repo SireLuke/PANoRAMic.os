@@ -156,6 +156,21 @@ def _e8_abom_comparison() -> dict[str, Any]:
         "abom_adapter_unique_root_count": len(adapter_set),
         "all_exact_norm_squared_two": exact_norms,
         "all_adapter_norm_squared_two": adapter_norms,
+def _e8_abom_comparison() -> dict[str, Any]:
+    exact_roots = tuple(_fraction_root(root) for root in e8_roots_exact())
+    adapter_roots = tuple(
+        tuple(Fraction(float(value)).limit_denominator(2) for value in root)
+        for root in abom_e8_roots()
+    )
+    exact_set, adapter_set = set(exact_roots), set(adapter_roots)
+    exact_hash = _object_hash(_root_payload(exact_set))
+    adapter_hash = _object_hash(_root_payload(adapter_set))
+    return {
+        "rank": 8,
+        "expected_roots": 240,
+        "exact_root_count": len(exact_set),
+        "abom_adapter_root_count": len(adapter_set),
+        "all_exact_norm_squared_two": all(sum(x * x for x in r) == 2 for r in exact_set),
         "root_sets_equal": exact_set == adapter_set,
         "exact_root_set_sha256": exact_hash,
         "abom_root_set_sha256": adapter_hash,
@@ -599,6 +614,33 @@ def _ablation_report(executions: dict[str, dict[str, Any]]) -> dict[str, Any]:
             "Every configuration is executed separately on the same frozen NS input and "
             "fixed seeds. Hash comparisons apply only to modules present in both runs."
         ),
+def _ablation_table(outputs: dict[str, Any]) -> dict[str, Any]:
+    """Report output-removal ablations without fabricating a shared score."""
+    full_keys = ("NS", "ABOM", "E8_COMPARISON", "LEECH", "EQBIT")
+    configurations = {
+        "full_orchestration": full_keys,
+        "minus_ABOM_adapter": ("NS", "E8_COMPARISON", "LEECH", "EQBIT"),
+        "minus_E8_comparison_adapter": ("NS", "ABOM", "LEECH", "EQBIT"),
+        "minus_Leech_audit_adapter": ("NS", "ABOM", "E8_COMPARISON", "EQBIT"),
+        "minus_flip_eqbit_adapter": ("NS", "ABOM", "E8_COMPARISON", "LEECH"),
+        "NS_snapshot_only": ("NS",),
+    }
+    rows: dict[str, Any] = {}
+    for name, keys in configurations.items():
+        rows[name] = {
+            "present_modules": list(keys),
+            "output_sha256": {key: _object_hash(outputs[key]) for key in keys},
+            "omitted_modules": [key for key in full_keys if key not in keys],
+            "shared_measured_observable_changes": [],
+            "interpretation": (
+                "removal changes output availability only; no shared cross-module "
+                "observable is currently defined"
+            ),
+        }
+    return {
+        "configurations": rows,
+        "common_input_ns_snapshot_sha256": _object_hash(outputs["NS"]),
+        "acceptance_note": "No scalar aggregate score is manufactured for disconnected modules.",
     }
 
 
@@ -656,6 +698,69 @@ def run(*, ns_results: str | Path = DEFAULT_NS_RESULTS,
         "experiment_id": "NS-ABOM-E8-LEECH-EQBIT-002-VALDORA",
         "seat": "Valdora (OpenAI / ChatGPT bench)",
         "mode": "independent_preregistered_ablation_execution",
+    ns_payload = load_ns_snapshot(ns_results)
+    cases = ns_payload["cases"]
+
+    abom_controls = _abom_probe_controls(cases, seed=seed)
+    e8_comparison = _e8_abom_comparison()
+    if (e8_comparison["exact_root_count"] != 240
+            or not e8_comparison["all_exact_norm_squared_two"]
+            or not e8_comparison["root_sets_equal"]):
+        raise AssertionError("ABOM/E8 canonical root-set comparison failed")
+
+    leech_summary = leech_unimodular_basis_audit()
+    if not leech_summary.get("even_unimodular") or leech_summary.get("rank") != 24:
+        raise AssertionError("Leech rank-24 even-unimodular audit failed")
+
+    graph_summary, roots, adjacency, pairs, anti_left, anti_right, anti_map = _graph_contract()
+    partition_controls = _partition_controls(
+        adjacency, pairs, anti_left, anti_right,
+        samples_per_seed=samples_per_seed, seed_count=seed_count, seed=seed,
+    )
+    relabel_control = _relabel_control(adjacency, anti_left, anti_right, seed ^ 0x4E534142)
+    if not relabel_control["invariant"]:
+        raise AssertionError("cut rank changed under vertex relabeling")
+    graph_null = _degree_preserving_rewire(
+        adjacency, attempts=rewire_attempts, seed=seed ^ 0x7A11C0DE,
+        anti_left=anti_left, anti_right=anti_right,
+    )
+
+    ns_source_path = Path(ns_results)
+    ns_output = {
+        "case_count": len(cases),
+        "dimensions": sorted({int(case["d"]) for case in cases}),
+        "frozen_snapshot_sha256": _file_hash(ns_source_path),
+        "snapshot_payload_sha256": _object_hash(ns_payload),
+        "cases": [
+            {key: case[key] for key in
+             ("n", "d", "nu", "T", "dt", "steps", "ET", "OmT", "max_div_T")}
+            for case in cases
+        ],
+        "status": "frozen finite-time benchmark data; Navier-Stokes regularity not tested",
+    }
+    eqbit_output = {
+        "graph": graph_summary,
+        "partition_controls": partition_controls,
+        "vertex_relabeling_control": relabel_control,
+        "degree_preserving_graph_null": graph_null,
+        "graph_state_boundary": (
+            "exact graph-state cut-rank mathematics for a specified graph and cut; "
+            "no physical quantum dynamics, hardware, or quantum advantage claim"
+        ),
+    }
+    outputs = {
+        "NS": ns_output,
+        "ABOM": abom_controls,
+        "E8_COMPARISON": e8_comparison,
+        "LEECH": leech_summary,
+        "EQBIT": eqbit_output,
+    }
+    hashes = {key: _object_hash(value) for key, value in outputs.items()}
+    return {
+        "schema": "pan.ns_abom_e8_leech_eqbit_002_valdora.v1",
+        "experiment_id": "NS-ABOM-E8-LEECH-EQBIT-002-VALDORA",
+        "seat": "Valdora (OpenAI / ChatGPT bench)",
+        "mode": "independent_preregistered_ablation_implementation",
         "preregistration": "research/NS_ABOM_E8_LEECH_EQBIT_002_ABLATION.md",
         "run_parameters": {
             "samples_per_seed_per_partition_family": samples_per_seed,
@@ -675,6 +780,10 @@ def run(*, ns_results: str | Path = DEFAULT_NS_RESULTS,
         "pairwise_status": {
             "NS_ABOM": "DIMENSIONLESS_PROBE_SENSITIVITY_ONLY",
             "ABOM_E8": "EXACT_ROOT_SET_EQUALITY_CHECKED_WITHOUT_SNAPPING",
+        "ablation": _ablation_table(outputs),
+        "pairwise_status": {
+            "NS_ABOM": "DIMENSIONLESS_PROBE_SENSITIVITY_ONLY",
+            "ABOM_E8": "EXACT_ROOT_SET_EQUALITY_CHECKED",
             "E8_GOSSET_EQBIT": "EXPLICIT_ROOT_VERTEX_BIJECTION_AND_ANTIPODAL_AUTOMORPHISM_CHECKED",
             "E8_LEECH": "SEPARATE_CERTIFICATES_NO_EMBEDDING",
             "LEECH_EQBIT": "SEPARATE_TYPED_ARTIFACTS_NO_EMBEDDING",
@@ -702,12 +811,14 @@ def run(*, ns_results: str | Path = DEFAULT_NS_RESULTS,
         "interpretation": [
             "The ABOM control family measures sensitivity to declared dimensionless probe sequences only.",
             "The E8/ABOM check compares canonical root sets without rounding near-roots onto exact roots.",
+            "The E8/ABOM check compares canonical root sets, not just cardinalities.",
             "The E8/Gosset check supplies an explicit root-to-vertex coordinate bijection.",
             "The antipodal map is checked as a fixed-point-free involutive graph automorphism.",
             "The Leech result is an independent rank-24 lattice certificate; no E8-to-Leech embedding is proposed.",
             "The graph-null preserves degree by double-edge switches; no spectral preservation is claimed.",
             "Each ablation configuration re-executes only the adapters it includes; no shared scalar is invented.",
             "Alternative valid fixed-point-free involutions are explicitly NOT_SEARCHED.",
+            "Ablations remove module outputs; disconnected modules are not assigned a synthetic coupling score.",
             "No numerical or software result here establishes Navier-Stokes regularity or blow-up.",
         ],
     }
