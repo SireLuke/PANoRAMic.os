@@ -135,6 +135,66 @@
           "detail": "No predictive transfer claim is made.",
           "dimension": "held-out cross-domain prediction",
           "status": "not_tested"
+        },
+        {
+          "dimension": "three_meaningful_scales",
+          "status": "not_tested",
+          "detail": "Not evaluated in this historical synthetic geometry audit."
+        },
+        {
+          "dimension": "two_independent_domains",
+          "status": "not_tested",
+          "detail": "Not evaluated in this historical synthetic geometry audit."
+        },
+        {
+          "dimension": "two_representations",
+          "status": "not_tested",
+          "detail": "Not evaluated in this historical synthetic geometry audit."
+        },
+        {
+          "dimension": "observer_implementation_checks",
+          "status": "not_tested",
+          "detail": "Not evaluated in this historical synthetic geometry audit."
+        },
+        {
+          "dimension": "randomized_controls",
+          "status": "not_tested",
+          "detail": "Not evaluated in this historical synthetic geometry audit."
+        },
+        {
+          "dimension": "structure_preserving_controls",
+          "status": "not_tested",
+          "detail": "Not evaluated in this historical synthetic geometry audit."
+        },
+        {
+          "dimension": "held_out_predictive_evaluation",
+          "status": "not_tested",
+          "detail": "Not evaluated in this historical synthetic geometry audit."
+        },
+        {
+          "dimension": "leakage_controls",
+          "status": "not_tested",
+          "detail": "Not evaluated in this historical synthetic geometry audit."
+        },
+        {
+          "dimension": "domain_native_baselines",
+          "status": "not_tested",
+          "detail": "Not evaluated in this historical synthetic geometry audit."
+        },
+        {
+          "dimension": "uncertainty",
+          "status": "not_tested",
+          "detail": "Not evaluated in this historical synthetic geometry audit."
+        },
+        {
+          "dimension": "provenance",
+          "status": "not_tested",
+          "detail": "Not evaluated in this historical synthetic geometry audit."
+        },
+        {
+          "dimension": "reproducibility",
+          "status": "pass",
+          "detail": "Historical record includes source hashes, commands, and seeds; software reproducibility only."
         }
       ],
       "evidence_level": "software-smoke-test",
