@@ -28,10 +28,12 @@ jobs:
         run: python experiments/moonshine_sierpinski/leech_voa_weight_two.py
       - name: Run exact Leech basis and unimodularity certificate
         run: python experiments/moonshine_sierpinski/leech_unimodular_basis.py
-      - name: Run Leech24 local-shell and common-neighbor audit
+      - name: Install NumPy for Leech24 exact array audit
+        run: python -m pip install numpy
+      - name: Run Leech24 local-shell and association-scheme audit
         run: python experiments/leech24_eqbit_001/local_shell_audit.py > /tmp/leech24-local-shell-audit.json
       - name: Run Leech24 GF(2) rank fixtures
-        run: python -m pytest tests/test_leech24_eqbit_001.py -q
+        run: python -m unittest tests.test_leech24_eqbit_001 -v
       - name: Run Leech-to-Monster representation bridge tests
         run: python -m unittest tests.test_leech_monster_representation_bridge -v
       - name: Run Leech-to-Monster representation bridge
