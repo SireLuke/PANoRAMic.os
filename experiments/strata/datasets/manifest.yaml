@@ -4,11 +4,13 @@ datasets:
   - dataset_id: zeng-et-al-realization-fractional-fermi-seas-v1
     domain: experimental-quantum-gas-physics
     source_url: https://zenodo.org/records/18697242
+    source_api_url: https://zenodo.org/api/records/18697242
     source_doi: 10.5281/zenodo.18697242
     source_version_or_release: v1
     published_utc: 2026-02-19
-    license: not_declared_in_accessible_zenodo_record
-    redistribution_policy: transient_fetch_only; do_not_repackage_or_redistribute_until_license_is_confirmed
+    license_expected: cc-by-4.0
+    license_verification: live_zenodo_api_metadata_required_each_run
+    redistribution_policy: CC-BY-4.0-attribution-required; only after live metadata confirms expected license
     retrieved_utc: recorded_per_file_in_generated_run_output
     checksum_sha256: computed_per_retrieval_and_recorded_in_generated_run_output
     source_checksum_md5:
