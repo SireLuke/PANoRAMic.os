@@ -602,6 +602,36 @@ def _ablation_report(executions: dict[str, dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _ablation_table(outputs: dict[str, Any]) -> dict[str, Any]:
+    """Report output-removal ablations without fabricating a shared score."""
+    full_keys = ("NS", "ABOM", "E8_COMPARISON", "LEECH", "EQBIT")
+    configurations = {
+        "full_orchestration": full_keys,
+        "minus_ABOM_adapter": ("NS", "E8_COMPARISON", "LEECH", "EQBIT"),
+        "minus_E8_comparison_adapter": ("NS", "ABOM", "LEECH", "EQBIT"),
+        "minus_Leech_audit_adapter": ("NS", "ABOM", "E8_COMPARISON", "EQBIT"),
+        "minus_flip_eqbit_adapter": ("NS", "ABOM", "E8_COMPARISON", "LEECH"),
+        "NS_snapshot_only": ("NS",),
+    }
+    rows: dict[str, Any] = {}
+    for name, keys in configurations.items():
+        rows[name] = {
+            "present_modules": list(keys),
+            "output_sha256": {key: _object_hash(outputs[key]) for key in keys},
+            "omitted_modules": [key for key in full_keys if key not in keys],
+            "shared_measured_observable_changes": [],
+            "interpretation": (
+                "removal changes output availability only; no shared cross-module "
+                "observable is currently defined"
+            ),
+        }
+    return {
+        "configurations": rows,
+        "common_input_ns_snapshot_sha256": _object_hash(outputs["NS"]),
+        "acceptance_note": "No scalar aggregate score is manufactured for disconnected modules.",
+    }
+
+
 def _source_provenance() -> dict[str, Any]:
     hashes = {}
     for relative in SOURCE_PATHS:

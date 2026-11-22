@@ -1,0 +1,59 @@
+{
+ "flip_curve": {
+  "0": {
+   "max": 112,
+   "mean": 112.0,
+   "min": 112
+  },
+  "1": {
+   "max": 114,
+   "mean": 113.84,
+   "min": 112
+  },
+  "2": {
+   "max": 116,
+   "mean": 115.42,
+   "min": 114
+  },
+  "4": {
+   "max": 120,
+   "mean": 117.64,
+   "min": 114
+  },
+  "8": {
+   "max": 120,
+   "mean": 118.28,
+   "min": 116
+  },
+  "16": {
+   "max": 120,
+   "mean": 118.44,
+   "min": 116
+  },
+  "32": {
+   "max": 120,
+   "mean": 118.58,
+   "min": 116
+  },
+  "60": {
+   "max": 120,
+   "mean": 118.46,
+   "min": 116
+  },
+  "120": {
+   "max": 112,
+   "mean": 112.0,
+   "min": 112
+  }
+ },
+ "id": "NS-ABOM-E8-LEECH-EQBIT-002-X1",
+ "positive_system_ranks": {
+  "n": 500,
+  "values": {
+   "112": 500
+  }
+ },
+ "seed_note": "SeedSequence([4242,1])",
+ "status": "EXPLORATORY_POST_HOC",
+ "transversal_B_symmetric_zero_diag_200_of_200": true
+}
