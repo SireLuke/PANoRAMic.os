@@ -1,0 +1,372 @@
+{
+  "bench": "cosmo_composition_bench.py",
+  "composition": "NS-ABOM-E8-LEECH-EQBIT-001",
+  "gates": {
+    "gate1_ns_provenance": {
+      "checks": {
+        "all_required_keys": true,
+        "byte_identical": true,
+        "cases": [
+          {
+            "ET": 0.24900199733599793,
+            "OmT": 0.49800399467199585,
+            "T": 0.1,
+            "d": 2,
+            "dt": 0.002,
+            "max_div_T": 1.6625578818879815e-16,
+            "n": 16,
+            "nu": 0.01,
+            "steps": 50
+          },
+          {
+            "ET": 0.24900199733599793,
+            "OmT": 0.49800399467199585,
+            "T": 0.1,
+            "d": 2,
+            "dt": 0.002,
+            "max_div_T": 2.8058658780589256e-16,
+            "n": 24,
+            "nu": 0.01,
+            "steps": 50
+          },
+          {
+            "ET": 0.24900199733599793,
+            "OmT": 0.49800399467199585,
+            "T": 0.1,
+            "d": 2,
+            "dt": 0.002,
+            "max_div_T": 3.8070880037246467e-16,
+            "n": 32,
+            "nu": 0.01,
+            "steps": 50
+          },
+          {
+            "ET": 0.12425198808087304,
+            "OmT": 0.3731414453839213,
+            "T": 0.1,
+            "d": 3,
+            "dt": 0.001,
+            "max_div_T": 7.39056785513138e-17,
+            "n": 16,
+            "nu": 0.01,
+            "steps": 100
+          },
+          {
+            "ET": 0.12425198808087301,
+            "OmT": 0.3731414453839252,
+            "T": 0.1,
+            "d": 3,
+            "dt": 0.001,
+            "max_div_T": 1.5002360103826339e-16,
+            "n": 24,
+            "nu": 0.01,
+            "steps": 100
+          },
+          {
+            "ET": 0.12425198808087304,
+            "OmT": 0.37314144538392524,
+            "T": 0.1,
+            "d": 3,
+            "dt": 0.001,
+            "max_div_T": 1.160914392744154e-16,
+            "n": 32,
+            "nu": 0.01,
+            "steps": 100
+          },
+          {
+            "ET": 0.12127471447954827,
+            "OmT": 0.3730854219640013,
+            "T": 0.5,
+            "d": 3,
+            "dt": 0.004,
+            "max_div_T": 6.026729987566248e-17,
+            "n": 16,
+            "nu": 0.01,
+            "steps": 125
+          },
+          {
+            "ET": 0.12127471447954546,
+            "OmT": 0.37308542196401895,
+            "T": 0.5,
+            "d": 3,
+            "dt": 0.002,
+            "max_div_T": 6.026729987566033e-17,
+            "n": 16,
+            "nu": 0.01,
+            "steps": 250
+          },
+          {
+            "ET": 0.12127471447954546,
+            "OmT": 0.37308542196402056,
+            "T": 0.5,
+            "d": 3,
+            "dt": 0.001,
+            "max_div_T": 6.026729987566018e-17,
+            "n": 16,
+            "nu": 0.01,
+            "steps": 500
+          }
+        ],
+        "dimensions_2d_3d": true,
+        "et_3d_T0.1_spread": 2.7755575615628914e-17,
+        "et_3d_T0.5_spread": 2.8033131371785203e-15,
+        "max_div_T_all": 3.8070880037246467e-16,
+        "nine_cases": true,
+        "sha256_repo": "1ab9852053e846e8a0605e59a6a61bf14592af28d609733c0510d28778b76742",
+        "sha256_workspace": "1ab9852053e846e8a0605e59a6a61bf14592af28d609733c0510d28778b76742",
+        "steps_dt_lands_on_T": true,
+        "three_seat_headline": "Cross-seat agreement established at merge time (PRs #130/#131/#133): Klaus blind replication agrees to <=3e-14, Cosmo third seat to <=~1.3e-14; not recomputed here \u2014 the other seats' files are outside this bench's scope. This gate checks the frozen Cosmo file itself.",
+        "value_identical": true
+      },
+      "pass": true,
+      "summary": "repo copy == workspace original byte-identical; 9 cases, 3D T=0.1 ET spread 2.78e-17, T=0.5 ET spread 2.80e-15"
+    },
+    "gate2_e8_roots": {
+      "checks": {
+        "count": 240,
+        "degree_max": 56,
+        "degree_min": 56,
+        "edges": 6720,
+        "norms_squared_scaled": [
+          8
+        ],
+        "set_equals_module_x2": true,
+        "shells_vs_root0": [
+          1,
+          56,
+          182,
+          1
+        ],
+        "simple_root_gram_matches_dynkin": true,
+        "simple_roots_in_my_set": true,
+        "unique": 240
+      },
+      "pass": true,
+      "summary": "240 roots, norm^2 8 (scaled), 56 neighbours, 6720 edges, shells [1, 56, 182, 1]; set == module x2"
+    },
+    "gate3_flip_eqbit_cut_rank": {
+      "checks": {
+        "antipodal_rank": 112,
+        "crossing_edges": 2240,
+        "expected_crossing": 2240,
+        "expected_rank": 112,
+        "module_antipodal_rank": 112,
+        "module_balanced_128": {
+          "max": 104,
+          "mean": 97.2109375,
+          "median": 97.0,
+          "min": 89,
+          "n": 128,
+          "p05": 91,
+          "p95": 102
+        },
+        "module_crossing_edges": 2240,
+        "module_geometry": {
+          "antipodal_pairs": 120,
+          "degree_max": 56,
+          "degree_min": 56,
+          "edges": 6720,
+          "vertices": 240
+        },
+        "module_transversal_128": {
+          "max": 120,
+          "mean": 118.515625,
+          "median": 118.0,
+          "min": 116,
+          "n": 128,
+          "p05": 116,
+          "p95": 120
+        },
+        "my_balanced_256": {
+          "max": 104,
+          "mean": 96.66015625,
+          "min": 88
+        },
+        "my_transversal_256": {
+          "max": 120,
+          "mean": 118.5234375,
+          "min": 116
+        }
+      },
+      "pass": true,
+      "summary": "antipodal cut-rank 112 (of 120), crossing 2240; module agrees exactly; my 256-sample transversal range 116-120, balanced 88-104"
+    },
+    "gate4_leech_basis_certificate": {
+      "checks": {
+        "all_norm_squared_32": true,
+        "all_pass_my_congruence_check": true,
+        "basis_shape": [
+          24,
+          24
+        ],
+        "coordinate_basis_det_sympy": 68719476736,
+        "coordinate_covolume_expected": 68719476736,
+        "family_counts": {
+          "A": 1104,
+          "B": 97152,
+          "C": 98304
+        },
+        "golay_codewords": 4096,
+        "golay_self_dual_via_generator_rows": true,
+        "golay_unique": 4096,
+        "golay_weight_distribution": {
+          "0": 1,
+          "8": 759,
+          "12": 2576,
+          "16": 759,
+          "24": 1
+        },
+        "gram_det_sympy": 1,
+        "gram_even_diagonal": true,
+        "gram_integral": true,
+        "gram_positive_definite": true,
+        "gram_rank": 24,
+        "harness_coordinate_det": 68719476736,
+        "harness_gram_det": 1,
+        "harness_leech_minimal": 196560,
+        "harness_minimum_norm": 4,
+        "minimal_shell_total": 196560,
+        "minimal_shell_unique": 196560
+      },
+      "pass": true,
+      "summary": "Gram det 1, coordinate det 68719476736, rank 24, even+positive-definite; minimal shell 196560 (1104+97152+98304) independently enumerated"
+    },
+    "gate5_abom_v8_sample": {
+      "checks": {
+        "points": {
+          "cosmo_adapter_point": {
+            "match": true,
+            "module_fermi_occupation": 0.2701195914384035,
+            "module_radial_field": 1.0,
+            "my_fermi_occupation": 0.2701195914384035,
+            "my_radial_field": 1.0
+          },
+          "generic_point": {
+            "match": true,
+            "module_fermi_occupation": 0.23147521650098238,
+            "module_radial_field": 4.894928706548194,
+            "my_fermi_occupation": 0.23147521650098238,
+            "my_radial_field": 4.894928706548194
+          },
+          "harness_probe_point": {
+            "match": true,
+            "module_fermi_occupation": 0.4689769053637146,
+            "module_radial_field": 1.0,
+            "my_fermi_occupation": 0.4689769053637146,
+            "my_radial_field": 1.0
+          }
+        },
+        "spot_checks": {
+          "B8_order": true,
+          "apply_6d_identity": true,
+          "exp_scale_inverse_roundtrip": true,
+          "octants_count": true,
+          "oscillator_level_3": true
+        }
+      },
+      "pass": true,
+      "summary": "closed-form channels recomputed at 3 points and match the module; root-count view 240; B8 order 10321920"
+    },
+    "gate6_ns_abom_adapter_cosmo": {
+      "checks": {
+        "adapter_match": true,
+        "case": {
+          "E0": 0.125,
+          "ET": 0.12425198808087304,
+          "T": 0.1,
+          "d": 3,
+          "dt": 0.001,
+          "n": 32,
+          "nu": 0.01,
+          "steps": 100
+        },
+        "harness_fermi_match": true,
+        "harness_fermi_occupation": 0.4689769053637146,
+        "harness_probe_energy_ET": 0.12425198808087304,
+        "module_fermi_at_cosmo_probe": {
+          "complementary_hole_fraction": 0.7298804085615965,
+          "positive_occupation": 0.2701195914384035,
+          "signed_contrast": -0.45976081712319306
+        },
+        "my_fermi_at_cosmo_probe": {
+          "complementary_hole_fraction": 0.7298804085615965,
+          "positive_occupation": 0.2701195914384035,
+          "signed_contrast": -0.45976081712319306
+        },
+        "my_fermi_at_harness_energy": 0.4689769053637146,
+        "note": "The harness feeds ET itself as the probe energy; Cosmo's adapter feeds the dimensionless ratio ET/E0. Different probe values, same interface: a labelled dimensionless Fermi-channel probe, not a physical energy coupling.",
+        "ns_eqbit_coupled": false,
+        "probe_ET_over_E0": 0.9940159046469843,
+        "probe_matches_spec_pinned": true
+      },
+      "pass": true,
+      "summary": "Cosmo probe ET/E0 = 0.994015904646984; Fermi occupation 0.270120 (harness probe 0.468977 at ET); NS<->flip-eqbit NOT_COUPLED"
+    }
+  },
+  "harness_overall_status": "PASS",
+  "harness_pairwise_gates": {
+    "ABOM_E8": {
+      "check": "ABOM root-count view agrees with canonical exact E8 root set",
+      "status": "PASS"
+    },
+    "E8_EQBIT": {
+      "check": "flip-eqbit reconstructs the 240-vertex E8/Gosset contract",
+      "status": "PASS"
+    },
+    "E8_LEECH": {
+      "check": "rank-8 E8 and rank-24 Leech certificates coexist without coordinate identification",
+      "shared_embedding": false,
+      "status": "PASS"
+    },
+    "LEECH_EQBIT": {
+      "check": "lattice certificate and graph-state audit remain separate typed artifacts",
+      "shared_embedding": false,
+      "status": "PASS"
+    },
+    "NS_ABOM": {
+      "check": "frozen nondimensional 3D NS energy accepted as explicitly labelled ABOM Fermi probe",
+      "physical_coupling_claim": false,
+      "status": "PASS"
+    },
+    "NS_EQBIT": {
+      "check": "no solver-to-graph-state dynamical map is defined",
+      "status": "NOT_COUPLED"
+    }
+  },
+  "harness_reference": "harness_reference.json (repo integration.compose, eqbit samples 128, seed 20261121)",
+  "interpretation": [
+    "Software composition and provenance exercise, not a unified physical law. Passing means the interface checks pass \u2014 nothing more.",
+    "Navier-Stokes remains not_tested; no regularity or blow-up claim.",
+    "E8 and Leech coordinate spaces are not embedded into one another.",
+    "Flip-eqbit is static graph-state mathematics, not physical quantum dynamics or hardware.",
+    "The Leech minimal-shell count 196,560 was independently enumerated here (three Conway families, own Golay code and congruence checks), not merely cross-checked.",
+    "NS <-> flip-eqbit stays NOT_COUPLED: no state map, units, dynamics, or falsifiable observables are defined for such a link."
+  ],
+  "overall": "PASS",
+  "pairwise_gates_cosmo": {
+    "ABOM_E8": {
+      "check": "ABOM root-count view (240) agrees with independently constructed E8 (240)",
+      "status": "PASS"
+    },
+    "E8_EQBIT": {
+      "check": "flip-eqbit reconstructs the 240-vertex Gosset contract from the independent E8 set",
+      "status": "PASS"
+    },
+    "E8_LEECH": {
+      "check": "rank-8 E8 and rank-24 Leech certificates coexist as separate artifacts; no embedding",
+      "status": "PASS"
+    },
+    "LEECH_EQBIT": {
+      "check": "lattice certificate and graph-state audit remain separate typed artifacts",
+      "status": "PASS"
+    },
+    "NS_ABOM": {
+      "check": "frozen 3D NS energy accepted as a labelled dimensionless Fermi probe (Cosmo adapter: ET/E0); no physical coupling claimed",
+      "status": "PASS"
+    },
+    "NS_EQBIT": {
+      "check": "no solver-to-graph-state dynamical map is defined in the protocol or the harness",
+      "status": "NOT_COUPLED"
+    }
+  }
+}

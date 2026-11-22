@@ -1,0 +1,225 @@
+{
+  "abom_probe": {
+    "coordinates": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0
+    },
+    "e8_root_count": 240,
+    "fermi": {
+      "complementary_hole_fraction": 0.5310230946362854,
+      "positive_occupation": 0.4689769053637146,
+      "signed_contrast": -0.06204618927257077
+    },
+    "fermi_weighted_field": {
+      "hole_channel": 0.5310230946362854,
+      "occupation_channel": 0.4689769053637146,
+      "signed_contrast_channel": -0.06204618927257077
+    },
+    "golden_branches": {
+      "phi": 1.618033988749877e-300,
+      "phi_inverse": 6.18033988749888e-301,
+      "phi_inverse_negative": -6.18033988749888e-301,
+      "phi_negative": -1.618033988749877e-300
+    },
+    "hyperoctahedral_B8_order": 10321920,
+    "octants": {
+      "+++": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "++-": [
+        0.0,
+        0.0,
+        -0.0
+      ],
+      "+-+": [
+        0.0,
+        -0.0,
+        0.0
+      ],
+      "+--": [
+        0.0,
+        -0.0,
+        -0.0
+      ],
+      "-++": [
+        -0.0,
+        0.0,
+        0.0
+      ],
+      "-+-": [
+        -0.0,
+        0.0,
+        -0.0
+      ],
+      "--+": [
+        -0.0,
+        -0.0,
+        0.0
+      ],
+      "---": [
+        -0.0,
+        -0.0,
+        -0.0
+      ]
+    },
+    "radial_field": 1.0,
+    "scale_coordinate": -996.5784284662087,
+    "status": "exploratory mathematical composition; not a physical unification"
+  },
+  "dimensions": {
+    "e8_root_space_rank": 8,
+    "gosset_graph_vertices": 240,
+    "leech_lattice_rank": 24,
+    "navier_stokes_spatial_dimension": [
+      2,
+      3
+    ],
+    "pan_v8_state_coordinates": 8,
+    "warning": "Distinct mathematical objects; no 9D fluid domain or common metric is defined."
+  },
+  "e8": {
+    "coordinate_field": "R^8 exact rational coordinates",
+    "rank": 8,
+    "root_count": 240,
+    "root_squared_norms": [
+      "2"
+    ]
+  },
+  "eqbit": {
+    "antipodal_cut": {
+      "crossing_edges": 2240,
+      "rank_gf2": 112
+    },
+    "empirical_comparisons": {
+      "antipodal_rank_at_least_arbitrary_balanced_fraction": 1.0,
+      "antipodal_rank_at_least_transversal_fraction": 0.0,
+      "note": "Seeded empirical fractions, not exact tail probabilities."
+    },
+    "geometry": {
+      "antipodal_pairs": 120,
+      "degree_max": 56,
+      "degree_min": 56,
+      "edges": 6720,
+      "vertices": 240
+    },
+    "interpretation": [
+      "Cut rank is an exact graph-state entanglement measure for the specified graph state and bipartition.",
+      "Random transversals split every antipodal pair and test orientation effects.",
+      "Arbitrary balanced cuts control for the antipodal-pair structure itself.",
+      "Finite samples do not establish a global maximum or population-wide typical value.",
+      "This is graph-state mathematics, not evidence of physical quantum dynamics or hardware."
+    ],
+    "random_balanced_cuts": {
+      "max": 104,
+      "mean": 97.2109375,
+      "median": 97.0,
+      "min": 89,
+      "n": 128,
+      "p05": 91,
+      "p95": 102
+    },
+    "random_transversal_cuts": {
+      "max": 120,
+      "mean": 118.515625,
+      "median": 118.0,
+      "min": 116,
+      "n": 128,
+      "p05": 116,
+      "p95": 120
+    },
+    "samples_per_control": 128,
+    "schema": "pan.flip_eqbit_cut_rank_audit.v1",
+    "seed": 20261121
+  },
+  "experiment_id": "NS-ABOM-E8-LEECH-EQBIT-001",
+  "interpretation": [
+    "Software composition and provenance exercise, not a unified physical law.",
+    "ABOM Fermi input is a declared dimensionless probe, not a physical energy identification.",
+    "E8 and Leech coordinate spaces are not embedded into one another.",
+    "Flip-eqbit is static graph-state mathematics, not physical quantum dynamics or hardware.",
+    "NS input is a frozen finite-time benchmark snapshot, not evidence about global regularity or blow-up.",
+    "A passing gate validates only its stated interface checks."
+  ],
+  "leech": {
+    "all_columns_satisfy_golay_congruences": true,
+    "basis_columns_checked": 24,
+    "coordinate_basis_determinant": 68719476736,
+    "coordinate_covolume_from_index": 68719476736,
+    "coordinate_scale": "1/sqrt(8)",
+    "even_unimodular": true,
+    "index_factors": {
+      "Golay_residue_subspace": 4096,
+      "common_coordinate_parity": 8388608,
+      "coordinate_sum_congruence": 2
+    },
+    "minimal_vectors_at_minimum": 196560,
+    "minimum_norm_attained": 4,
+    "minimum_norm_lower_bound": 4,
+    "minimum_norm_proof": "Golay minimum distance 8 and Type-II weights divisible by 4 exclude every nonzero coordinate vector of lattice norm below 4",
+    "positive_definite": true,
+    "rank": 24,
+    "scaled_gram_determinant": 1,
+    "scaled_gram_even": true,
+    "scaled_gram_integral": true,
+    "scope": "exact rank-24 basis, covolume, even-unimodular and minimum-norm certificate for the Golay-defined coordinate lattice"
+  },
+  "mode": "read_only_composition",
+  "ns_snapshot": {
+    "case_count": 9,
+    "selected_probe": {
+      "ET": 0.12425198808087304,
+      "OmT": 0.3731414453839213,
+      "T": 0.1,
+      "d": 3,
+      "dt": 0.001,
+      "max_div_T": 7.39056785513138e-17,
+      "n": 16,
+      "nu": 0.01,
+      "steps": 100
+    },
+    "status": "frozen reference data; Navier\u2013Stokes regularity remains not_tested",
+    "three_dimensional_case_count": 6
+  },
+  "overall_status": "PASS",
+  "pairwise_gates": {
+    "ABOM_E8": {
+      "check": "ABOM root-count view agrees with canonical exact E8 root set",
+      "status": "PASS"
+    },
+    "E8_EQBIT": {
+      "check": "flip-eqbit reconstructs the 240-vertex E8/Gosset contract",
+      "status": "PASS"
+    },
+    "E8_LEECH": {
+      "check": "rank-8 E8 and rank-24 Leech certificates coexist without coordinate identification",
+      "shared_embedding": false,
+      "status": "PASS"
+    },
+    "LEECH_EQBIT": {
+      "check": "lattice certificate and graph-state audit remain separate typed artifacts",
+      "shared_embedding": false,
+      "status": "PASS"
+    },
+    "NS_ABOM": {
+      "check": "frozen nondimensional 3D NS energy accepted as explicitly labelled ABOM Fermi probe",
+      "physical_coupling_claim": false,
+      "status": "PASS"
+    },
+    "NS_EQBIT": {
+      "check": "no solver-to-graph-state dynamical map is defined",
+      "status": "NOT_COUPLED"
+    }
+  },
+  "schema": "pan.ns_abom_e8_leech_eqbit.integration.v1",
+  "source_artifacts": {
+    "abom": "core.abom_v8.abom_v8_model.abom_v8_sample",
+    "e8": "core.geometry.e8_root_system.e8_roots_exact",
+    "eqbit": "experiments.flip_qubit.cut_rank_audit.run",
+    "leech": "experiments.moonshine_sierpinski.leech_unimodular_basis.leech_unimodular_basis_audit",
+    "ns": "repo/experiments/ns_evidence_001_cosmo/cosmo_results.json",
+    "ns_seat": "Cosmo (Memory bench), third seat, independent implementation"
+  }
+}
