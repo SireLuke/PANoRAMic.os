@@ -57,6 +57,8 @@ python -m unittest tests.test_griess_untwisted_heisenberg -v
 python -m experiments.moonshine_sierpinski.griess_untwisted_heisenberg
 ```
 
+The opposite-pair self-product fixture is included in the same test module.
+
 ## Validation boundary
 
 The test suite checks exact contraction fixtures, commutativity of the
@@ -64,9 +66,19 @@ oscillator block, symmetry of its Fock-space bilinear form, antipodal
 invariance of the oscillator/momentum block, input lattice membership, and
 the conformal identity on the implemented blocks.
 
-Not implemented: momentum × momentum, the lattice 2-cocycle, the complete
-untwisted fixed-sector product, twisted-module action, twisted-twisted
-intertwining product, full Griess algebra, or Monster action.
+A narrow momentum × momentum case is now implemented: the self-product of
+one antipodal momentum orbit with itself. For the standard normalized
+lattice cocycle and norm-four alpha, the opposite-charge terms combine to
+the oscillator state alpha(-1)^2; the alpha(-2) contributions cancel. The
+implementation stores this in the unnormalised A_ij basis with exact
+rational coefficients and checks antipodal invariance.
+
+Not implemented: products of distinct momentum orbits (the inner-product
+-2 case), a general lattice 2-cocycle interface, the complete untwisted
+fixed-sector product, twisted-module action, twisted-twisted intertwining
+product, full Griess algebra, or Monster action. The opposite-pair formula
+must be cross-checked against the primary FLM convention before it is
+treated as a fully sourced general-purpose cocycle implementation.
 
 The formulae here are the elementary Heisenberg/lattice-VOA consequences
 used by the code. The full construction PR must still attach precise

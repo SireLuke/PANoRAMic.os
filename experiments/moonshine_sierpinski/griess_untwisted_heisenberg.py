@@ -9,9 +9,11 @@ Y(h_i(-1)h_j(-1)1,z) = :h_i(z)h_j(z):
 in an orthonormal Heisenberg basis, with lattice vectors stored as integral
 coordinates x and physical coordinates alpha=x/sqrt(8).
 
-This is a partial untwisted product kernel. It does not implement
-momentum x momentum, lattice cocycles, the twisted module, the orbifold
-intertwiner, the full Griess product, or Monster actions.
+This is a partial untwisted product kernel. It includes only the opposite-pair
+momentum self-product under the standard normalized cocycle; general distinct
+momentum-pair products and their cocycle phases remain unimplemented. The
+twisted module, orbifold intertwiner, full Griess product, and Monster actions
+also remain unimplemented.
 """
 from __future__ import annotations
 
@@ -141,6 +143,37 @@ def conformal_identity_momentum_product(
     return {key: coefficient}
 
 
+
+def momentum_opposite_pair_self_product(momentum: tuple[int, ...]) -> SparseVector:
+    """Compute E_[alpha]_1 E_[alpha] for E_[alpha]=e^alpha+e^-alpha.
+
+    For a norm-four vector alpha, only the two opposite-charge terms contribute
+    to the z^-2 coefficient. With the standard normalized lattice cocycle,
+    epsilon(alpha,-alpha)=epsilon(-alpha,alpha)=1. Their oscillator expansions
+    contribute +alpha(-1)^2/2 and +alpha(-1)^2/2; the alpha(-2) terms cancel.
+    Thus the result is alpha(-1)^2 in Sym^2(h(-1)).
+
+    Stored coordinates are x=sqrt(8)*alpha. In the unnormalised oscillator
+    basis A_ij=h_i(-1)h_j(-1)1, the coefficients are x_i^2/8 on A_ii and
+    x_i*x_j/4 on A_ij for i<j.
+
+    This handles only the same antipodal momentum orbit. It does not implement
+    products for distinct momentum orbits (inner product -2), nor a general
+    lattice 2-cocycle.
+    """
+    vector = _validate_minimal_leech_coordinate(momentum)
+    result: SparseVector = {}
+    for i in range(24):
+        diagonal = Fraction(vector[i] * vector[i], 8)
+        if diagonal:
+            result[("osc", i, i)] = diagonal
+        for j in range(i + 1, 24):
+            coefficient = Fraction(vector[i] * vector[j], 4)
+            if coefficient:
+                result[("osc", i, j)] = coefficient
+    return result
+
+
 def untwisted_heisenberg_block_audit() -> dict:
     """Return formula-level scope and exact normalization checks."""
     sample = tuple([4, 4] + [0] * 22)
@@ -159,7 +192,8 @@ def untwisted_heisenberg_block_audit() -> dict:
         "sample_oscillator_identity": {
             str(key): str(value) for key, value in identity_oscillator.items()
         },
-        "momentum_x_momentum_implemented": False,
+        "momentum_opposite_pair_self_product_implemented": True,
+        "general_distinct_momentum_product_implemented": False,
         "lattice_cocycle_implemented": False,
         "twisted_blocks_implemented": False,
         "full_griess_product_constructed": False,
