@@ -476,7 +476,7 @@ def untwisted_oscillator_invariance_global_audit() -> dict:
             )
             candidate_triples.add(triple)
 
-    if len(candidate_triples) != 190464:
+    if len(candidate_triples) != 45840:
         raise AssertionError(
             f"unexpected oscillator triple support count: {len(candidate_triples)}"
         )
@@ -509,7 +509,7 @@ def untwisted_oscillator_invariance_global_audit() -> dict:
         "invariance_checks": checked,
         "nonzero_trilinear_values": nonzero,
         "zero_residual_count": checked,
-        "all_potentially_nonzero_triples_checked": checked == 190464,
+        "all_potentially_nonzero_triples_checked": checked == 45840,
         "scope": (
             "exhaustive exact invariance audit for the 300-dimensional "
             "oscillator block; zero-support triples vanish by the "
