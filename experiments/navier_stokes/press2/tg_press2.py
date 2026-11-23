@@ -29,7 +29,7 @@ if REPO not in sys.path:
 from experiments.navier_stokes.press2 import press2_selftest as ST  # noqa: E402
 
 SEED0 = 20261122
-OUT_STEPS, SNAP_STEPS, CKPT_STEPS = 10, 25, 200       # 0.025, 0.25, 1.0 at dt = 0.005
+DIAG_DT, SNAP_DT, CKPT_DT = 0.025, 0.25, 1.0          # cadences in TIME (preregistration S2/S4); step counts derive from dt in run()
 WINDOW = (6.0, 10.0)
 NEED, PCT, WFRAC = 9, 95.0, 1e-3
 
@@ -188,6 +188,9 @@ def run(a):
         meta = dict(O1=t1[3], O3=t3[3])
         np.savez(tri_path, a1=tri1[0], b1=tri1[1], c1=tri1[2], a3=tri3[0], b3=tri3[1], c3=tri3[2], meta=json.dumps(meta))
     steps = int(round(T / dt))
+    out_steps = max(1, int(round(DIAG_DT / dt)))
+    snap_steps = max(1, int(round(SNAP_DT / dt)))
+    ckpt_steps = max(1, int(round(CKPT_DT / dt)))
     ckpt = os.path.join(a.out, "%s.ckpt.npz" % a.tag)
     hist = {"t": [], "E": [], "Om": [], "eps": [], "wmax": [], "O2_diag_t": [], "O2_diag": []}
     stats = {"t": [], "snap": []}
@@ -208,18 +211,18 @@ def run(a):
         hist["O2_diag_t"].append(s * dt); hist["O2_diag"].append(sv.flatness(uh))
 
     def record_snap(s):
-        rec = snapshot(sv, uh, s // SNAP_STEPS, tri1, tri3, a.M)
+        rec = snapshot(sv, uh, s // snap_steps, tri1, tri3, a.M)
         stats["t"].append(s * dt); stats["snap"].append(rec)
 
     if start == 0:
         record_diag(0); record_snap(0)
     for s in range(start + 1, steps + 1):
         uh = sv.step(uh, dt)
-        if s % OUT_STEPS == 0:
+        if s % out_steps == 0:
             record_diag(s)
-        if s % SNAP_STEPS == 0:
+        if s % snap_steps == 0:
             record_snap(s)
-        if s % CKPT_STEPS == 0:
+        if s % ckpt_steps == 0:
             np.savez(ckpt, u0=uh[0], u1=uh[1], u2=uh[2], step=s, hist=json.dumps(hist), stats=json.dumps(stats))
             print("step %d/%d t=%.2f wall=%ds ckpt" % (s, steps, s * dt, time.time() - t0), flush=True)
     res = dict(tag=a.tag, N=N, nu=nu, Re=a.Re, T=T, dt=dt, M=a.M, seed0=SEED0, triads=meta, hist=hist, stats=stats,
