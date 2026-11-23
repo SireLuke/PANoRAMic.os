@@ -1,0 +1,54 @@
+{
+ "id": "NS-PRESS-II-SELFTEST-DEMO",
+ "incoherent_field": {
+  "hit_count": 1,
+  "mean_C_tri": 0.00952767423935154,
+  "mean_active_weight": 1907240267.3201513,
+  "mean_shuffle_C_tri": 0.008207773283400662,
+  "separates": false
+ },
+ "null_calibration": {
+  "M": 100,
+  "false_positive_rate": 0.0,
+  "hit_count_distribution": {
+   "0": 41,
+   "1": 32,
+   "2": 18,
+   "3": 6,
+   "4": 3
+  },
+  "n_separating": 0
+ },
+ "params": {
+  "M": 100,
+  "N": 32,
+  "cap": 200000,
+  "kmax": 8,
+  "need": 9,
+  "pct": 95.0,
+  "seed": 20261122,
+  "snapshots": 17
+ },
+ "planted_control": {
+  "hit_count": 17,
+  "mean_C_tri": 0.2507859405789294,
+  "mean_shuffle_C_tri": 0.008148190244822204,
+  "separates": true
+ },
+ "runtime_s": 257.521756354,
+ "shuffle_checks": {
+  "max_abs_amplitude_change": 5.684341886080802e-14,
+  "max_imag_part_of_ifft": 4.410735475803829e-17,
+  "relative_divergence_after_shuffle": 2.4107183319849694e-16
+ },
+ "status": "PIPELINE_DEMO_ON_SYNTHETIC_FIELDS_NOT_A_RESULT",
+ "triad_set": {
+  "N": 32,
+  "attempts": 40000000,
+  "cap": 200000,
+  "kmax": 8,
+  "n_triads": 173328,
+  "seed": 20261122,
+  "sha256": "e85e92b32922f5bc80e04e1394b772fc86e9f3c3aafa0d03dbaca9cd83d76998"
+ }
+}
