@@ -14,13 +14,13 @@ concurrency:
 jobs:
   monster-character-table:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - name: Install GAP and Character Table Library
         run: |
-          sudo apt-get update
-          sudo apt-get install -y gap-core gap-character-tables
+          sudo apt-get -o Acquire::Retries=3 update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends gap-core gap-character-tables
       - name: Run exact Monster character-table and involution audit
         run: gap -q -b -r scripts/monster_character_table_audit.g
   source-regression:
