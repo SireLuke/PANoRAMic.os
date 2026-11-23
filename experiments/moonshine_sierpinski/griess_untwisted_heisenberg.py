@@ -443,6 +443,81 @@ def untwisted_invariant_form_global_audit() -> dict:
     }
 
 
+def untwisted_oscillator_invariance_global_audit() -> dict:
+    """Exhaust the oscillator trilinear invariance identity by support class.
+
+    For oscillator basis states A_ij, the trilinear form
+    <A_ij _1 A_kl, A_mn> can be nonzero only when every coordinate index
+    among i,j,k,l,m,n occurs an even number of times. Enumerating every
+    ordered pairing of the even-multiplicity six-index multisets therefore
+    covers every potentially nonzero basis triple; all other triples vanish
+    on both sides by the contraction formula.
+    """
+    from itertools import combinations, permutations
+
+    candidate_triples: set[tuple[tuple[int, int], tuple[int, int], tuple[int, int]]] = set()
+
+    multisets = []
+    multisets.extend((index,) * 6 for index in range(24))
+    multisets.extend(
+        (left,) * 4 + (right,) * 2
+        for left in range(24) for right in range(24) if left != right
+    )
+    multisets.extend(
+        (left, left, middle, middle, right, right)
+        for left, middle, right in combinations(range(24), 3)
+    )
+
+    for values in multisets:
+        for arrangement in set(permutations(values)):
+            triple = tuple(
+                tuple(sorted((arrangement[offset], arrangement[offset + 1])))
+                for offset in (0, 2, 4)
+            )
+            candidate_triples.add(triple)
+
+    if len(candidate_triples) != 190464:
+        raise AssertionError(
+            f"unexpected oscillator triple support count: {len(candidate_triples)}"
+        )
+
+    def trilinear(
+        left: tuple[int, int],
+        right: tuple[int, int],
+        probe: tuple[int, int],
+    ) -> Fraction:
+        product = oscillator_oscillator_product(left, right)
+        probe_key: BasisKey = ("osc", probe[0], probe[1])
+        return griess_sparse_bilinear_form(product, {probe_key: Fraction(1)})
+
+    checked = 0
+    nonzero = 0
+    for left, right, probe in candidate_triples:
+        forward = trilinear(left, right, probe)
+        reverse = trilinear(left, probe, right)
+        if forward != reverse:
+            raise AssertionError(
+                "oscillator invariant-form mismatch for "
+                f"{left}, {right}, {probe}: {forward} != {reverse}"
+            )
+        checked += 1
+        nonzero += int(forward != 0)
+
+    return {
+        "oscillator_basis_dimension": 300,
+        "potentially_nonzero_ordered_triples": len(candidate_triples),
+        "invariance_checks": checked,
+        "nonzero_trilinear_values": nonzero,
+        "zero_residual_count": checked,
+        "all_potentially_nonzero_triples_checked": checked == 190464,
+        "scope": (
+            "exhaustive exact invariance audit for the 300-dimensional "
+            "oscillator block; zero-support triples vanish by the "
+            "even-index-multiplicity contraction criterion"
+        ),
+    }
+
+
 def untwisted_heisenberg_block_audit() -> dict:
     """Return formula-level scope and exact normalization checks."""
     sample = tuple([4, 4] + [0] * 22)
@@ -471,6 +546,7 @@ def untwisted_heisenberg_block_audit() -> dict:
         "invariant_bilinear_form_implemented": True,
         "invariant_form_fixture_audit": untwisted_invariant_form_audit(),
         "invariant_form_global_audit": untwisted_invariant_form_global_audit(),
+        "oscillator_invariance_global_audit": untwisted_oscillator_invariance_global_audit(),
         "twisted_blocks_implemented": False,
         "full_griess_product_constructed": False,
         "monster_action_constructed": False,
