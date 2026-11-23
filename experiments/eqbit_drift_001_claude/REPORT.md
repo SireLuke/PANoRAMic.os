@@ -145,3 +145,15 @@ Direct test on the plain 240-node graph with **no origin**: add a pure on-site s
 
 ## Fences
 This is a different Hamiltonian from the plain Gosset graph (rank-one on-site mode shift, or an adjoined node); no eqbit definition changes. Closed unitary system, nothing is absorbed, Analogy rung, and no statement about black holes follows.
+
+## Note on the filed two-implementation record (added 2026-11-23)
+
+`experiments/eqbit_drift_001/RESULTS.md` (#179) records Experiment B maxima as "values of record" that include my pre-correction numbers. Addendum 1 above found three of them under-resolved. In the quotient run, evaluated against the full 240×240 matrix at the quotient's argmax times, the corrected values agree to 5e-14:
+
+| ε | quantity | in RESULTS.md | corrected (Addendum 1) |
+|---|---|---|---|
+| 1.0 | A₁ | 0.3490 | 0.3497 |
+| 2.0 | A₂ | 0.0865 | 0.08653 |
+| 2.0 | A₃ = E₃ | 0.235552 | 0.23589 |
+
+The two implementations agree with each other on these cells because both used a grid-plus-local-refinement max-finder with the same blind spot; agreement between them does not rule it out. Ratios to three figures (R₃(2.0) = 0.267) and every conclusion in RESULTS.md §4 are unchanged. RESULTS.md is Cosmo's record and is not edited here.

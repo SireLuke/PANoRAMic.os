@@ -31,7 +31,7 @@ def main() -> dict:
         "strata_dimensions": [
             {"dimension": "Fermi disk area identity", "status": "pass" if area_identity else "fail"},
             {"dimension": "source identity and published checksum verification", "status": "pass"},
-            {"dimension": "dataset license and reuse permission", "status": "inconclusive"},
+            {"dimension": "dataset license and reuse permission", "status": dataset["license_status"]},
             {"dimension": "one experimental domain", "status": "pass"},
             {"dimension": "three meaningful scales", "status": "not_tested"},
             {"dimension": "independent domains", "status": "not_tested"},
@@ -45,7 +45,7 @@ def main() -> dict:
             "The unit-disk partition identity is exact; the eye marks are excluded.",
             "The Gerono transport curve in the Fractal Kernel is a separate curve family and is not substituted for the S-curve disk boundary.",
             "The Zeng data audit verifies published figure CSVs and extracts diagnostics; it does not reproduce the experiment or GHD simulations.",
-            "The accessible Zenodo record does not declare a dataset license; files are fetched transiently and are not redistributed.",
+            "License is accepted only when live Zenodo API metadata matches preregistered CC BY 4.0; unavailable or mismatched metadata remains inconclusive.",
             "No cross-domain invariant, causal mechanism, or scientific law is inferred.",
         ],
     }
