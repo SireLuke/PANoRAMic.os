@@ -96,3 +96,26 @@ Gates: census 1, 4600, 47104, 93150, 47104, 4600, 1 (pass); degree 4600 (pass); 
 1. Resonant Floquet drive ε(t) = ε₀ cos Ωt on the depth potential. It preserves the orbit quotient, and the ε = 0 gaps are even integers, so resonances are exact (e.g. E8 Ω ∈ {2, 10, 12, ...}).
 2. Potential by inner-product class (6 nonzero levels on Leech) instead of BFS depth; this would be a post-hoc variant and must be registered as such.
 3. Complex (Peierls-type) hopping phases, the only closed-system route to non-reciprocal transport; they generally break the orbit quotient.
+
+---
+
+# Addendum 2 (2026-11-22): radial breathing drive with sign flip (E8 quotient)
+
+Files: `breathing_drive.py` (preregistration header frozen before the run), `outputs/eqbit_drift_001_breathing.json`. H(t) = A_q + ε₀ cos(Ωt)·diag(depth) on the 5-orbit quotient; the pole alternates between well and hill each half cycle. ε₀ ∈ {0.25, 1.0}; Ω = every exact gap of the integer spectrum (2, 10, 12, 20, 28, 30, 32, 48, 58, 60), six off-resonant controls, and Ω = 0 static. Peaks are dt = 0.001 grid maxima over t ∈ [0, 200].
+
+## Gates
+
+| Gate | Verdict |
+|---|---|
+| G0 norm conservation < 1e-8 | **FAIL** on 2 of 34 runs (ε₀ = 1.0, Ω = 58: 1.68e-8; Ω = 60: 1.56e-8). Solver tolerance at the fastest drives. Re-running those cases at rtol 1e-12 moves the peaks by at most 1.1e-8, far below every claim threshold. The gate stays recorded as failed; it was not loosened after the fact. |
+| G1 static control (Ω = 0): reciprocity < 1e-8 and value matches static table | pass |
+| G2 solver check at rtol 1e-12 (ε₀ = 1, Ω = 12) | pass (6.4e-10) |
+
+## Results against the registered claim rules
+
+- **Resonant enhancement: not supported.** Peaks above the static ε = 0 ceiling (0.8821) appear for most drives, but the off-resonant controls do as well or better: at ε₀ = 1.0 the best control (Ω = 25.5) reaches 0.9997 against 0.9956 for the best gap-resonant drive; at ε₀ = 0.25 the best control reaches 0.9914 against 0.9861. By the frozen rule (must also beat the matched controls) no row qualifies.
+- **Likely reading of the raised peaks (interpretation, not tested here):** the orbit space is only five-dimensional, and a drive adds incommensurate frequencies, so over a 200-unit window the state wanders close to many states. A max-over-window statistic is therefore weak evidence of engineered transfer. Time-averaged outward transfer stays at 0.26–0.39 (static ε = 0: 0.363), i.e. no systematic enhancement.
+- **Inward/outward asymmetry: supported, with a mundane mechanism.** Every driven run has Dmax > 1e-3, up to 0.80 (ε₀ = 1.0, Ω = 10), while the static controls give exactly 0 (gate G1). The identity P(a→b) = P(b→a) holds for static real symmetric H only; a time-dependent H breaks it. This is mostly a difference in *timing*: the outward and inward peaks differ by at most about 0.07 (ε₀ = 1, Ω = 12: 0.927 vs 0.981) with no consistent direction registered or claimed.
+
+## Not run
+Leech breathing (spectrum reaches 4600, so the stiff ODE needs a different integrator), a rotating directional gradient (needs the full 240×240 problem), and complex hopping phases.
