@@ -46,8 +46,6 @@ class LeechLatticeCocycleTests(unittest.TestCase):
     def test_commutator_matches_lattice_inner_product_parity(self):
         rng = random.Random(240024)
         for _ in range(300):
-            a = tuple(sum(self.basis[i][j] * (rng.randint(-2, 2) if j == k else 0)
-                          for j in range(24)) for i in range(24) for k in [])
             # Generate coefficient vectors independently, then map through B.
             n = [rng.randint(-2, 2) for _ in range(24)]
             m = [rng.randint(-2, 2) for _ in range(24)]
