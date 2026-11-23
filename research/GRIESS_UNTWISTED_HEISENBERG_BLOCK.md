@@ -100,3 +100,30 @@ used by the code. The full construction PR must still attach precise
 primary-source FLM equation/page references for the cocycle and exponential
 vertex-operator product before those blocks are accepted. No external
 bibliographic page citation is claimed by this increment.
+
+
+## Invariant bilinear form — G1d
+
+The untwisted weight-two basis now has an explicit exact bilinear form.
+On the 300 oscillator states it is the Heisenberg Fock pairing
+\[
+\langle A_{ij},A_{kl}\rangle
+=\delta_{ik}\delta_{jl}+\delta_{il}\delta_{jk}.
+\]
+The oscillator and momentum sectors are orthogonal. For the even momentum
+orbit states \(E_{[\\alpha]}=e^\\alpha+e^{-\\alpha}\), the pairing is
+2 when the antipodal orbits agree and 0 otherwise.
+
+A sparse-vector pairing and a unified dispatcher over the currently
+implemented untwisted products allow the invariance residual
+\[
+\langle a_1 b,c\rangle-\langle b,a_1 c\rangle
+\]
+to be evaluated exactly. Deterministic tests cover 216 triples drawn from
+oscillator states and three momentum orbits (including an inner-product-2
+sum orbit). All 216 residuals are required to vanish, and symmetry and
+sector orthogonality are checked separately.
+
+This is a finite fixture audit of the implemented formulas, not an
+exhaustive proof of invariance over all 196,884 dimensions and not a
+construction of the twisted-sector extension.

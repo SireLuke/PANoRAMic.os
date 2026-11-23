@@ -11,12 +11,10 @@ Y(h_i(-1)h_j(-1)1,z) = :h_i(z)h_j(z):
 in an orthonormal Heisenberg basis, with lattice vectors stored as integral
 coordinates x and physical coordinates alpha=x/sqrt(8).
 
-This is a partial untwisted product kernel. Its distinct-momentum case uses
-one explicit cocycle convention relative to the repository's certified
-Leech basis and handles only the absolute-inner-product-2 orbit. Other
-momentum-pair inner products, the complete untwisted product, twisted module,
-orbifold intertwiner, full Griess product, and Monster actions remain
-unimplemented.
+This is a partial untwisted product kernel. It now includes all
+momentum-pair inner-product classes and an exact bilinear form with
+invariance checks on deterministic fixtures. The twisted module, orbifold
+intertwiner, full Griess product, and Monster actions remain unimplemented.
 """
 from __future__ import annotations
 
@@ -267,6 +265,106 @@ def momentum_inner_product_distribution(
     return dict(sorted(counts.items()))
 
 
+
+def griess_basis_bilinear_form(left: BasisKey, right: BasisKey) -> Fraction:
+    """Invariant weight-two pairing on the implemented untwisted basis.
+
+    Oscillator states use the Heisenberg Fock pairing. Even momentum-orbit
+    states E_[alpha]=e^alpha+e^-alpha are orthogonal unless their antipodal
+    orbits agree, in which case the two exponential pairings contribute 2.
+    Oscillator and momentum sectors are orthogonal.
+    """
+    if not isinstance(left, tuple) or not isinstance(right, tuple):
+        raise TypeError("Griess basis keys must be tuples")
+    if len(left) == 3 and left[0] == "osc":
+        if len(right) == 3 and right[0] == "osc":
+            return oscillator_bilinear_form(
+                (left[1], left[2]), (right[1], right[2])
+            )
+        if len(right) == 2 and right[0] == "mom":
+            return Fraction(0)
+    if len(left) == 2 and left[0] == "mom":
+        if len(right) == 3 and right[0] == "osc":
+            return Fraction(0)
+        if len(right) == 2 and right[0] == "mom":
+            left_key = canonical_momentum_key(left[1])
+            right_key = canonical_momentum_key(right[1])
+            return Fraction(2 if left_key == right_key else 0)
+    raise ValueError("unrecognized weight-two Griess basis key")
+
+
+def griess_sparse_bilinear_form(
+    left: SparseVector, right: SparseVector
+) -> Fraction:
+    """Pair two exact sparse weight-two vectors."""
+    return sum(
+        left_coefficient * right_coefficient
+        * griess_basis_bilinear_form(left_key, right_key)
+        for left_key, left_coefficient in left.items()
+        for right_key, right_coefficient in right.items()
+    )
+
+
+def untwisted_weight_two_product(left: BasisKey, right: BasisKey) -> SparseVector:
+    """Dispatch every product block currently implemented in the untwisted space."""
+    if not isinstance(left, tuple) or not isinstance(right, tuple):
+        raise TypeError("Griess basis keys must be tuples")
+    if len(left) == 3 and left[0] == "osc":
+        left_pair = (left[1], left[2])
+        if len(right) == 3 and right[0] == "osc":
+            return oscillator_oscillator_product(left_pair, (right[1], right[2]))
+        if len(right) == 2 and right[0] == "mom":
+            return oscillator_momentum_product(left_pair, right[1])
+    if len(left) == 2 and left[0] == "mom":
+        if len(right) == 3 and right[0] == "osc":
+            return oscillator_momentum_product((right[1], right[2]), left[1])
+        if len(right) == 2 and right[0] == "mom":
+            return momentum_momentum_product(left[1], right[1])
+    raise ValueError("unrecognized weight-two Griess basis key")
+
+
+def griess_invariance_residual(
+    left: BasisKey, right: BasisKey, probe: BasisKey
+) -> Fraction:
+    """Return <left_1 right, probe> - <right, left_1 probe> exactly."""
+    left_right = untwisted_weight_two_product(left, right)
+    left_probe = untwisted_weight_two_product(left, probe)
+    return (
+        griess_sparse_bilinear_form(left_right, {probe: Fraction(1)})
+        - griess_sparse_bilinear_form({right: Fraction(1)}, left_probe)
+    )
+
+
+def untwisted_invariant_form_audit() -> dict:
+    """Small exact certificate for the bilinear form and invariance fixtures."""
+    alpha = (4, 4) + (0,) * 22
+    beta = (-4, 0, 4) + (0,) * 21
+    gamma = tuple(a + b for a, b in zip(alpha, beta))
+    keys: tuple[BasisKey, ...] = (
+        ("osc", 0, 0),
+        ("osc", 0, 1),
+        ("osc", 3, 17),
+        ("mom", canonical_momentum_key(alpha)[1]),
+        ("mom", canonical_momentum_key(beta)[1]),
+        ("mom", canonical_momentum_key(gamma)[1]),
+    )
+    residuals = [
+        griess_invariance_residual(left, right, probe)
+        for left in keys for right in keys for probe in keys
+    ]
+    return {
+        "pairing_symmetric": all(
+            griess_basis_bilinear_form(left, right)
+            == griess_basis_bilinear_form(right, left)
+            for left in keys for right in keys
+        ),
+        "invariance_fixture_count": len(residuals),
+        "invariance_zero_count": sum(value == 0 for value in residuals),
+        "invariance_all_zero": all(value == 0 for value in residuals),
+        "scope": "exact invariant-form checks on selected untwisted basis fixtures; not a full 196884-dimensional algebra certificate",
+    }
+
+
 def untwisted_heisenberg_block_audit() -> dict:
     """Return formula-level scope and exact normalization checks."""
     sample = tuple([4, 4] + [0] * 22)
@@ -292,6 +390,8 @@ def untwisted_heisenberg_block_audit() -> dict:
         "complete_weight_two_momentum_momentum_dispatch_implemented": True,
         "general_distinct_momentum_product_implemented": True,
         "lattice_cocycle_implemented": True,
+        "invariant_bilinear_form_implemented": True,
+        "invariant_form_fixture_audit": untwisted_invariant_form_audit(),
         "twisted_blocks_implemented": False,
         "full_griess_product_constructed": False,
         "monster_action_constructed": False,
