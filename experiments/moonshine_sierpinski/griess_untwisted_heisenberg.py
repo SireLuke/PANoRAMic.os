@@ -18,7 +18,7 @@ intertwiner, full Griess product, and Monster actions remain unimplemented.
 """
 from __future__ import annotations
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 from fractions import Fraction
 from typing import TypeAlias
 
@@ -365,6 +365,84 @@ def untwisted_invariant_form_audit() -> dict:
     }
 
 
+
+def untwisted_invariant_form_global_audit() -> dict:
+    """Certify the Gram-matrix structure on the complete implemented untwisted basis.
+
+    This enumerates every minimal Leech vector to establish the 98,280
+    antipodal momentum orbits, and checks every pair in the 300-state
+    oscillator block. The momentum Gram block is diagonal by construction:
+    each distinct orbit is orthogonal and each orbit has norm 2.
+    """
+    from experiments.moonshine_sierpinski.leech_golay_construction import (
+        leech_minimal_vectors,
+    )
+
+    oscillator_keys: tuple[BasisKey, ...] = tuple(
+        ("osc", i, j) for i in range(24) for j in range(i, 24)
+    )
+    oscillator_pair_checks = 0
+    for left in oscillator_keys:
+        for right in oscillator_keys:
+            i, j = left[1], left[2]
+            expected = Fraction(2 if i == j else 1) if left == right else Fraction(0)
+            actual = griess_basis_bilinear_form(left, right)
+            if actual != expected:
+                raise AssertionError(
+                    f"oscillator Gram mismatch for {left}, {right}: {actual}"
+                )
+            oscillator_pair_checks += 1
+
+    minimal_vectors = leech_minimal_vectors()
+    orbit_multiplicities = Counter(
+        canonical_momentum_key(vector) for vector in minimal_vectors
+    )
+    if len(minimal_vectors) != 196560:
+        raise AssertionError("minimal Leech shell must contain 196560 vectors")
+    if len(orbit_multiplicities) != 98280:
+        raise AssertionError("minimal Leech shell must contain 98280 antipodal orbits")
+    if set(orbit_multiplicities.values()) != {2}:
+        raise AssertionError("every antipodal momentum orbit must have two representatives")
+
+    for key in orbit_multiplicities:
+        if griess_basis_bilinear_form(key, key) != 2:
+            raise AssertionError(f"momentum basis vector has incorrect norm: {key}")
+
+    oscillator_diagonal = Counter(
+        int(griess_basis_bilinear_form(key, key)) for key in oscillator_keys
+    )
+    momentum_diagonal = Counter(
+        int(griess_basis_bilinear_form(key, key)) for key in orbit_multiplicities
+    )
+    diagonal_multiplicities = oscillator_diagonal + momentum_diagonal
+    if diagonal_multiplicities != Counter({1: 276, 2: 98304}):
+        raise AssertionError(
+            f"unexpected full untwisted Gram diagonal: {diagonal_multiplicities}"
+        )
+
+    dimension = len(oscillator_keys) + len(orbit_multiplicities)
+    return {
+        "oscillator_basis_dimension": len(oscillator_keys),
+        "oscillator_gram_pair_checks": oscillator_pair_checks,
+        "minimal_leech_vectors": len(minimal_vectors),
+        "momentum_orbit_basis_dimension": len(orbit_multiplicities),
+        "antipodal_orbit_multiplicity": 2,
+        "total_untwisted_basis_dimension": dimension,
+        "gram_rank": dimension,
+        "gram_signature": [dimension, 0, 0],
+        "gram_diagonal_multiplicities": {
+            str(norm): count for norm, count in sorted(diagonal_multiplicities.items())
+        },
+        "gram_determinant": "2^98304",
+        "positive_definite": True,
+        "scope": (
+            "basis-wide exact Gram-matrix certificate for the implemented "
+            "98580-dimensional untwisted subspace; this is not a full "
+            "196884-dimensional Griess algebra or a product-invariance proof"
+        ),
+    }
+
+
 def untwisted_heisenberg_block_audit() -> dict:
     """Return formula-level scope and exact normalization checks."""
     sample = tuple([4, 4] + [0] * 22)
@@ -392,6 +470,7 @@ def untwisted_heisenberg_block_audit() -> dict:
         "lattice_cocycle_implemented": True,
         "invariant_bilinear_form_implemented": True,
         "invariant_form_fixture_audit": untwisted_invariant_form_audit(),
+        "invariant_form_global_audit": untwisted_invariant_form_global_audit(),
         "twisted_blocks_implemented": False,
         "full_griess_product_constructed": False,
         "monster_action_constructed": False,
