@@ -1,0 +1,135 @@
+schema_version: "0.1"
+experiment_id: "OQ-EXP-2026-003"
+title: "NS Press II: Phase-Aware Observables vs In-Run Shuffle Nulls"
+created: "2026-11-23"
+updated: "2026-11-23"
+status: "completed"
+maturity: "refuted"
+domain:
+  primary: "Navier-Stokes & CFD"
+  secondary: ["Fermi-sea programme", "STRATA claim grading", "Cross-Domain Methods & Validation"]
+claim_class: "numerical_experiment"
+summary: "A preregistered successor press to OQ-EXP-2026-002. Press I's Stage C statistic (the spectral occupation front) was phase-blind by construction and failed to separate from a phase-shuffled control. Press II tested the phase-aware repair at identical parameters (Taylor-Green, Re 1600, N=128): triadic phase coherence (O1, flagship), antipodal biphase (O3), and vorticity kurtosis (O2, witness only), each against an in-run null of M=100 phase shuffles of the same field at the same instant. Stage A solver honesty PASSED. O1 separated at only 1 of 17 in-window snapshots (9 required) with its real mean below the shuffle mean; O3 separated at 0 of 17. O2 separated 17/17, confirming the field is genuinely turbulent. The phase-aware repair FAILS at N=128 and is registered as a negative result under the preregistration's own separation rule. Navier-Stokes remains not_tested."
+question: "Do phase-aware observables of a Taylor-Green flow - triadic phase coherence and antipodal biphase - carry signal about coherent dynamics that separates from phase-shuffled copies of the same field with the identical spectrum?"
+hypothesis: "At least the flagship observable O1 (triadic phase coherence) beats the 95th percentile of its in-run shuffle ensemble at 9 or more of the 17 in-window snapshots (t in [6,10])."
+null_hypothesis: "The phase-aware observables are, at this resolution, properties of the spectrum and the statistic rather than of coherent phase dynamics: phase-shuffled copies of the same field reproduce them."
+success_criteria:
+  - "Stage A gate (inherited): eps_max within +10%/-5% of the pinned reference 0.01286 and t_peak within +-0.4 of 8.97."
+  - "O1 separation: real C_tri exceeds the M=100 shuffle ensemble 95th percentile at >= 9 of 17 in-window snapshots."
+  - "O3 separation: same rule applied to the antipodal biphase."
+  - "O2 is a witness only and cannot satisfy or fail the press."
+controls:
+  - name: "In-run phase-shuffle ensemble (M = 100 per snapshot)"
+    rationale: "The sharp null: the same field, same spectrum, phases destroyed, at the same instant. If an observable detects coherence present in this field now, it must beat this ensemble."
+    method: "Hermitian-symmetric shuffles preserving |u_hat(k)| exactly, seeds 20261122 + i (i = 0..99), recomputed at every statistics snapshot (0.25 cadence); conventions C1-C8 as preregistered."
+  - name: "Calibration self-test (pre-run)"
+    rationale: "The machinery must separate a planted coherent control and must not separate an incoherent field, before any production number is trusted."
+    method: "press2_selftest.py on the run host: planted control separated 17/17, incoherent field 1/17, null false-positive rate 0.0 over the ensemble; 11/11 unit tests pass."
+contributors:
+  - name: "Lucas"
+    role: "maintainer"
+    affiliation_or_bench: "PANoRAMic.os"
+    contribution: "Ruled the four preregistration decisions and conventions C6-C8 (2026-11-22); authorized the production run; directed this filing."
+    model_or_version: null
+  - name: "Cosmo"
+    role: "run_and_analysis"
+    affiliation_or_bench: "Memory bench"
+    contribution: "Drafted the preregistration; ran the calibration self-test and the production run (including three checkpoint relaunches across host VM reboots); ran the analysis; prepared this registration."
+    model_or_version: null
+  - name: "Claude"
+    role: "implementation"
+    affiliation_or_bench: "Architect bench"
+    contribution: "Filed the preregistration (PR #169) and the production implementation tg_press2.py with its self-test (PR #170)."
+    model_or_version: null
+provenance:
+  source_repositories:
+    - "https://github.com/SireLuke/PANoRAMic.os"
+  source_revisions:
+    - "Preregistration: PR #169: https://github.com/SireLuke/PANoRAMic.os/pull/169"
+    - "Implementation: PR #170: https://github.com/SireLuke/PANoRAMic.os/pull/170"
+    - "Cadence fix: PR #172: https://github.com/SireLuke/PANoRAMic.os/pull/172"
+    - "Launch pad: PR #174: https://github.com/SireLuke/PANoRAMic.os/pull/174"
+  datasets:
+    - "Stage A reference: 512^3 spectral Taylor-Green dataset (spectral_Re1600_512.gdiag, attributed to van Rees et al. 2011), peak dissipation 0.0128575 at t = 8.97, inherited from OQ-EXP-2026-002."
+  licenses_and_access: ["Repository artifacts; observe repository license and access terms."]
+  preprocessing: "Conventions C6-C8 (inactive snapshots count as not separating; O3 one q per antipodal pair with 4 <= |k| <= 32 and |q-k| <= 32; O2 ensembles at the 0.25 snapshots) were ratified by the maintainer before the run and are recorded in the results note."
+method:
+  description: "Fourier pseudospectral solver (tg_press2.py) for unforced incompressible Navier-Stokes on [0,2pi)^3 with Taylor-Green initial conditions, identical parameters to Press I. At every 0.25-cadence snapshot the live field is phase-shuffled M=100 times and O1 (triadic phase coherence over triads |k|,|p|,|q| <= 32, cap 200,000, active-weight gate), O3 (antipodal biphase, one q per +- pair per convention C7), and O2 (vorticity kurtosis, Gaussian value 3) are recomputed on the real field and each shuffle. Separation per observable: real value beats the ensemble 95th percentile at >= 9 of the 17 in-window snapshots (t in [6,10]); inactive O1/O3 snapshots count as not separating (C6)."
+  equations_or_specification:
+    - "Separation: #{snapshots in [6,10] : real > P95(shuffles)} >= 9 of 17."
+    - "O1: weighted mean resultant length of triad phase sums over the preregistered triad set (173,328 triads realized under the cap)."
+    - "O3: antipodal biphase coherence over the C7 q set (9 q vectors)."
+  parameters:
+    N: 128
+    nu_main: 0.000625
+    Re: 1600
+    T: 12.0
+    dt: 0.005
+    steps: 2400
+    M_shuffles: 100
+    triad_cap: 200000
+    kmax: 32
+    seed0: 20261122
+  random_seeds: ["Shuffle ensembles: 20261122 + i, i = 0..99, per snapshot."]
+  environment: "Python/NumPy pseudospectral solver (tg_press2.py); checkpointed, resumable run; the production run survived three host VM reboots via checkpoints (died at steps 1000, 1000, 1800; landed 2400/2400)."
+  commands:
+    - "python3 -m experiments.navier_stokes.press2.tg_press2 run --out <runs> --tag press2_re1600_n128 --N 128 --Re 1600 --T 12 --dt 0.005 --M 100 --cap 200000 --kmax 32"
+    - "python3 -m experiments.navier_stokes.press2.tg_press2 analyze --out <runs> --tag press2_re1600_n128"
+  resource_limits: {}
+artifacts:
+  code:
+    - "experiments/navier_stokes/press2/tg_press2.py"
+    - "experiments/navier_stokes/press2/press2_selftest.py"
+  data:
+    - "experiments/navier_stokes/press2/press2_re1600_n128.json"
+    - "experiments/navier_stokes/press2/press2_re1600_n128_analysis.json"
+  outputs:
+    - "experiments/navier_stokes/press2/RESULTS.md"
+    - "experiments/navier_stokes/NS_PRESS_II_PREREGISTRATION.md"
+  logs: []
+  external_references:
+    - "Preregistration (merged): https://github.com/SireLuke/PANoRAMic.os/pull/169"
+    - "Press I registration (negative result): OQ-EXP-2026-002"
+reproduction:
+  instructions: "Re-run `tg_press2.py analyze` on the filed press2_re1600_n128.json to reproduce every verdict number exactly (verified twice on the run host, identical output). Re-running the solver with the filed command reproduces the run up to floating-point and host variation; checkpoints make the run resumable."
+  expected_outputs: "Stage A: eps_max 0.0138 at t = 8.925, gate PASS. O1: 1/17 hits, real mean 0.3189 vs shuffle mean 0.3414, separates = false. O3: 0/17 hits, real mean 0.00695 vs shuffle 0.01041, separates = false. O2: 17/17, real mean 14.88 vs shuffle 3.00 (witness only). Verdict: O1 fails - negative result."
+  known_blockers:
+    - "The verdict rests on a single realization of the flow (one Taylor-Green run); the null at each snapshot is an ensemble of 100 shuffles, but run-to-run variability of the real observable is not sampled."
+results:
+  summary: "Stage A PASS; O1 FAILS (1/17, real mean below the shuffle mean); O3 FAILS (0/17); O2 witness separates 17/17. The phase-aware repair fails at N=128 - negative result."
+  observations:
+    - "Stage A: eps_max = 0.0138 at t = 8.925 vs pinned 0.01286 at 8.97 (ratio 1.070, inside gate) - the solver remains honest at this resolution."
+    - "O1: hit count 1/17 (only the first in-window snapshot); real mean 0.3189 vs shuffle mean 0.3414; null false-positive rate 0.0."
+    - "O3: hit count 0/17; real mean 0.00695 vs shuffle mean 0.01041; null false-positive rate 0.0."
+    - "O2: hit count 17/17; real mean 14.88 vs shuffle mean 3.00 (Gaussian) - the field is strongly non-Gaussian, so the O1/O3 negatives are live measurements, not a dead run."
+  uncertainty: "One flow realization; N=128 resolution. The shuffle null is an ensemble (M=100) at each snapshot, so the per-snapshot comparison is distributional on the null side only."
+  failures_and_negative_results:
+    - "The preregistered separation rule fired as a falsifier: neither phase-aware observable separates from the in-run shuffle null at N=128, so the phase-aware dictionary repair is filed as a negative result."
+interpretation:
+  supported_claims:
+    - "The press solver remains calibrated at N=128 against the pinned published Taylor-Green reference (Stage A)."
+    - "At N=128, Re=1600, triadic phase coherence and antipodal biphase - as defined in the preregistration - do not distinguish the real Taylor-Green field from phase-shuffled copies of itself."
+  unsupported_claims:
+    - "Any claim about Navier-Stokes regularity or finite-time blow-up; Navier-Stokes remains not_tested."
+    - "Any Fermi-sea mechanism claim resting on these observables at this resolution."
+    - "That phase coherence is absent from the flow in general - only that these statistics, at this resolution, on this realization, do not detect any beyond the shuffle null."
+  limitations:
+    - "Single flow realization; no ensemble of real runs."
+    - "Resolution deliberately held at N=128 for comparability with Press I, per the preregistration; the declared ladder makes a different observable, not higher resolution, the next move if any."
+    - "O2 is a witness by design and grades nothing."
+  alternative_explanations:
+    - "The observables may be too coarse (triad cap, kmax 32, single-scale biphase set) to register the coherence that O2's kurtosis implies is present in amplitude statistics."
+    - "Coherence may live in amplitude-phase coupling that pure phase statistics discard."
+  falsifiers:
+    - "The preregistered falsifier - failure to separate from the in-run shuffle null - is the outcome recorded here."
+review:
+  independent_reviewers: []
+  review_status: "in_review"
+  review_artifacts: []
+  next_independent_check: "An independent bench reruns `tg_press2.py analyze` on the filed press2_re1600_n128.json and confirms the verdict arithmetic; any Press III requires a new preregistration and the maintainer's separate authorization."
+history:
+  - date: "2026-11-23"
+    action: "registered_completed_experiment"
+    note: "Registered the completed Press II with its negative result, at the maintainer's direction, in the same change as the filed results (experiments/navier_stokes/press2/RESULTS.md and the run/analysis JSONs). No results were upgraded during registration; the Stage A pass grades the solver, not the dictionary."
+    author: "Cosmo (Memory bench)"
+    related_pr_or_commit: null
