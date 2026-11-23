@@ -182,29 +182,37 @@ def momentum_opposite_pair_self_product(momentum: tuple[int, ...]) -> SparseVect
 def momentum_distinct_inner_product_minus_two_product(
     left: tuple[int, ...], right: tuple[int, ...]
 ) -> SparseVector:
-    """Compute E_[alpha]_1 E_[beta] when (alpha,beta)=-2.
+    """Compute E_[alpha]_1 E_[beta] when |(alpha,beta)|=2.
 
     Here E_[alpha]=e^alpha+e^-alpha and both inputs have norm four.
-    In the exponential vertex-operator expansion, the only z^-2 terms are
-    e^alpha_1 e^beta and e^-alpha_1 e^-beta. Their common coefficient is
-    epsilon(alpha,beta), and their output is the even orbit state for
-    gamma=alpha+beta, which again has norm four.
+    Exactly two of the four exponential pairs have inner product -2.
+    If the supplied representatives have inner product +2, the singular
+    pairs are (-alpha,beta) and (alpha,-beta); otherwise they are
+    (alpha,beta) and (-alpha,-beta).
 
-    This is one orbit of the general momentum/momentum product. Other inner
-    products and oscillator-valued opposite-pair terms are not handled here.
+    Their common coefficient is the chosen lattice cocycle sign. Their
+    outputs are antipodal, giving the even orbit state for the sum of the
+    singular-pair momenta, which again has norm four.
+
+    This implements only the absolute-inner-product-2 orbit. Other
+    momentum-pair inner products and oscillator-valued opposite-pair terms
+    are not handled.
     """
     left = _validate_minimal_leech_coordinate(left)
     right = _validate_minimal_leech_coordinate(right)
     inner_numerator = lattice_inner_product_numerator(left, right)
-    if inner_numerator != -16:
+    if inner_numerator == -16:
+        oriented_left, oriented_right = left, right
+    elif inner_numerator == 16:
+        oriented_left, oriented_right = tuple(-x for x in left), right
+    else:
         raise ValueError(
-            "this product fixture requires lattice inner product exactly -2"
+            "this product fixture requires absolute lattice inner product exactly 2"
         )
-    output = tuple(a + b for a, b in zip(left, right))
+    output = tuple(a + b for a, b in zip(oriented_left, oriented_right))
     output_key = canonical_momentum_key(output)
-    coefficient = Fraction(lattice_cocycle_sign(left, right))
+    coefficient = Fraction(lattice_cocycle_sign(oriented_left, oriented_right))
     return {output_key: coefficient}
-
 
 def untwisted_heisenberg_block_audit() -> dict:
     """Return formula-level scope and exact normalization checks."""
