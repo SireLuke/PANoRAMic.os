@@ -1,19 +1,22 @@
 """Exact Heisenberg-sector products for the untwisted weight-two space.
 
-Implements only:
+Implements selected exact blocks:
   * Sym^2(h(-1)) x Sym^2(h(-1)) -> Sym^2(h(-1));
-  * Sym^2(h(-1)) x even norm-four momentum states -> even momentum states.
+  * Sym^2(h(-1)) x even norm-four momentum states -> even momentum states;
+  * opposite momentum-orbit self-product -> oscillator states;
+  * distinct norm-four momentum pairs with absolute inner product 2 -> momentum states.
 
 The formulas are the z^-2 coefficients of
 Y(h_i(-1)h_j(-1)1,z) = :h_i(z)h_j(z):
 in an orthonormal Heisenberg basis, with lattice vectors stored as integral
 coordinates x and physical coordinates alpha=x/sqrt(8).
 
-This is a partial untwisted product kernel. It includes only the opposite-pair
-momentum self-product under the standard normalized cocycle; general distinct
-momentum-pair products and their cocycle phases remain unimplemented. The
-twisted module, orbifold intertwiner, full Griess product, and Monster actions
-also remain unimplemented.
+This is a partial untwisted product kernel. Its distinct-momentum case uses
+one explicit cocycle convention relative to the repository's certified
+Leech basis and handles only the absolute-inner-product-2 orbit. Other
+momentum-pair inner products, the complete untwisted product, twisted module,
+orbifold intertwiner, full Griess product, and Monster actions remain
+unimplemented.
 """
 from __future__ import annotations
 
@@ -224,6 +227,8 @@ def untwisted_heisenberg_block_audit() -> dict:
         "implemented_blocks": [
             "oscillator x oscillator -> oscillator",
             "oscillator x even norm-four momentum -> even norm-four momentum",
+            "opposite momentum orbit x itself -> oscillator",
+            "distinct norm-four momentum pairs with absolute inner product 2 -> momentum",
         ],
         "oscillator_basis_dimension": 300,
         "momentum_basis_dimension": 98280,
