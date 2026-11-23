@@ -1,0 +1,76 @@
+{
+ "F1": [
+  {
+   "g": 0.05,
+   "max_over_3000": 0.9999876571281898,
+   "first_ge_0.95": 246.65,
+   "first_ge_0.99": 444.55,
+   "first_ge_0.999": 545.07
+  },
+  {
+   "g": 0.1,
+   "max_over_3000": 0.9999841607327923,
+   "first_ge_0.95": 64.43,
+   "first_ge_0.99": 111.54,
+   "first_ge_0.999": 139.8
+  },
+  {
+   "g": 0.25,
+   "max_over_3000": 0.9999974304977838,
+   "first_ge_0.95": 11.02,
+   "first_ge_0.99": 20.42,
+   "first_ge_0.999": 23.56
+  },
+  {
+   "g": 0.5,
+   "max_over_3000": 0.9999009667989162,
+   "first_ge_0.95": 4.7,
+   "first_ge_0.99": 4.72,
+   "first_ge_0.999": 89.54
+  },
+  {
+   "g": 1.0,
+   "max_over_3000": 0.999999999886797,
+   "first_ge_0.95": 1.54,
+   "first_ge_0.99": 1.56,
+   "first_ge_0.999": 1.57
+  }
+ ],
+ "F2": [
+  {
+   "delta": 0.0,
+   "dipole_axis_shift_peak": 0.8820834294988504,
+   "perp_dipole_shift_peak": 0.8820834294988504
+  },
+  {
+   "delta": 0.01,
+   "dipole_axis_shift_peak": 0.9790063415843085,
+   "perp_dipole_shift_peak": 0.8820834294988115
+  },
+  {
+   "delta": 0.1,
+   "dipole_axis_shift_peak": 0.9995816438444496,
+   "perp_dipole_shift_peak": 0.8820834294989303
+  },
+  {
+   "delta": 0.5,
+   "dipole_axis_shift_peak": 0.9900929762351692,
+   "perp_dipole_shift_peak": 0.8820834294988348
+  },
+  {
+   "delta": 1.0,
+   "dipole_axis_shift_peak": 0.9633266924670345,
+   "perp_dipole_shift_peak": 0.8820834294988417
+  },
+  {
+   "delta": 3.0,
+   "dipole_axis_shift_peak": 0.9656298557583461,
+   "perp_dipole_shift_peak": 0.8820834294988706
+  },
+  {
+   "delta": -1.0,
+   "dipole_axis_shift_peak": 0.9608798595356178,
+   "perp_dipole_shift_peak": 0.8820834294988749
+  }
+ ]
+}

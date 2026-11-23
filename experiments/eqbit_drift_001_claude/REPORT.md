@@ -119,3 +119,29 @@ Files: `breathing_drive.py` (preregistration header frozen before the run), `out
 
 ## Not run
 Leech breathing (spectrum reaches 4600, so the stiff ODE needs a different integrator), a rotating directional gradient (needs the full 240×240 problem), and complex hopping phases.
+
+---
+
+# Addendum 3 (2026-11-23): crosshair hallway through 0⁸
+
+Files: `hallway_crosshair.py` (header frozen before the run), `hallway_mechanism.py` (post-run, **unregistered** follow-ups), `outputs/eqbit_drift_001_hallway.json`, `outputs/eqbit_drift_001_hallway_followups.json`.
+
+**Construction.** Experiment A coupled the adjoined origin uniformly to all roots, an even pattern under v → −v, so the origin could not mediate antipodal transfer. Here the coupling is odd: c_v = g·(v·n), with n the unit axis through root 0 and its antipode. Controls at equal coupling norm g√60: the uniform (Experiment A) pattern and an axis perpendicular to the pole. E8 root graph, 241×241 exact diagonalization, start at root 0.
+
+## Gates (all pass)
+The coordinate functions are an exact 28-eigenspace (H1); Σ(v·n)² = 60 (H2); single-root origin occupancy equals the two-level occupancy divided by 30 to 1e-12, the two-level peak formula holds to 1e-6, and E₀ = 28 gives full two-level transfer (H3); the even antipodal state is exactly dark (H4).
+
+## Results
+- **Antipodal peak:** hallway 0.9999–1.0000 in all 12 (g, E₀) cells, against 0.8821 with no origin. The uniform pattern gives 0.894–0.896, and the perpendicular axis leaves 0.8821 unchanged.
+- **Time-averaged antipodal probability is unchanged** (0.3627–0.3651 against 0.3633): a sharper peak, not more transfer on average.
+- **Resonant hallway (E₀ = 28):** the origin's peak occupancy from a single root is 1/30 = 0.0333, against 1/240 for the uniform Experiment A. The factor is the squared overlap of a root with the normalized dipole mode.
+- **Registered claim rule fired in 2 of 12 cells** (g = 0.1, E₀ = 56; g = 1.0, E₀ = 0). The header gave the time-average condition no margin: in the first cell it is satisfied by 4e-6 (0.363303 vs 0.363299), in the second by 1.8e-3. The rule was not edited afterwards. Plain reading: the peak enhancement is large and present in every cell, but the rule's average-transfer condition is essentially a tie.
+- **Not a long-window artifact** (unregistered F1, window 3000, E₀ = 0): the time to first reach P ≥ 0.99 is 444.6, 111.5, 20.4, 4.72, 1.56 at g = 0.05, 0.1, 0.25, 0.5, 1.0, and the maximum over 3000 is ≥ 0.9999. At small g the time scales as 1/g² (t·g² ≈ 1.11), as a second-order effect would.
+
+## Mechanism (unregistered F2): the origin is not needed
+In the 5-orbit quotient the antipode amplitude from the pole is Σ a_k e^(−iE_k t), with weights a = (0.35, −0.4667, 0.1458, −0.0333, 0.0042) at E = (−4, −2, 8, 28, 56). Σ|a_k| = 1.000000, so perfect transfer needs all five phases at their sign pattern at once; the integer spectrum fixes the phases and the best reachable over a period is 0.8821. The 28 mode is the dipole mode along the pole axis, and the hallway couples to exactly that mode.
+
+Direct test on the plain 240-node graph with **no origin**: add a pure on-site shift δ on the dipole mode only (H = A + δ·d̂d̂ᵀ). The antipodal peak goes 0.8821 → 0.979 (δ = 0.01) → **0.9996 (δ = 0.1)** → 0.990 (0.5) → 0.963 (1.0); δ = −1 gives 0.961. The same shift on the perpendicular dipole leaves the peak at 0.8820834295 to 1e-13 (the pole state is orthogonal to it). So the hallway's effect is a one-mode detuning that frees the one missing phase. The adjoined origin is one way to produce that detuning, not a necessary ingredient.
+
+## Fences
+This is a different Hamiltonian from the plain Gosset graph (rank-one on-site mode shift, or an adjoined node); no eqbit definition changes. Closed unitary system, nothing is absorbed, Analogy rung, and no statement about black holes follows.
