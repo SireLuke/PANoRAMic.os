@@ -13,6 +13,11 @@ from experiments.moonshine_sierpinski.griess_untwisted_heisenberg import (
     momentum_distinct_inner_product_minus_two_product,
     momentum_momentum_product,
     momentum_inner_product_distribution,
+    griess_basis_bilinear_form,
+    griess_sparse_bilinear_form,
+    griess_invariance_residual,
+    untwisted_weight_two_product,
+    untwisted_invariant_form_audit,
 )
 from experiments.moonshine_sierpinski.leech_lattice_cocycle import (
     lattice_cocycle_sign,
@@ -214,6 +219,73 @@ class UntwistedHeisenbergProductTests(unittest.TestCase):
             momentum_inner_product_distribution(reference),
             {-4: 1, -2: 4600, -1: 47104, 0: 93150, 1: 47104, 2: 4600, 4: 1},
         )
+
+
+    def test_weight_two_pairing_is_symmetric_and_sector_orthogonal(self):
+        alpha = (4, 4) + (0,) * 22
+        beta = (-4, 0, 4) + (0,) * 21
+        keys = [
+            ("osc", 0, 0),
+            ("osc", 0, 1),
+            ("osc", 3, 17),
+            ("mom", canonical_momentum_key(alpha)[1]),
+            ("mom", canonical_momentum_key(beta)[1]),
+        ]
+        for left in keys:
+            for right in keys:
+                self.assertEqual(
+                    griess_basis_bilinear_form(left, right),
+                    griess_basis_bilinear_form(right, left),
+                )
+        self.assertEqual(
+            griess_basis_bilinear_form(keys[0], keys[3]), Fraction(0)
+        )
+        self.assertEqual(
+            griess_basis_bilinear_form(keys[3], keys[3]), Fraction(2)
+        )
+
+    def test_untwisted_product_dispatch_is_commutative(self):
+        alpha = (4, 4) + (0,) * 22
+        beta = (-4, 0, 4) + (0,) * 21
+        keys = [
+            ("osc", 0, 0),
+            ("osc", 0, 1),
+            ("osc", 3, 17),
+            ("mom", canonical_momentum_key(alpha)[1]),
+            ("mom", canonical_momentum_key(beta)[1]),
+        ]
+        for left in keys:
+            for right in keys:
+                self.assertEqual(
+                    untwisted_weight_two_product(left, right),
+                    untwisted_weight_two_product(right, left),
+                )
+
+    def test_invariant_form_identity_on_untwisted_fixture_triples(self):
+        alpha = (4, 4) + (0,) * 22
+        beta = (-4, 0, 4) + (0,) * 21
+        gamma = tuple(a + b for a, b in zip(alpha, beta))
+        keys = [
+            ("osc", 0, 0),
+            ("osc", 0, 1),
+            ("osc", 3, 17),
+            ("mom", canonical_momentum_key(alpha)[1]),
+            ("mom", canonical_momentum_key(beta)[1]),
+            ("mom", canonical_momentum_key(gamma)[1]),
+        ]
+        residuals = [
+            griess_invariance_residual(left, right, probe)
+            for left in keys for right in keys for probe in keys
+        ]
+        self.assertEqual(len(residuals), 216)
+        self.assertTrue(all(value == 0 for value in residuals), residuals)
+
+    def test_invariant_form_audit_reports_exact_zero_residuals(self):
+        audit = untwisted_invariant_form_audit()
+        self.assertTrue(audit["pairing_symmetric"])
+        self.assertEqual(audit["invariance_fixture_count"], 216)
+        self.assertEqual(audit["invariance_zero_count"], 216)
+        self.assertTrue(audit["invariance_all_zero"])
 
 
 if __name__ == "__main__":
