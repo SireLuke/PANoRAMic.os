@@ -1,19 +1,22 @@
 """Exact Heisenberg-sector products for the untwisted weight-two space.
 
-Implements only:
+Implements selected exact blocks:
   * Sym^2(h(-1)) x Sym^2(h(-1)) -> Sym^2(h(-1));
-  * Sym^2(h(-1)) x even norm-four momentum states -> even momentum states.
+  * Sym^2(h(-1)) x even norm-four momentum states -> even momentum states;
+  * opposite momentum-orbit self-product -> oscillator states;
+  * distinct norm-four momentum pairs with absolute inner product 2 -> momentum states.
 
 The formulas are the z^-2 coefficients of
 Y(h_i(-1)h_j(-1)1,z) = :h_i(z)h_j(z):
 in an orthonormal Heisenberg basis, with lattice vectors stored as integral
 coordinates x and physical coordinates alpha=x/sqrt(8).
 
-This is a partial untwisted product kernel. It includes only the opposite-pair
-momentum self-product under the standard normalized cocycle; general distinct
-momentum-pair products and their cocycle phases remain unimplemented. The
-twisted module, orbifold intertwiner, full Griess product, and Monster actions
-also remain unimplemented.
+This is a partial untwisted product kernel. Its distinct-momentum case uses
+one explicit cocycle convention relative to the repository's certified
+Leech basis and handles only the absolute-inner-product-2 orbit. Other
+momentum-pair inner products, the complete untwisted product, twisted module,
+orbifold intertwiner, full Griess product, and Monster actions remain
+unimplemented.
 """
 from __future__ import annotations
 
@@ -23,6 +26,10 @@ from typing import TypeAlias
 
 from experiments.moonshine_sierpinski.leech_golay_construction import (
     code_words_cached,
+)
+from experiments.moonshine_sierpinski.leech_lattice_cocycle import (
+    lattice_cocycle_sign,
+    lattice_inner_product_numerator,
 )
 
 OscillatorKey: TypeAlias = tuple[str, int, int]
@@ -174,6 +181,42 @@ def momentum_opposite_pair_self_product(momentum: tuple[int, ...]) -> SparseVect
     return result
 
 
+
+def momentum_distinct_inner_product_minus_two_product(
+    left: tuple[int, ...], right: tuple[int, ...]
+) -> SparseVector:
+    """Compute E_[alpha]_1 E_[beta] when |(alpha,beta)|=2.
+
+    Here E_[alpha]=e^alpha+e^-alpha and both inputs have norm four.
+    Exactly two of the four exponential pairs have inner product -2.
+    If the supplied representatives have inner product +2, the singular
+    pairs are (-alpha,beta) and (alpha,-beta); otherwise they are
+    (alpha,beta) and (-alpha,-beta).
+
+    Their common coefficient is the chosen lattice cocycle sign. Their
+    outputs are antipodal, giving the even orbit state for the sum of the
+    singular-pair momenta, which again has norm four.
+
+    This implements only the absolute-inner-product-2 orbit. Other
+    momentum-pair inner products and oscillator-valued opposite-pair terms
+    are not handled.
+    """
+    left = _validate_minimal_leech_coordinate(left)
+    right = _validate_minimal_leech_coordinate(right)
+    inner_numerator = lattice_inner_product_numerator(left, right)
+    if inner_numerator == -16:
+        oriented_left, oriented_right = left, right
+    elif inner_numerator == 16:
+        oriented_left, oriented_right = tuple(-x for x in left), right
+    else:
+        raise ValueError(
+            "this product fixture requires absolute lattice inner product exactly 2"
+        )
+    output = tuple(a + b for a, b in zip(oriented_left, oriented_right))
+    output_key = canonical_momentum_key(output)
+    coefficient = Fraction(lattice_cocycle_sign(oriented_left, oriented_right))
+    return {output_key: coefficient}
+
 def untwisted_heisenberg_block_audit() -> dict:
     """Return formula-level scope and exact normalization checks."""
     sample = tuple([4, 4] + [0] * 22)
@@ -184,6 +227,8 @@ def untwisted_heisenberg_block_audit() -> dict:
         "implemented_blocks": [
             "oscillator x oscillator -> oscillator",
             "oscillator x even norm-four momentum -> even norm-four momentum",
+            "opposite momentum orbit x itself -> oscillator",
+            "distinct norm-four momentum pairs with absolute inner product 2 -> momentum",
         ],
         "oscillator_basis_dimension": 300,
         "momentum_basis_dimension": 98280,
@@ -193,8 +238,9 @@ def untwisted_heisenberg_block_audit() -> dict:
             str(key): str(value) for key, value in identity_oscillator.items()
         },
         "momentum_opposite_pair_self_product_implemented": True,
+        "distinct_momentum_inner_product_minus_two_implemented": True,
         "general_distinct_momentum_product_implemented": False,
-        "lattice_cocycle_implemented": False,
+        "lattice_cocycle_implemented": True,
         "twisted_blocks_implemented": False,
         "full_griess_product_constructed": False,
         "monster_action_constructed": False,

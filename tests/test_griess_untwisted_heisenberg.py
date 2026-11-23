@@ -10,6 +10,10 @@ from experiments.moonshine_sierpinski.griess_untwisted_heisenberg import (
     oscillator_momentum_product,
     oscillator_oscillator_product,
     momentum_opposite_pair_self_product,
+    momentum_distinct_inner_product_minus_two_product,
+)
+from experiments.moonshine_sierpinski.leech_lattice_cocycle import (
+    lattice_cocycle_sign,
 )
 
 
@@ -124,6 +128,46 @@ class UntwistedHeisenbergProductTests(unittest.TestCase):
     def test_opposite_pair_self_product_rejects_nonminimal_vectors(self):
         with self.assertRaises(ValueError):
             momentum_opposite_pair_self_product((4, 0) + (0,) * 22)
+
+
+    def test_distinct_momentum_inner_product_minus_two_product(self):
+        left = (4, 4) + (0,) * 22
+        right = (-4, 0, 4) + (0,) * 21
+        output = tuple(a + b for a, b in zip(left, right))
+        key = canonical_momentum_key(output)
+        self.assertEqual(
+            momentum_distinct_inner_product_minus_two_product(left, right),
+            {key: Fraction(lattice_cocycle_sign(left, right))},
+        )
+        self.assertEqual(sum(value * value for value in output), 32)
+
+    def test_distinct_momentum_product_is_commutative(self):
+        left = (4, 4) + (0,) * 22
+        right = (-4, 0, 4) + (0,) * 21
+        self.assertEqual(
+            momentum_distinct_inner_product_minus_two_product(left, right),
+            momentum_distinct_inner_product_minus_two_product(right, left),
+        )
+
+    def test_distinct_momentum_product_is_independent_of_antipodal_representatives(self):
+        left = (4, 4) + (0,) * 22
+        right = (-4, 0, 4) + (0,) * 21
+        expected = momentum_distinct_inner_product_minus_two_product(left, right)
+        for a, b in (
+            (tuple(-x for x in left), right),
+            (left, tuple(-x for x in right)),
+            (tuple(-x for x in left), tuple(-x for x in right)),
+        ):
+            self.assertEqual(
+                momentum_distinct_inner_product_minus_two_product(a, b),
+                expected,
+            )
+
+    def test_distinct_momentum_product_rejects_wrong_inner_product(self):
+        left = (4, 4) + (0,) * 22
+        right = (4, -4) + (0,) * 22
+        with self.assertRaises(ValueError):
+            momentum_distinct_inner_product_minus_two_product(left, right)
 
 
 if __name__ == "__main__":
