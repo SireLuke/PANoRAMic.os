@@ -24,6 +24,10 @@ from typing import TypeAlias
 from experiments.moonshine_sierpinski.leech_golay_construction import (
     code_words_cached,
 )
+from experiments.moonshine_sierpinski.leech_lattice_cocycle import (
+    lattice_cocycle_sign,
+    lattice_inner_product_numerator,
+)
 
 OscillatorKey: TypeAlias = tuple[str, int, int]
 MomentumKey: TypeAlias = tuple[str, tuple[int, ...]]
@@ -174,6 +178,34 @@ def momentum_opposite_pair_self_product(momentum: tuple[int, ...]) -> SparseVect
     return result
 
 
+
+def momentum_distinct_inner_product_minus_two_product(
+    left: tuple[int, ...], right: tuple[int, ...]
+) -> SparseVector:
+    """Compute E_[alpha]_1 E_[beta] when (alpha,beta)=-2.
+
+    Here E_[alpha]=e^alpha+e^-alpha and both inputs have norm four.
+    In the exponential vertex-operator expansion, the only z^-2 terms are
+    e^alpha_1 e^beta and e^-alpha_1 e^-beta. Their common coefficient is
+    epsilon(alpha,beta), and their output is the even orbit state for
+    gamma=alpha+beta, which again has norm four.
+
+    This is one orbit of the general momentum/momentum product. Other inner
+    products and oscillator-valued opposite-pair terms are not handled here.
+    """
+    left = _validate_minimal_leech_coordinate(left)
+    right = _validate_minimal_leech_coordinate(right)
+    inner_numerator = lattice_inner_product_numerator(left, right)
+    if inner_numerator != -16:
+        raise ValueError(
+            "this product fixture requires lattice inner product exactly -2"
+        )
+    output = tuple(a + b for a, b in zip(left, right))
+    output_key = canonical_momentum_key(output)
+    coefficient = Fraction(lattice_cocycle_sign(left, right))
+    return {output_key: coefficient}
+
+
 def untwisted_heisenberg_block_audit() -> dict:
     """Return formula-level scope and exact normalization checks."""
     sample = tuple([4, 4] + [0] * 22)
@@ -193,8 +225,9 @@ def untwisted_heisenberg_block_audit() -> dict:
             str(key): str(value) for key, value in identity_oscillator.items()
         },
         "momentum_opposite_pair_self_product_implemented": True,
+        "distinct_momentum_inner_product_minus_two_implemented": True,
         "general_distinct_momentum_product_implemented": False,
-        "lattice_cocycle_implemented": False,
+        "lattice_cocycle_implemented": True,
         "twisted_blocks_implemented": False,
         "full_griess_product_constructed": False,
         "monster_action_constructed": False,
