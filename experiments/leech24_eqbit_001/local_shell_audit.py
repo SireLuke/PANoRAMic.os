@@ -328,6 +328,7 @@ def run() -> dict:
     }
 
     output["global_association_scheme"] = global_association_scheme_audit(shell)
+    output["local_relation_censuses"] = {}
 
     for family, index in FAMILY_STARTS.items():
         ref = shell[index].astype(np.int16)
@@ -409,10 +410,15 @@ def run() -> dict:
         histogram_bytes = json.dumps(
             histogram, sort_keys=True, separators=(",", ":")
         ).encode()
+        # Run the complete 4-class closure/spectral audit independently for
+        # every deterministic construction-family representative. Do not
+        # infer B/C from A or silently promote a sampled census to a proof.
+        output["local_relation_censuses"][family] = local_relation_census(
+            neighbor_gram, within
+        )
         if family == "A":
-            output["local_relation_census"] = local_relation_census(
-                neighbor_gram, within
-            )
+            # Backward-compatible alias for consumers of the v1 result shape.
+            output["local_relation_census"] = output["local_relation_censuses"][family]
 
         output["reference_results"][family] = {
             "reference_index": index,
