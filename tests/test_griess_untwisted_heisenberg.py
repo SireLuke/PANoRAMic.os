@@ -11,6 +11,8 @@ from experiments.moonshine_sierpinski.griess_untwisted_heisenberg import (
     oscillator_oscillator_product,
     momentum_opposite_pair_self_product,
     momentum_distinct_inner_product_minus_two_product,
+    momentum_momentum_product,
+    momentum_inner_product_distribution,
 )
 from experiments.moonshine_sierpinski.leech_lattice_cocycle import (
     lattice_cocycle_sign,
@@ -168,6 +170,50 @@ class UntwistedHeisenbergProductTests(unittest.TestCase):
         right = (4, -4) + (0,) * 22
         with self.assertRaises(ValueError):
             momentum_distinct_inner_product_minus_two_product(left, right)
+
+
+    def test_complete_momentum_product_dispatches_all_inner_product_classes(self):
+        alpha = (4, 4) + (0,) * 22
+        opposite = tuple(-x for x in alpha)
+        beta = (-4, 0, 4) + (0,) * 21  # (alpha,beta)=-2
+        orthogonal = (4, -4) + (0,) * 22  # (alpha,orthogonal)=0
+
+        self.assertEqual(
+            momentum_momentum_product(alpha, alpha),
+            momentum_opposite_pair_self_product(alpha),
+        )
+        self.assertEqual(
+            momentum_momentum_product(alpha, opposite),
+            momentum_opposite_pair_self_product(alpha),
+        )
+        self.assertEqual(
+            momentum_momentum_product(alpha, beta),
+            momentum_distinct_inner_product_minus_two_product(alpha, beta),
+        )
+        self.assertEqual(momentum_momentum_product(alpha, orthogonal), {})
+
+    def test_complete_momentum_product_is_commutative_on_fixtures(self):
+        alpha = (4, 4) + (0,) * 22
+        fixtures = [
+            alpha,
+            tuple(-x for x in alpha),
+            (-4, 0, 4) + (0,) * 21,
+            (4, -4) + (0,) * 22,
+            (0, 0, 4, -4) + (0,) * 20,
+        ]
+        for left in fixtures:
+            for right in fixtures:
+                self.assertEqual(
+                    momentum_momentum_product(left, right),
+                    momentum_momentum_product(right, left),
+                )
+
+    def test_minimal_shell_inner_product_distribution(self):
+        reference = (4, 4) + (0,) * 22
+        self.assertEqual(
+            momentum_inner_product_distribution(reference),
+            {-4: 1, -2: 4600, -1: 47104, 0: 93150, 1: 47104, 2: 4600, 4: 1},
+        )
 
 
 if __name__ == "__main__":

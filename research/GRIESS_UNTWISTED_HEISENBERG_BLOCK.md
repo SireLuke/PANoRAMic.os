@@ -12,8 +12,10 @@ weight-two sector:
 2. The action of oscillator quadratic states on the 98,280 even momentum
    directions.
 
-It is intentionally called G1a. It is not the full untwisted product
-\(U*U\), because momentum × momentum is not implemented.
+The oscillator and oscillator/momentum formulas originated in G1a. The
+momentum × momentum dispatcher was added in the subsequent G1b work; this
+file records the combined partial untwisted weight-two kernel, not the full
+Moonshine Griess algebra.
 
 ## Formulae and normalization
 
@@ -57,7 +59,9 @@ python -m unittest tests.test_griess_untwisted_heisenberg -v
 python -m experiments.moonshine_sierpinski.griess_untwisted_heisenberg
 ```
 
-The opposite-pair self-product fixture is included in the same test module.
+The same test module also covers the opposite-pair self-product, distinct
+momentum-pair product, dispatch across all inner-product classes, and the
+full minimal-shell inner-product distribution.
 
 ## Validation boundary
 
@@ -73,12 +77,23 @@ the oscillator state alpha(-1)^2; the alpha(-2) contributions cancel. The
 implementation stores this in the unnormalised A_ij basis with exact
 rational coefficients and checks antipodal invariance.
 
-Not implemented: products of distinct momentum orbits (the inner-product
--2 case), a general lattice 2-cocycle interface, the complete untwisted
-fixed-sector product, twisted-module action, twisted-twisted intertwining
-product, full Griess algebra, or Monster action. The opposite-pair formula
-must be cross-checked against the primary FLM convention before it is
-treated as a fully sourced general-purpose cocycle implementation.
+A basis-relative lattice cocycle and one distinct-momentum orbit with
+absolute inner product 2 are now implemented in the companion G1b increment.
+The momentum × momentum dispatcher now covers every possible inner-product
+class for two norm-four Leech vectors: equal/opposite vectors produce the
+oscillator self-product; absolute inner product 2 produces the corresponding
+even momentum state; absolute inner product 0 or 1 produces zero. The
+remaining inner products +/-3 are excluded by the absence of norm-two
+vectors in the Leech lattice. A full 196,560-vector shell census test checks
+the distribution {-4:1, -2:4600, -1:47104, 0:93150, 1:47104, 2:4600, 4:1}.
+
+This completes the weight-two momentum × momentum dispatch at the level of
+the implemented cocycle convention, but does not complete the entire
+untwisted VOA product across all sectors or the full Griess algebra. The
+twisted-module action, twisted-twisted intertwining product, and Monster
+action remain open. Precise primary FLM page/equation references for the
+chosen cocycle and exponential vertex-operator convention remain a required
+source-verification step.
 
 The formulae here are the elementary Heisenberg/lattice-VOA consequences
 used by the code. The full construction PR must still attach precise
