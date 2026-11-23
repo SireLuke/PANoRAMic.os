@@ -159,7 +159,9 @@ the six indices occurs with even multiplicity. This follows directly
 from the four-term Heisenberg contraction formula and the oscillator
 Fock pairing.
 
-There are exactly 190,464 ordered pairings of the even-multiplicity
+After identifying permutations that yield the same ordered triple of
+symmetric oscillator basis states, there are exactly 45,840 distinct
+potentially nonzero ordered triples from the even-multiplicity
 six-index multisets. The audit enumerates those support candidates,
 evaluates both sides of
 \[
