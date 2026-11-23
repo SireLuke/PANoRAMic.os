@@ -22,6 +22,8 @@ jobs:
           python-version: "3.12"
       - name: Run Leech shell, VOA, and basis tests
         run: python -m unittest tests.test_leech_shell_design_and_voa_weight_two tests.test_leech_golay_construction tests.test_leech_voa_character tests.test_leech_z2_orbifold_character tests.test_leech_unimodular_basis -v
+      - name: Run untwisted Griess product and invariant-form tests
+        run: python -m unittest tests.test_griess_untwisted_heisenberg tests.test_leech_lattice_cocycle -v
       - name: Run Leech directional moment audit
         run: python experiments/moonshine_sierpinski/leech_shell_design_moments.py
       - name: Run weight-two VOA grading audit
