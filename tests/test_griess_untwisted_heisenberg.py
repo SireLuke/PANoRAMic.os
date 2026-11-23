@@ -1,0 +1,96 @@
+import random
+import unittest
+from fractions import Fraction
+
+from experiments.moonshine_sierpinski.griess_untwisted_heisenberg import (
+    canonical_momentum_key,
+    conformal_identity_momentum_product,
+    conformal_identity_oscillator_product,
+    oscillator_bilinear_form,
+    oscillator_momentum_product,
+    oscillator_oscillator_product,
+)
+
+
+class UntwistedHeisenbergProductTests(unittest.TestCase):
+    def test_oscillator_product_is_commutative(self):
+        pairs = [(i, j) for i in range(24) for j in range(i, 24)]
+        rng = random.Random(20261123)
+        for _ in range(500):
+            left, right = rng.choice(pairs), rng.choice(pairs)
+            self.assertEqual(
+                oscillator_oscillator_product(left, right),
+                oscillator_oscillator_product(right, left),
+            )
+
+    def test_oscillator_product_exact_contraction_fixtures(self):
+        self.assertEqual(
+            oscillator_oscillator_product((2, 2), (2, 2)),
+            {("osc", 2, 2): Fraction(4)},
+        )
+        self.assertEqual(
+            oscillator_oscillator_product((1, 3), (3, 7)),
+            {("osc", 1, 7): Fraction(1)},
+        )
+        self.assertEqual(
+            oscillator_oscillator_product((1, 3), (1, 3)),
+            {
+                ("osc", 1, 3): Fraction(2),
+                ("osc", 3, 3): Fraction(1),
+                ("osc", 1, 1): Fraction(1),
+            },
+        )
+
+    def test_oscillator_identity_on_all_300_basis_states(self):
+        for i in range(24):
+            for j in range(i, 24):
+                self.assertEqual(
+                    conformal_identity_oscillator_product((i, j)),
+                    {("osc", i, j): Fraction(1)},
+                )
+
+    def test_oscillator_form_is_symmetric(self):
+        pairs = [(i, j) for i in range(24) for j in range(i, 24)]
+        rng = random.Random(240024)
+        for _ in range(1000):
+            left, right = rng.choice(pairs), rng.choice(pairs)
+            self.assertEqual(
+                oscillator_bilinear_form(left, right),
+                oscillator_bilinear_form(right, left),
+            )
+
+    def test_oscillator_momentum_formula_and_antipodal_invariance(self):
+        vector = (4, 4) + (0,) * 22
+        key = canonical_momentum_key(vector)
+        self.assertEqual(oscillator_momentum_product((0, 1), vector), {
+            key: Fraction(2)
+        })
+        self.assertEqual(
+            oscillator_momentum_product((0, 1), vector),
+            oscillator_momentum_product((0, 1), tuple(-x for x in vector)),
+        )
+        self.assertEqual(oscillator_momentum_product((0, 2), vector), {})
+
+    def test_conformal_identity_on_norm_four_momentum_states(self):
+        fixtures = [
+            (4, 4) + (0,) * 22,
+            (4, -4) + (0,) * 22,
+        ]
+        for vector in fixtures:
+            key = canonical_momentum_key(vector)
+            self.assertEqual(
+                conformal_identity_momentum_product(vector),
+                {key: Fraction(1)},
+            )
+
+    def test_rejects_non_leech_or_wrong_norm_inputs(self):
+        with self.assertRaises(ValueError):
+            canonical_momentum_key((1,) * 24)
+        with self.assertRaises(ValueError):
+            canonical_momentum_key((4, 0) + (0,) * 22)
+        with self.assertRaises(TypeError):
+            canonical_momentum_key(tuple([4.0, 4] + [0] * 22))
+
+
+if __name__ == "__main__":
+    unittest.main()
