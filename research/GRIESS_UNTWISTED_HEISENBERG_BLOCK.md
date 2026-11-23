@@ -127,3 +127,24 @@ sector orthogonality are checked separately.
 This is a finite fixture audit of the implemented formulas, not an
 exhaustive proof of invariance over all 196,884 dimensions and not a
 construction of the twisted-sector extension.
+
+
+## Basis-wide invariant-form Gram certificate — G1e
+
+The next audit verifies the Gram matrix on the entire implemented untwisted
+basis without allocating a dense matrix. It checks all 90,000 ordered pairs
+in the 300-state oscillator block, enumerates the 196,560 minimal Leech
+vectors, confirms that they form 98,280 antipodal momentum orbits, and
+checks the norm of every momentum-orbit basis vector.
+
+The resulting 98,580-dimensional Gram matrix is diagonal in the chosen
+basis: 276 off-diagonal oscillator states have norm 1, while 24 diagonal
+oscillator states and all 98,280 momentum-orbit states have norm 2. Thus
+the exact diagonal multiplicities are 276 of norm 1 and 98,304 of norm 2;
+the Gram matrix has rank 98,580, signature (98,580, 0, 0), determinant
+\(2^{98304}\), and is positive definite.
+
+This is a basis-wide certificate for the implemented untwisted subspace.
+It is not a proof that the product-invariance identity holds for every
+triple, and it does not construct the missing twisted-sector extension or
+the full 196,884-dimensional Griess algebra.
