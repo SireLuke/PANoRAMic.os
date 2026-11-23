@@ -49,11 +49,25 @@ the basis lattice, normalization at zero, the commutator law, the
 bimultiplicative 2-cocycle identity, diagonal normalization, and membership
 of sampled Golay minimal-shell vectors.
 
+## Product coverage
+
+The cocycle is now consumed by a distinct momentum-pair product fixture.
+For two norm-four Leech vectors, the weight-two momentum × momentum dispatch
+covers every possible inner-product class: equal/opposite representatives
+produce the oscillator self-product; absolute inner product 2 produces the
+even momentum state with coefficient from this cocycle; absolute inner
+product 0 or 1 produces zero. Inner products +/-3 are excluded because they
+would create a norm-two Leech vector.
+
+A full minimal-shell census test checks the distribution:
+\[
+\{-4:1,-2:4600,-1:47104,0:93150,1:47104,2:4600,4:1\}.
+\]
+
 ## Boundary
 
-This is the cocycle foundation, not yet the distinct-momentum Griess product.
-The next step is to use the cocycle sign in the \((\alpha,\beta)=-2\)
-exponential-product fixture, then verify invariance under antipodal
-representative changes and the exact output momentum \(\alpha+\beta\).
-It does not construct twisted-module operators, the full Griess algebra, or
-Monster actions.
+This completes the momentum × momentum block for the specified cocycle
+convention, not the full Griess algebra. Twisted-module products, the
+twisted-twisted intertwiner, and Monster actions remain open. Exact primary
+FLM source references for the phase convention remain a required
+verification item.
