@@ -11,12 +11,10 @@ Y(h_i(-1)h_j(-1)1,z) = :h_i(z)h_j(z):
 in an orthonormal Heisenberg basis, with lattice vectors stored as integral
 coordinates x and physical coordinates alpha=x/sqrt(8).
 
-This is a partial untwisted product kernel. Its distinct-momentum case uses
-one explicit cocycle convention relative to the repository's certified
-Leech basis and handles only the absolute-inner-product-2 orbit. Other
-momentum-pair inner products, the complete untwisted product, twisted module,
-orbifold intertwiner, full Griess product, and Monster actions remain
-unimplemented.
+This is a partial untwisted product kernel. It now includes all
+momentum-pair inner-product classes and an exact bilinear form with
+invariance checks on deterministic fixtures. The twisted module, orbifold
+intertwiner, full Griess product, and Monster actions remain unimplemented.
 """
 from __future__ import annotations
 
@@ -392,6 +390,8 @@ def untwisted_heisenberg_block_audit() -> dict:
         "complete_weight_two_momentum_momentum_dispatch_implemented": True,
         "general_distinct_momentum_product_implemented": True,
         "lattice_cocycle_implemented": True,
+        "invariant_bilinear_form_implemented": True,
+        "invariant_form_fixture_audit": untwisted_invariant_form_audit(),
         "twisted_blocks_implemented": False,
         "full_griess_product_constructed": False,
         "monster_action_constructed": False,
