@@ -55,3 +55,44 @@ A-bare maxima: g = 0.1 → 0.00305188, 0.5 → 0.07109005, 1.0 → 0.234375, 2.0
 
 - Root enumeration is regenerated here (integer pairs, then even-parity sign vectors). Experiment B depends only on the pole's orbit structure, so enumeration order should not change any number.
 - Closed unitary system: no dissipation, no one-way membrane. The origin node in Experiment A is an adjoined modelling device, not a Gosset vertex.
+
+---
+
+# Addendum (2026-11-22): correction, phase structure, and Leech extension
+
+Files: `leech_quotient_extension.py` (preregistration header frozen before the Leech run), `leech_quotient_diagnostics.py` (post-run, not preregistered), `outputs/eqbit_drift_001_leech_quotient.json`, `outputs/eqbit_drift_001_leech_diagnostics.json`. Run from the repo root.
+
+## Correction to the Experiment B table above
+
+The new orbit-quotient code was gated (Q3) against the full-matrix table and **failed at the 1e-4 tolerance** (worst difference 7.2e-4). Diagnostic D1 re-evaluated the full 240x240 matrix at the quotient's argmax times and agreed with the quotient to 5e-14, so the quotient is right and the earlier refinement (0.01 grid + local search) under-resolved three maxima. Corrected values (the table above is retained unedited):
+
+| ε | quantity | table above | corrected |
+|---|---|---|---|
+| 1.0 | A₁ | 0.3490 | 0.3497 |
+| 2.0 | A₂ | 0.0865 | 0.08653 |
+| 2.0 | A₃ = E₃ | 0.2356 | 0.2359 |
+
+No conclusion changes (E1 ordering still inverted; R₃(2.0) = 0.267 to three figures). Times of maximum at ε = 0 in the table above are not meaningful, see next section.
+
+## ε = 0 is exactly phase-locked
+
+The pole-start dynamics lives in the 5-dimensional orbit subspace (E8) or 7-dimensional one (Leech). Their ε = 0 spectra are integers:
+- E8: −4, −2, 8, 28, 56
+- Leech: −20, −10, 76, 350, 1000, 2300, 4600
+
+All differences are even, so P(t) is exactly periodic with period π (checked: max |P(t+π) − P(t)| ≤ 2e-13). Consequences: the 0.882 E8 antipodal peak is a permanent ceiling set by eigenvector weights, not a phase-misalignment that more time would cure; the draft spec's §1 sentence attributing it to phases that "never align exactly" does not hold for this subspace; at ε = 0 the window T = 200 adds nothing beyond one period. For ε > 0 the spectrum is generic and the signal is quasi-periodic.
+
+## Leech minimal-vector graph (196,560 vertices) via the 7-orbit quotient
+
+Gates: census 1, 4600, 47104, 93150, 47104, 4600, 1 (pass); degree 4600 (pass); quotient symmetry identity (pass); neighbour-count constancy on a stride sample of every orbit (pass, **sampled**; full constancy rests on the known Co₀ stabilizer orbit structure, not on this sample).
+
+- BFS depth classes from the pole: 1 / 4,600 / 144,854 / 47,105. **Still only three nonzero depths**, so the §4 exponential-law ceiling still binds.
+- Antipode-only transfer at ε = 0: **0.9995** (E8: 0.882). Under a depth gradient it decreases smoothly: 0.994, 0.983, 0.937, 0.787 at ε = 0.25, 0.5, 1, 2; 0.384 at 5; 0.154 at 10; 0.061 at 20; 0.029 at 50; 0.015 at 100. Unlike E8 there is no bump at small ε.
+- Arrival from depth shells (Leech, ε = 0): A₁ = 0.146, A₂ = 0.032, A₃ = 0.114; E1 monotone ordering fails at every ε. Ratios in the JSON.
+- Reciprocity (real symmetric H) still forbids any drift-in / leak-out asymmetry; for single-vertex endpoints the two are identical.
+
+## Not run, proposed
+
+1. Resonant Floquet drive ε(t) = ε₀ cos Ωt on the depth potential. It preserves the orbit quotient, and the ε = 0 gaps are even integers, so resonances are exact (e.g. E8 Ω ∈ {2, 10, 12, ...}).
+2. Potential by inner-product class (6 nonzero levels on Leech) instead of BFS depth; this would be a post-hoc variant and must be registered as such.
+3. Complex (Peierls-type) hopping phases, the only closed-system route to non-reciprocal transport; they generally break the orbit quotient.
