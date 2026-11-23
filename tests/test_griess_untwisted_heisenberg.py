@@ -212,7 +212,7 @@ class UntwistedHeisenbergProductTests(unittest.TestCase):
         reference = (4, 4) + (0,) * 22
         self.assertEqual(
             momentum_inner_product_distribution(reference),
-            {-4: 1, -2: 4600, 0: 187358, 2: 4600, 4: 1},
+            {-4: 1, -2: 4600, -1: 47104, 0: 93150, 1: 47104, 2: 4600, 4: 1},
         )
 
 
