@@ -217,6 +217,56 @@ def momentum_distinct_inner_product_minus_two_product(
     coefficient = Fraction(lattice_cocycle_sign(oriented_left, oriented_right))
     return {output_key: coefficient}
 
+
+def momentum_momentum_product(
+    left: tuple[int, ...], right: tuple[int, ...]
+) -> SparseVector:
+    """Dispatch the weight-two product of two even norm-four momentum states.
+
+    For E_[alpha]=e^alpha+e^-alpha and E_[beta]=e^beta+e^-beta,
+    the four exponential terms contribute to the z^-2 coefficient only
+    when one signed inner product is -2. Therefore:
+      * alpha=+/-beta: opposite-charge terms give the oscillator self-product;
+      * |(alpha,beta)|=2: two singular terms give a norm-four momentum state;
+      * |(alpha,beta)|<=1: the product is zero.
+
+    The Leech lattice has no norm-two vectors, so distinct minimal vectors
+    cannot have inner product +/-3. The input validator enforces membership
+    in the norm-four Leech shell. All inner products are computed exactly.
+    """
+    left = _validate_minimal_leech_coordinate(left)
+    right = _validate_minimal_leech_coordinate(right)
+    inner_numerator = lattice_inner_product_numerator(left, right)
+    if inner_numerator % 8:
+        raise ArithmeticError("Leech inner product is not integral")
+    inner_product = inner_numerator // 8
+
+    if inner_product in (4, -4):
+        return momentum_opposite_pair_self_product(left)
+    if abs(inner_product) == 2:
+        return momentum_distinct_inner_product_minus_two_product(left, right)
+    if abs(inner_product) <= 1:
+        return {}
+    raise ValueError("unexpected inner product for norm-four Leech shell vectors")
+
+
+def momentum_inner_product_distribution(
+    reference: tuple[int, ...],
+) -> dict[int, int]:
+    """Count all 196560 minimal-shell vectors by exact inner product."""
+    reference = _validate_minimal_leech_coordinate(reference)
+    from collections import Counter
+    from experiments.moonshine_sierpinski.leech_golay_construction import (
+        leech_minimal_vectors,
+    )
+
+    counts = Counter(
+        lattice_inner_product_numerator(reference, vector) // 8
+        for vector in leech_minimal_vectors()
+    )
+    return dict(sorted(counts.items()))
+
+
 def untwisted_heisenberg_block_audit() -> dict:
     """Return formula-level scope and exact normalization checks."""
     sample = tuple([4, 4] + [0] * 22)
@@ -239,12 +289,13 @@ def untwisted_heisenberg_block_audit() -> dict:
         },
         "momentum_opposite_pair_self_product_implemented": True,
         "distinct_momentum_inner_product_minus_two_implemented": True,
-        "general_distinct_momentum_product_implemented": False,
+        "complete_weight_two_momentum_momentum_dispatch_implemented": True,
+        "general_distinct_momentum_product_implemented": True,
         "lattice_cocycle_implemented": True,
         "twisted_blocks_implemented": False,
         "full_griess_product_constructed": False,
         "monster_action_constructed": False,
-        "scope": "exact Heisenberg sub-blocks of the untwisted weight-two product only",
+        "scope": "exact oscillator and complete momentum-momentum blocks of the untwisted weight-two product; twisted sector remains open",
     }
 
 
