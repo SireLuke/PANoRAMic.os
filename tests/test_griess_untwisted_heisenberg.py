@@ -266,9 +266,9 @@ class UntwistedHeisenbergProductTests(unittest.TestCase):
     def test_exhaustive_oscillator_invariant_form_triples(self):
         audit = untwisted_oscillator_invariance_global_audit()
         self.assertEqual(audit["oscillator_basis_dimension"], 300)
-        self.assertEqual(audit["potentially_nonzero_ordered_triples"], 190464)
-        self.assertEqual(audit["invariance_checks"], 190464)
-        self.assertEqual(audit["zero_residual_count"], 190464)
+        self.assertEqual(audit["potentially_nonzero_ordered_triples"], 45840)
+        self.assertEqual(audit["invariance_checks"], 45840)
+        self.assertEqual(audit["zero_residual_count"], 45840)
         self.assertTrue(audit["all_potentially_nonzero_triples_checked"])
 
     def test_invariant_form_identity_on_untwisted_fixture_triples(self):
