@@ -9,6 +9,7 @@ from experiments.moonshine_sierpinski.griess_untwisted_heisenberg import (
     oscillator_bilinear_form,
     oscillator_momentum_product,
     oscillator_oscillator_product,
+    momentum_opposite_pair_self_product,
 )
 
 
@@ -89,6 +90,40 @@ class UntwistedHeisenbergProductTests(unittest.TestCase):
             canonical_momentum_key((4, 0) + (0,) * 22)
         with self.assertRaises(TypeError):
             canonical_momentum_key(tuple([4.0, 4] + [0] * 22))
+
+
+    def test_opposite_pair_self_product_exact_coefficients(self):
+        vector = (4, 4) + (0,) * 22
+        self.assertEqual(
+            momentum_opposite_pair_self_product(vector),
+            {
+                ("osc", 0, 0): Fraction(2),
+                ("osc", 0, 1): Fraction(4),
+                ("osc", 1, 1): Fraction(2),
+            },
+        )
+
+    def test_opposite_pair_self_product_is_antipodally_invariant(self):
+        vectors = [
+            (4, 4) + (0,) * 22,
+            (4, -4) + (0,) * 22,
+            (0, 0, 4, 4) + (0,) * 20,
+        ]
+        for vector in vectors:
+            self.assertEqual(
+                momentum_opposite_pair_self_product(vector),
+                momentum_opposite_pair_self_product(tuple(-x for x in vector)),
+            )
+
+    def test_opposite_pair_self_product_has_only_oscillator_outputs(self):
+        result = momentum_opposite_pair_self_product((4, 4) + (0,) * 22)
+        self.assertTrue(result)
+        self.assertTrue(all(key[0] == "osc" for key in result))
+        self.assertEqual(sum(result.values()), Fraction(8))
+
+    def test_opposite_pair_self_product_rejects_nonminimal_vectors(self):
+        with self.assertRaises(ValueError):
+            momentum_opposite_pair_self_product((4, 0) + (0,) * 22)
 
 
 if __name__ == "__main__":
