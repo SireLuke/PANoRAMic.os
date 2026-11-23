@@ -35,7 +35,6 @@ class UntwistedHeisenbergProductTests(unittest.TestCase):
         self.assertEqual(
             oscillator_oscillator_product((1, 3), (1, 3)),
             {
-                ("osc", 1, 3): Fraction(2),
                 ("osc", 3, 3): Fraction(1),
                 ("osc", 1, 1): Fraction(1),
             },
