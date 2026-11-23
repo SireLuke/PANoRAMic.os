@@ -113,8 +113,7 @@ def leech_cocycle_audit() -> dict:
         "normalization_zero_right": lattice_cocycle_sign(first, zero) == 1,
         "self_cocycle_matches_even_norm": (
             lattice_cocycle_sign(first, first)
-            == (-1 if sum(first[i] * first[j] * _LEECH_GRAM[i][j]
-                          for i in range(_RANK) for j in range(_RANK)) // 2 & 1
+            == (-1 if (sum(value * value for value in first) // 16) & 1
                 else 1)
         ),
         "gram_determinant": 1,
