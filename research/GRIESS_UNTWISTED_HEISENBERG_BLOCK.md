@@ -12,8 +12,10 @@ weight-two sector:
 2. The action of oscillator quadratic states on the 98,280 even momentum
    directions.
 
-It is intentionally called G1a. It is not the full untwisted product
-\(U*U\), because momentum × momentum is not implemented.
+The oscillator and oscillator/momentum formulas originated in G1a. The
+momentum × momentum dispatcher was added in the subsequent G1b work; this
+file records the combined partial untwisted weight-two kernel, not the full
+Moonshine Griess algebra.
 
 ## Formulae and normalization
 
@@ -57,7 +59,9 @@ python -m unittest tests.test_griess_untwisted_heisenberg -v
 python -m experiments.moonshine_sierpinski.griess_untwisted_heisenberg
 ```
 
-The opposite-pair self-product fixture is included in the same test module.
+The same test module also covers the opposite-pair self-product, distinct
+momentum-pair product, dispatch across all inner-product classes, and the
+full minimal-shell inner-product distribution.
 
 ## Validation boundary
 
