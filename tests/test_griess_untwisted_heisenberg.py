@@ -18,6 +18,7 @@ from experiments.moonshine_sierpinski.griess_untwisted_heisenberg import (
     griess_invariance_residual,
     untwisted_weight_two_product,
     untwisted_invariant_form_audit,
+    untwisted_invariant_form_global_audit,
 )
 from experiments.moonshine_sierpinski.leech_lattice_cocycle import (
     lattice_cocycle_sign,
@@ -279,6 +280,21 @@ class UntwistedHeisenbergProductTests(unittest.TestCase):
         ]
         self.assertEqual(len(residuals), 216)
         self.assertTrue(all(value == 0 for value in residuals), residuals)
+
+    def test_global_untwisted_invariant_form_gram_certificate(self):
+        audit = untwisted_invariant_form_global_audit()
+        self.assertEqual(audit["oscillator_basis_dimension"], 300)
+        self.assertEqual(audit["oscillator_gram_pair_checks"], 90000)
+        self.assertEqual(audit["minimal_leech_vectors"], 196560)
+        self.assertEqual(audit["momentum_orbit_basis_dimension"], 98280)
+        self.assertEqual(audit["total_untwisted_basis_dimension"], 98580)
+        self.assertEqual(audit["gram_rank"], 98580)
+        self.assertEqual(audit["gram_signature"], [98580, 0, 0])
+        self.assertEqual(
+            audit["gram_diagonal_multiplicities"], {"1": 276, "2": 98304}
+        )
+        self.assertEqual(audit["gram_determinant"], "2^98304")
+        self.assertTrue(audit["positive_definite"])
 
     def test_invariant_form_audit_reports_exact_zero_residuals(self):
         audit = untwisted_invariant_form_audit()
