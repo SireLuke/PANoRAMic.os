@@ -1,0 +1,132 @@
+schema_version: "0.1"
+experiment_id: "OQ-EXP-2026-002"
+title: "NS Press Stages A-C: Taylor-Green Calibration, BKM Monitoring, and the Fermi-Sea Front Test"
+created: "2026-11-21"
+updated: "2026-11-21"
+status: "completed"
+maturity: "refuted"
+domain:
+  primary: "Navier-Stokes & CFD"
+  secondary: ["Fermi-sea programme", "STRATA claim grading", "Cross-Domain Methods & Validation"]
+claim_class: "numerical_experiment"
+summary: "A preregistered three-stage press on a Taylor-Green vortex at Re 1600, N=128. Stage A calibrated the solver against pinned published references (PASS). Stage B monitored the Beale-Kato-Majda integral under the declared band (in band). Stage C tested the Fermi-sea dictionary entry - the spectral occupation front K(t) - for a saturating ceiling approach and log-periodicity at pinned candidate periods, against a phase-shuffled identical-spectrum control and a decaying nu=0.01 baseline. The Stage C signature FAILED to separate from the phase-shuffled control on both legs and is registered as a negative result under the preregistration's own falsifier. Navier-Stokes remains not_tested."
+question: "Does the spectral occupation front K(t) of a Taylor-Green flow carry a dynamics-specific signature - a saturating ceiling approach with log-periodicity at the pinned candidate periods - that separates from a phase-shuffled field with the identical energy spectrum?"
+hypothesis: "The front K(t) rises toward a ceiling (saturating model beats the no-ceiling model by residual-RMS ratio < 0.8 on the intensification interval) and its approach is log-periodic at the pinned candidates (log-phi family; bridge-note constants S-bar ~ 0.36 and twist 2pi/19), with scan statistics exceeding the controls'."
+null_hypothesis: "The front signature is a property of the energy spectrum and the front statistic at this resolution, not of the coherent dynamics: a phase-shuffled field with the identical spectrum reproduces it."
+success_criteria:
+  - "Stage A gate: eps_max within +10%/-5% of the pinned reference 0.01286 and t_peak within +-0.4 of 8.97."
+  - "Stage B: BKM integral over [0,10] inside the declared 180-210 band from the published resolution ladder."
+  - "Stage C ceiling: saturating model residual-RMS ratio < 0.8 against the no-ceiling model on t in [4, t(eps_max)]."
+  - "Stage C periodicity: per-candidate scan statistic (amp/resid_std) at the pinned candidates exceeds the controls' corresponding statistics."
+controls:
+  - name: "Phase-shuffled control (identical spectrum)"
+    rationale: "Preserves |u_hat(k)| per mode and divergence-freeness while destroying phase coherence; if the signature survives shuffling, it is spectrum-driven, not dynamics-driven."
+    method: "Same solver and pipeline, Hermitian-symmetric random phases, seed 20261121, tag re1600_n128_shuffle; analysed with identical Stage C machinery (stage_c_controls.py)."
+  - name: "Decaying baseline (nu = 0.01)"
+    rationale: "A strongly viscous run with no intensification phase; the machinery must not manufacture a ceiling or a front where none exists."
+    method: "Same solver, nu = 0.01, tag re001_nu001; ceiling test applies only if a preregistered intensification interval exists (t(eps_max) >= 4)."
+contributors:
+  - name: "Lucas"
+    role: "maintainer"
+    affiliation_or_bench: "PANoRAMic.os"
+    contribution: "Approved the preregistration (OS PR #134) and its Stage C amendment; directed the runs and this filing."
+    model_or_version: null
+  - name: "Cosmo"
+    role: "implementation"
+    affiliation_or_bench: "Memory bench"
+    contribution: "Wrote the press solver and analysis scripts, ran the main run and both controls, computed the verdict, prepared this registration."
+    model_or_version: null
+provenance:
+  source_repositories:
+    - "https://github.com/SireLuke/PANoRAMic.os"
+  source_revisions:
+    - "Preregistration: PR #134: https://github.com/SireLuke/PANoRAMic.os/pull/134"
+  datasets:
+    - "Stage A reference: 512^3 spectral Taylor-Green dataset (spectral_Re1600_512.gdiag, attributed to van Rees et al. 2011), peak dissipation 0.0128575 at t = 8.97 as read by the Autan validation catalogue; corroborated by Brachet et al. 1983 (~0.0126) and the NSLab resolution ladder."
+  licenses_and_access: ["Repository artifacts; observe repository license and access terms."]
+  preprocessing: "Amendment 1 pins (Stage A references, Stage B expectations, Stage C definitions and candidate families) were recorded in the preregistration's workspace copy before any press analysis."
+method:
+  description: "Fourier pseudospectral solver (rfftn, 2/3 dealiasing, Leray projection, classical RK4) for unforced incompressible Navier-Stokes on [0,2pi)^3 with Taylor-Green initial conditions. Diagnostics every 0.025 time units; shell spectra every 0.25. Occupation front K(t) = smallest shell k with energy in shells > k below 1e-3 of total energy. Ceiling test fits log K on t in [4, t(eps_max)] with a saturating model log K = a - b*exp(-(t-4)/tau) (tau gridded) against a no-ceiling model log K = a + c*log(t-3). Log-periodicity scan fits sinusoids in log t to the winning model's residuals over periods 0.10-1.50 and reports amp/resid_std at the pinned candidates."
+  equations_or_specification:
+    - "Front: K(t) = min{ k : sum_{j>k} E_j < 1e-3 * sum_j E_j }."
+    - "Ceiling (i): log K = a - b*exp(-(t-4)/tau). No-ceiling (ii): log K = a + c*log(t-3). Pass: RMS(i)/RMS(ii) < 0.8."
+    - "Candidates (i) log-phi family: 0.2406, 0.4812, 0.9624. (ii) bridge-note constants: S-bar 0.36, twist 2pi/19 = 0.3307."
+  parameters:
+    N: 128
+    nu_main: 0.000625
+    Re: 1600
+    T: 12.0
+    dt: 0.005
+    steps: 2400
+    shuffle_seed: 20261121
+    nu_baseline: 0.01
+  random_seeds: ["Phase-shuffled control: 20261121."]
+  environment: "Python/NumPy pseudospectral solver (tg_press.py); checkpointed, resumable runs; the main run and both controls survived multiple host reboots via checkpoints."
+  commands:
+    - "python3 tg_press.py 128 re1600_n128 0.000625"
+    - "python3 tg_press.py 128 re1600_n128_shuffle 0.000625 20261121"
+    - "python3 tg_press.py 128 re001_nu001 0.01"
+    - "python3 stage_c_analysis.py; python3 stage_c_controls.py <run.json> <out.json>"
+  resource_limits: {}
+artifacts:
+  code:
+    - "experiments/navier_stokes/press_data/tg_press.py"
+    - "experiments/navier_stokes/press_data/stage_c_analysis.py"
+    - "experiments/navier_stokes/press_data/stage_c_controls.py"
+  data:
+    - "experiments/navier_stokes/press_data/re1600_n128.json"
+    - "experiments/navier_stokes/press_data/re1600_n128_shuffle.json"
+    - "experiments/navier_stokes/press_data/re001_nu001.json"
+    - "experiments/navier_stokes/press_data/stage_c_results.json"
+    - "experiments/navier_stokes/press_data/stage_c_shuffle_results.json"
+  outputs:
+    - "experiments/navier_stokes/PRESS_RESULTS.md"
+    - "experiments/navier_stokes/ns-truly-testing-plan.md"
+  logs: []
+  external_references:
+    - "Preregistration plan (merged): https://github.com/SireLuke/PANoRAMic.os/pull/134"
+    - "NS x Fermi-sea bridge note (merged): https://github.com/SireLuke/PANoRAMic.os/pull/126"
+reproduction:
+  instructions: "Re-run the analysis scripts on the filed run JSONs in experiments/navier_stokes/press_data/ to reproduce every Stage C number exactly. Re-running the solver with the filed commands reproduces the runs up to floating-point and host variation; checkpoints make the runs resumable."
+  expected_outputs: "Stage A: eps_max 0.0137585 at t = 8.90 (PASS). Stage B: BKM integral 188.36 (in band). Stage C main: ceiling ratio 0.428; log-phi amp/resid_std 0.828. Shuffle control: ceiling ratio 0.461; log-phi amp/resid_std 0.938. Verdict: Stage C negative (no separation)."
+  known_blockers:
+    - "The control comparison rests on a single shuffle realization (a point comparison, not an ensemble 95th percentile); this caveat is declared in stage_c_controls.py and in PRESS_RESULTS.md."
+    - "The nu=0.01 baseline JSON is appended on landing; the separation verdict does not depend on it."
+results:
+  summary: "Stage A PASS; Stage B in band; Stage C NEGATIVE - the occupation-front signature does not separate from the phase-shuffled identical-spectrum control on either leg."
+  observations:
+    - "Stage A: eps_max = 0.0137585 at t = 8.90 vs pinned 0.01286 at 8.97 (ratio 1.070, inside gate); enstrophy peak 11.007 vs derived ~10.3, same coarse-grid overshoot direction as the published ladder."
+    - "Stage B: BKM integral over [0,10] = 188.36 (declared band 180-210; ladder 161 at 96^3, 223 at 192^3, 250 at 256^3); ||omega||_inf peak 44.24 at t = 8.70."
+    - "Stage C ceiling: main run ratio 0.428 (PASS); shuffle control ratio 0.461 (also PASS), front peak 56 vs main 58, same saturating shape."
+    - "Stage C periodicity: main log-phi amp/resid_std 0.828, global best period 0.584; shuffle log-phi 0.938, global best 0.959 at period 0.580. The control meets or exceeds the main run at the log-phi, S-bar, and 2 log-phi candidates."
+  uncertainty: "Single shuffle realization; N=128 resolution with Kolmogorov estimate k_d ~ 87 exceeding the front (~57), so grid truncation is a live alternative explanation that the shuffle result strengthens."
+  failures_and_negative_results:
+    - "Stage C falsifier fired as preregistered: the signature fails to separate from the phase-shuffled control by the declared margins, so the tested Fermi-sea dictionary entry is filed as a negative result."
+interpretation:
+  supported_claims:
+    - "The press solver is calibrated at N=128 against pinned published Taylor-Green references (Stage A) and its BKM integral sits in the declared resolution-ladder band (Stage B)."
+    - "At N=128, the occupation front K(t) and its approach are spectrum/statistic-dominated: a phase-scrambled field with the identical spectrum reproduces the ceiling shape and the log-phi scan statistics."
+  unsupported_claims:
+    - "Any claim about Navier-Stokes regularity or finite-time blow-up; Navier-Stokes remains not_tested."
+    - "Any Fermi-sea mechanism claim resting on the occupation-front statistic at this resolution."
+    - "That a ceiling or log-periodicity in K(t) evidences coherent dynamics."
+  limitations:
+    - "One shuffle realization; no ensemble percentile."
+    - "Front definition threshold (1e-3 of total energy) is the preregistered one; other thresholds were not scanned."
+    - "BKM integral uses trapezoid sampling every 0.025, biased low on spikes, as declared in Amendment 1."
+  alternative_explanations:
+    - "Grid truncation: the front saturates near the resolved range in both runs (k_d ~ 87 > front ~ 57 is not satisfied - the front sits below k_d but the saturation may still track the spectrum's extent, which both runs share by construction)."
+    - "The front statistic is phase-blind by construction (it reads shell energies only), so phase coherence cannot appear in it; a phase-aware statistic is a different instrument."
+  falsifiers:
+    - "The preregistered falsifier - failure to separate from the controls - is the outcome recorded here."
+review:
+  independent_reviewers: []
+  review_status: "in_review"
+  review_artifacts: []
+  next_independent_check: "An independent bench reruns stage_c_analysis.py and stage_c_controls.py on the filed JSONs and confirms the verdict arithmetic; any follow-up dictionary entry (phase-aware statistic, higher resolution) requires a new preregistration."
+history:
+  - date: "2026-11-21"
+    action: "registered_completed_experiment"
+    note: "Registered the completed press with its Stage C negative result, at the maintainer's direction, in the same change as the filed results (experiments/navier_stokes/PRESS_RESULTS.md and press_data/). No results were upgraded during registration; Stage A/B passes grade the solver, not the dictionary."
+    author: "Cosmo (Memory bench)"
+    related_pr_or_commit: null

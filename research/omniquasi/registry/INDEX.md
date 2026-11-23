@@ -5,6 +5,8 @@ Append new registrations; do not silently rewrite or delete historical rows. For
 | Experiment ID | Title | Domain | Claim class | Status | Manifest | Last reviewed |
 |---|---|---|---|---|---|---|
 | OQ-EXP-2026-001 | Flip Eqbits on the Gosset Graph | E8/Gosset; graph-state quantum information | exact_computation | completed (first pass; independent review pending) | [manifest](experiments/OQ-EXP-2026-001/manifest.yaml) | 2026-11-21 |
+| OQ-EXP-2026-002 | NS Press Stages A-C: Taylor-Green calibration, BKM monitoring, Fermi-sea front test | Navier-Stokes & CFD; Fermi-sea programme | numerical_experiment | completed (Stage C negative result - signature failed to separate from controls) | [manifest](experiments/OQ-EXP-2026-002/manifest.yaml) | 2026-11-21 |
+| OQ-EXP-2026-003 | NS Press II: Phase-Aware Observables vs In-Run Shuffle Nulls | Navier-Stokes & CFD; Fermi-sea programme | numerical_experiment | completed (negative result - phase-aware observables failed to separate from shuffle nulls) | [manifest](experiments/OQ-EXP-2026-003/manifest.yaml) | 2026-11-23 |
 
 ## Registration checklist
 

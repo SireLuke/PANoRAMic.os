@@ -1,0 +1,101 @@
+name: NS-ABOM-E8-Leech-EQBIT independent phase
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "experiments/ns_abom_e8_leech_eqbit_002_valdora/**"
+      - "experiments/ns_evidence_001_cosmo/cosmo_results.json"
+      - "core/abom_v8/abom_v8_model.py"
+      - "core/geometry/e8_root_system.py"
+      - "experiments/flip_qubit/**"
+      - "experiments/moonshine_sierpinski/leech_*.py"
+      - "tests/test_ns_abom_e8_leech_eqbit_002_valdora.py"
+      - ".github/workflows/ns-abom-valdora-independent-phase.yml"
+  pull_request:
+    paths:
+      - "experiments/ns_abom_e8_leech_eqbit_002_valdora/**"
+      - "experiments/ns_evidence_001_cosmo/cosmo_results.json"
+      - "core/abom_v8/abom_v8_model.py"
+      - "core/geometry/e8_root_system.py"
+      - "experiments/flip_qubit/**"
+      - "experiments/moonshine_sierpinski/leech_*.py"
+      - "tests/test_ns_abom_e8_leech_eqbit_002_valdora.py"
+      - ".github/workflows/ns-abom-valdora-independent-phase.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  valdora-independent-phase:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out exact tested commit
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Record environment and commit
+        run: |
+          python --version
+          python -c "import platform; print(platform.platform())"
+          git rev-parse HEAD
+
+      - name: Run focused Valdora regression suite
+        run: python -m unittest tests.test_ns_abom_e8_leech_eqbit_002_valdora -v
+
+      - name: Execute all six preregistered ablations and full certificates
+        run: |
+          python -m experiments.ns_abom_e8_leech_eqbit_002_valdora.runner \
+            --samples-per-seed 1000 \
+            --seed-count 10 \
+            --seed 20261121 \
+            --rewire-attempts 25000 \
+            --output experiments/ns_abom_e8_leech_eqbit_002_valdora/results.json
+
+      - name: Publish compact audit summary
+        if: always() && hashFiles('experiments/ns_abom_e8_leech_eqbit_002_valdora/results.json') != ''
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("experiments/ns_abom_e8_leech_eqbit_002_valdora/results.json")
+          r = json.loads(p.read_text(encoding="utf-8"))
+          summary = {
+              "experiment_id": r.get("experiment_id"),
+              "run_parameters": r.get("run_parameters"),
+              "module_output_sha256": r.get("module_output_sha256"),
+              "pairwise_status": r.get("pairwise_status"),
+              "ablation": r.get("ablation"),
+              "configuration_measurements": r.get("configuration_measurements"),
+              "module_output_keys": {
+                  name: sorted(value) if isinstance(value, dict) else type(value).__name__
+                  for name, value in r.get("module_outputs", {}).items()
+              },
+              "leech": {
+                  key: r.get("module_outputs", {}).get("LEECH", {}).get(key)
+                  for key in ("rank", "minimum_norm_attained", "minimal_vectors_at_minimum",
+                              "even_unimodular", "basis_columns_checked")
+              },
+          }
+          print("VALDORA_AUDIT_SUMMARY_BEGIN")
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          print("VALDORA_AUDIT_SUMMARY_END")
+          with open(Path(__import__("os").environ["GITHUB_STEP_SUMMARY"]), "a", encoding="utf-8") as f:
+              f.write("## Valdora independent phase summary\\n\\n")
+              f.write("See the run log between VALDORA_AUDIT_SUMMARY markers for the full compact JSON audit summary.\\n")
+          PY
+
+      - name: Upload immutable run result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ns-abom-valdora-phase-${{ github.sha }}
+          path: experiments/ns_abom_e8_leech_eqbit_002_valdora/results.json
+          if-no-files-found: warn
+          retention-days: 90
