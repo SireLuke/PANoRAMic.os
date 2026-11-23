@@ -148,3 +148,27 @@ This is a basis-wide certificate for the implemented untwisted subspace.
 It is not a proof that the product-invariance identity holds for every
 triple, and it does not construct the missing twisted-sector extension or
 the full 196,884-dimensional Griess algebra.
+
+
+## Exhaustive oscillator product-invariance audit — G1f
+
+The next audit exhausts the invariant-form identity on the complete
+300-dimensional oscillator block. For three quadratic basis states, the
+trilinear pairing can be nonzero only when every coordinate index among
+the six indices occurs with even multiplicity. This follows directly
+from the four-term Heisenberg contraction formula and the oscillator
+Fock pairing.
+
+There are exactly 190,464 ordered pairings of the even-multiplicity
+six-index multisets. The audit enumerates those support candidates,
+evaluates both sides of
+\[
+\langle a_1 b,c\rangle=\langle b,a_1 c\rangle,
+\]
+and requires exact rational equality in every case. All remaining
+oscillator triples have zero pairing on both sides by the same support
+criterion.
+
+This closes the product-invariance check for the oscillator block only.
+It does not establish the corresponding identity for all momentum triples,
+the twisted sector, or the full Griess algebra.
