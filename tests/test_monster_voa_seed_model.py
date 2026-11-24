@@ -59,7 +59,10 @@ class MonsterVOASeedModelTests(unittest.TestCase):
             if row.sector == "untwisted" and row.floor == 3 and row.tau
         )
         parent = _parent_untwisted(child)
-        reduced = tuple(row for row in self.rows if row != parent)
+        from experiments.monster_voa_seed.model import _key
+
+        parent_key = _key(parent)
+        reduced = tuple(row for row in self.rows if _key(row) != parent_key)
         result = audit_transition_edges(reduced)
         self.assertFalse(result["passed"])
         self.assertTrue(any(
