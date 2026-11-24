@@ -603,6 +603,97 @@ def untwisted_momentum_invariance_star_audit() -> dict:
     }
 
 
+
+def untwisted_mixed_invariance_star_audit() -> dict:
+    """Exhaust both mixed oscillator/momentum invariance orientations at one star.
+
+    Fix alpha=(4,4,0,...,0). For every oscillator basis state A_ij, scan
+    the complete minimal Leech shell for <A_ij _1 E_[alpha], E_[beta]>
+    = <E_[alpha], A_ij _1 E_[beta]>. The full shell scan establishes the
+    support: both sides vanish unless [beta]=[alpha].
+
+    In the other orientation, check
+    <E_[alpha] _1 E_[beta], A_ij>
+    = <E_[beta], E_[alpha] _1 A_ij>
+    for all 300 oscillators and every beta in the support star: the
+    opposite vector -alpha plus the 4,600 vectors with (alpha,beta)=-2.
+    All arithmetic is exact. This is a fixed-alpha mixed-sector star,
+    not a global all-triples certificate.
+    """
+    from experiments.moonshine_sierpinski.leech_golay_construction import (
+        leech_minimal_vectors,
+    )
+
+    alpha = (4, 4) + (0,) * 22
+    alpha_key: BasisKey = ("mom", canonical_momentum_key(alpha)[1])
+    oscillator_keys: tuple[BasisKey, ...] = tuple(
+        ("osc", i, j) for i in range(24) for j in range(i, 24)
+    )
+    shell = leech_minimal_vectors()
+    if len(shell) != 196560:
+        raise AssertionError("minimal Leech shell must contain 196560 vectors")
+
+    mixed_star: dict[MomentumKey, tuple[int, ...]] = {}
+    for beta in shell:
+        inner = lattice_inner_product_numerator(alpha, beta)
+        if inner == -32 or inner == -16:
+            key = canonical_momentum_key(beta)
+            mixed_star.setdefault(key, beta)
+
+    if len(mixed_star) != 4601:
+        raise AssertionError(
+            f"expected 4601 supported momentum orbits, got {len(mixed_star)}"
+        )
+
+    # Orientation 1: oscillator x fixed momentum against arbitrary momentum probe.
+    # Check every shell representative; support outside [alpha] is zero on both sides.
+    orientation_one_checks = 0
+    for beta in shell:
+        probe: BasisKey = ("mom", canonical_momentum_key(beta)[1])
+        for oscillator in oscillator_keys:
+            residual = griess_invariance_residual(oscillator, alpha_key, probe)
+            if residual:
+                raise AssertionError(
+                    "oscillator-momentum-momentum invariance mismatch: "
+                    f"{oscillator}, {alpha_key}, {probe}: {residual}"
+                )
+            orientation_one_checks += 1
+
+    # Orientation 2: momentum x momentum against every oscillator probe.
+    orientation_two_checks = 0
+    for beta in mixed_star.values():
+        beta_key: BasisKey = ("mom", canonical_momentum_key(beta)[1])
+        for oscillator in oscillator_keys:
+            residual = griess_invariance_residual(alpha_key, beta_key, oscillator)
+            if residual:
+                raise AssertionError(
+                    "momentum-momentum-oscillator invariance mismatch: "
+                    f"{alpha_key}, {beta_key}, {oscillator}: {residual}"
+                )
+            orientation_two_checks += 1
+
+    expected_one = 196560 * 300
+    expected_two = 4601 * 300
+    if orientation_one_checks != expected_one or orientation_two_checks != expected_two:
+        raise AssertionError("mixed invariant-form star did not complete all checks")
+
+    return {
+        "fixed_momentum_orbit": alpha_key[1],
+        "minimal_shell_vectors_scanned": len(shell),
+        "oscillator_basis_dimension": len(oscillator_keys),
+        "supported_momentum_orbits_for_second_orientation": len(mixed_star),
+        "orientation_one_checks": orientation_one_checks,
+        "orientation_two_checks": orientation_two_checks,
+        "total_exact_invariance_checks": orientation_one_checks + orientation_two_checks,
+        "zero_residual_count": orientation_one_checks + orientation_two_checks,
+        "all_checks_exact": True,
+        "scope": (
+            "exhaustive mixed oscillator/momentum invariant-form star for one "
+            "fixed Leech momentum orbit; not a global all-triples certificate"
+        ),
+    }
+
+
 def untwisted_heisenberg_block_audit() -> dict:
     """Return formula-level scope and exact normalization checks."""
     sample = tuple([4, 4] + [0] * 22)
