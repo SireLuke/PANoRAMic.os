@@ -1,54 +1,50 @@
 # PROP-VOA-001 — independent specification audit
 
-**Status:** preliminary independent audit; no preregistered experiment run.
+**Status:** specification diagnostic; formal preregistered run not launched.
 **Implementation target:** Python standard library, existing PANoRAMic.os modules.
 
 ## Reuse map
 
 - `experiments/moonshine_sierpinski/lattice_modular_audit.py`:
   `leech_theta_reference` supplies the exact Leech shell coefficients from
-  (E_4^3-720\Delta).
+  `(E_4^3-720 Delta)`.
 - `experiments/moonshine_sierpinski/leech_z2_orbifold_character.py`:
   `leech_z2_orbifold_character` supplies the independent aggregate
   untwisted/twisted q-series census.
 - `core/seed_sharing/contract.py`:
   `SeedEnvelope.to_record` supplies canonical JSON, provenance, and a
-  SHA-256 content address for the immutable B1/B2 base.
-- `experiments/menger_seed/propagation.py` is reused as an engineering
-  pattern only: immutable base reference, bounded local deltas, fail-closed
-  budgets. Its Menger face graph is deliberately not imported or used.
+  SHA-256 content address for the immutable base seed.
+- `experiments/menger_seed/propagation.py` is an engineering pattern only;
+  no Menger geometry is imported into the VOA model.
 
-All new arithmetic is exact integer arithmetic. No NumPy or third-party
-runtime dependency is introduced.
+## Canonical grading and seed interpretation
 
-## Explicit interpretation used for the diagnostic
+The governing transition budget is **one unit of conformal grade**, not one
+oscillator creation operator. In the twisted sector, an individual
+half-integer oscillator contributes half a grade; therefore an oscillator
+count is not a sector-independent budget.
 
-For an occupancy (r_m) of one oscillator mode, the 24 bosonic colors
-contribute ({23+r_m\choose23}). The multiplicity for a partition type is
-the product over its occupied modes.
+- Untwisted class grade is the Leech shell grade plus the integer oscillator
+  mode sum.
+- Twisted class grade is the 3/2 ground grade plus the exact sum of doubled
+  half-integer modes divided by two.
+- Every D1 propagation edge must increase exact conformal grade by exactly 1.
+- D2 Leech shell seeds are counted separately from propagation.
+- The D3 twisted-ground seed remains separately identified and is not
+  mislabeled as a Leech shell seed or a D1 edge.
+- The propagation depth ceiling remains five floors. The class and serialized
+  JSON ceilings remain 512 and 65,536 bytes.
 
-- Untwisted shell (k=0): only even oscillator-count classes are projected
-  into the orbifold census. Odd-count classes are retained as explicitly
-  marked, unprojected bridge nodes so a one-grade D1 path can pass through
-  the odd sector.
-- Untwisted shell (k>0): each antipodal pair ({\lambda,-\lambda})
-  contributes one invariant combination for every oscillator state. Both
-  oscillator parities therefore occur, with multiplicity
-  (S_k/2) times the oscillator color multiplicity.
-- Twisted sector: the 4096-dimensional ground space is at weight (3/2);
-  fixed classes have an odd number of half-integer oscillators. A half-mode
-  is encoded by its odd doubled mode number (1,3,5,\ldots).
+The rev. 2 reconciliation is treated as governing: vacuum-sector bridge
+classes, the D3 twisted seed, conformal-grade units, and classwise permutation
+control are explicit. The six previously adopted amendments remain in force.
+No unresolved-specification status is carried forward from the older draft
+text.
 
-This makes the distinction between projected census classes and transit-only
-bridge classes explicit instead of silently counting unprojected states.
+## Preserved class-census diagnostic baseline
 
-## Preliminary diagnostic results
-
-The standard-library enumerator produces 44 class records across floors 0–5,
-of which 34 are projected census classes and 10 are unprojected vacuum-shell
-bridge classes. Per-floor record counts are 1, 1, 4, 7, 12, 19.
-
-The projected class multiplicities reproduce the PR #197 sector splits:
+The prior census implementation and its reported baseline remain unchanged by
+this additive edge-audit patch:
 
 | Floor | Untwisted fixed | Twisted fixed | Total |
 |---:|---:|---:|---:|
@@ -59,38 +55,41 @@ The projected class multiplicities reproduce the PR #197 sector splits:
 | 4 | 432,155,586 | 432,144,384 | 864,299,970 |
 | 5 | 10,122,903,552 | 10,122,952,704 | 20,245,856,256 |
 
-The canonical class-table JSON is 4,891 bytes in this diagnostic encoding,
-below the 65,536-byte ceiling. Floor 5 describes approximately 4.14 million
-states per serialized byte. This is a diagnostic measurement, not yet the
-frozen preregistered result.
+The existing enumerator reported 44 class records across floors 0–5: 34
+projected census classes and 10 unprojected vacuum-shell bridge classes.
+Per-floor record counts were 1, 1, 4, 7, 12, and 19. Its canonical JSON
+encoding was reported as 4,891 bytes against the 65,536-byte ceiling. These
+are inherited diagnostic baseline figures, not results of the new edge audit
+and not a preregistered run. The existing 24-color bosonic occupancy factor
+for mode occupancy r is binomial(23+r, 23), multiplied over occupied modes.
 
-## Specification discrepancies that must be reconciled before the formal run
+## Rev. 3 amendment 7 — explicit transition-edge audit
 
-1. **Vacuum-sector closure.** If the class table contains only projected
-   (\lambda=0) states, floor 2's two-mode class has no floor-1 parent,
-   because floor 1 is projected out. The same issue recurs for all-ones
-   even-count partitions. The diagnostic includes odd-count (\lambda=0)
-   bridge nodes, marked `projected=false`; they contribute no census
-   multiplicity. Confirm that these transit-only nodes are permitted.
-2. **Twisted seed.** The floor-2 twisted class is seeded from the 3/2-weight,
-   4096-dimensional twisted ground space plus one 1/2-mode. It is not a
-   Leech shell seed and has no integer-floor-1 parent. The D2/D3 seed
-   distinction must be explicit.
-3. **Twisted D1 step.** A one-grade transition in the half-integer sector
-   either raises one half-mode by 1, or adjoins a pair of 1/2-modes. Adjoining
-   one 1/2-mode alone changes the conformal weight by 1/2 and leaves the
-   integer-floor grading. Clarify that the budget means one unit of
-   conformal grade, not necessarily one oscillator creation operator.
-4. **Permutation control.** Permuting multiplicities among classes within
-   one floor and sector preserves the aggregate sector sum. It therefore
-   cannot fail aggregate C1 as currently worded. Add a classwise C1 check
-   against the canonical formula/table; the permutation control should fail
-   that check while the aggregate sum remains unchanged.
+The original C2 closure audit is preserved as a separate result. The additive
+edge audit enumerates every child class and its candidate parent, then checks:
 
-## Current disposition
+1. The parent is present in the enumerated class table; absent parents are
+   reported as orphan edges.
+2. The edge is generated by an explicitly named allowed D1 operation:
+   adding an integer mode-1 oscillator, raising an integer mode, adding a
+   pair of twisted half-modes, or raising a twisted half-mode.
+3. The exact conformal-grade increment is 1.
+4. Parent and child remain in the same sector.
+5. Untwisted oscillator parity and projection/bridge status are consistent;
+   twisted fixed classes retain odd oscillator count and the required parity.
+6. Root, D2 Leech-shell, and D3 twisted-ground seeds are reported separately
+   from D1 propagation.
+7. The edge-level D1 count cross-checks the original C2 closure count.
 
-The arithmetic and compression diagnostic is promising, and the class graph
-closes under the explicitly declared D1/D2/D3 rules. The formal PROP-VOA-001
-run remains gated on independent-spec reconciliation, particularly the four
-items above. No states, Griess product, vertex operators, or Monster action
-are constructed or claimed.
+The audit reports both C2 closure and the stronger edge-level result. It does
+not silently replace the preregistered C2 claim. A failed edge, missing parent,
+invalid grade, parity/sector violation, or seed misclassification fails the
+edge audit.
+
+## Evidence boundary
+
+This remains a class-census and transition-graph diagnostic. It constructs no
+VOA states, vertex operators, Griess product, or Monster action. Green tests
+would validate the encoded finite audit rules only; they do not constitute a
+formal PROP-VOA-001 run or a physical validation claim.
+
