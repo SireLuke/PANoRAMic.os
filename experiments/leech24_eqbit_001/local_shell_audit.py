@@ -85,10 +85,28 @@ def local_relation_census(gram: np.ndarray, adjacency: np.ndarray) -> dict:
                 forward_counts = popcount[forward].sum(axis=1, dtype=np.uint16)
                 reverse_counts = popcount[reverse].sum(axis=1, dtype=np.uint16)
                 pair_dots = gram[i, i + 1:]
-                for pair_dot, count in zip(pair_dots.tolist(), forward_counts.tolist()):
-                    by_pair_class[int(pair_dot)].add(int(count))
-                for pair_dot, count in zip(pair_dots.tolist(), reverse_counts.tolist()):
-                    by_pair_class[int(pair_dot)].add(int(count))
+                # Reduce each relation class in NumPy rather than iterating
+                # over every unordered vertex pair in Python.  The previous
+                # scalar loop performed ~168M Python-level insertions per
+                # local census and made this audit appear stalled for minutes.
+                for pair_dot in relation_dots:
+                    mask = pair_dots == pair_dot
+                    if not np.any(mask):
+                        raise AssertionError(
+                            f"missing pair class {pair_dot} in local relation census"
+                        )
+                    f_values = forward_counts[mask]
+                    r_values = reverse_counts[mask]
+                    f_min, f_max = int(f_values.min()), int(f_values.max())
+                    r_min, r_max = int(r_values.min()), int(r_values.max())
+                    if f_min != f_max or r_min != r_max:
+                        raise AssertionError(
+                            f"intersection number varies for R{dot_a}*R{dot_b} "
+                            f"on pair class {pair_dot}: "
+                            f"forward=[{f_min},{f_max}], reverse=[{r_min},{r_max}]"
+                        )
+                    by_pair_class[pair_dot].add(f_min)
+                    by_pair_class[pair_dot].add(r_min)
             if any(len(values) != 1 for values in by_pair_class.values()):
                 raise AssertionError(
                     f"intersection number varies for R{dot_a}*R{dot_b}: "
@@ -327,10 +345,13 @@ def run() -> dict:
         "reference_results": {},
     }
 
+    print("[local-shell] starting global seven-relation audit", file=sys.stderr, flush=True)
     output["global_association_scheme"] = global_association_scheme_audit(shell)
+    print("[local-shell] global seven-relation audit complete", file=sys.stderr, flush=True)
     output["local_relation_censuses"] = {}
 
     for family, index in FAMILY_STARTS.items():
+        print(f"[local-shell] starting family {family} reference {index}", file=sys.stderr, flush=True)
         ref = shell[index].astype(np.int16)
         dots = shell.astype(np.int16) @ ref
         histogram = dict(sorted(Counter(map(int, dots)).items()))
@@ -420,6 +441,7 @@ def run() -> dict:
             # Backward-compatible alias for consumers of the v1 result shape.
             output["local_relation_census"] = output["local_relation_censuses"][family]
 
+        print(f"[local-shell] family {family} complete", file=sys.stderr, flush=True)
         output["reference_results"][family] = {
             "reference_index": index,
             "reference_vector": shell[index].astype(int).tolist(),

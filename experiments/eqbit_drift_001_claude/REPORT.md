@@ -157,3 +157,76 @@ This is a different Hamiltonian from the plain Gosset graph (rank-one on-site mo
 | 2.0 | A₃ = E₃ | 0.235552 | 0.23589 |
 
 The two implementations agree with each other on these cells because both used a grid-plus-local-refinement max-finder with the same blind spot; agreement between them does not rule it out. Ratios to three figures (R₃(2.0) = 0.267) and every conclusion in RESULTS.md §4 are unchanged. RESULTS.md is Cosmo's record and is not edited here.
+
+---
+
+# Addendum 4 (2026-11-23): complex hopping phases and a rotating gradient (E8, full 240 x 240)
+
+Files: `hopping_phases.py` and `rotating_gradient.py` (headers frozen before their runs); `hopping_followup.py`, `hopping_symmetry_check.py`, `rotating_diag.py` (post-hoc, **unregistered**); JSONs `eqbit_drift_001_hopping*.json`, `eqbit_drift_001_rotating*.json` in `outputs/`. Closed unitary system, Analogy rung. Start at the pole root 0 and at its antipode; window T = 200.
+
+## A. Complex (Peierls-type) hopping phases
+
+H_uv = A_uv exp(iΘ_uv), Θ antisymmetric. Families: **J** (Θ = α·uᵀJv, a symplectic form on coordinate pairs), **ord** (Θ = α·sign(v−u), an arbitrary fixed orientation), **gauge** (Θ = α(g_u − g_v), an exact pure gauge, control). α ∈ {0.05, 0.1, 0.25, 0.5, 1, π/2}.
+
+**Gates.** HG0 Hermitian/unitary, HG1 α = 0 reproduces 0.8820834 and reciprocity, HG2 gauge changes nothing (series difference 1.8e-12, gauge flux 0), HG3 sign identity P₋α(anti|0) = Pα(0|anti) (5.6e-16): **pass**. **HG4 FAILED as written:** the header required a nonzero-flux triangle fraction above 0.5, but J carries nonzero flux on 42.9% of triangles (ord: 100%). The threshold was a guess; it was not loosened. The J phases are plainly nontrivial (below).
+
+**Results (registered runs).**
+- **J:** antipodal peak 0.749–0.881 (undriven 0.882), time-averaged transfer 0.103–0.167 (undriven 0.363). **Dmax = 0 for the pole/antipode pair at every α.**
+- **ord:** strong suppression (peak 0.14–0.82, time average 0.016–0.052). Instantaneous non-reciprocity Dmax up to 0.15, but the net asymmetry |Dbar| ≤ 1.0e-3.
+- **gauge:** identical to α = 0, exactly.
+- Claim rules: non-reciprocity claimed in 6 of 6 ord rows only; net one-way transport 0 rows; peak enhancement 0 rows. The registered expectation (Dbar ≈ 0) holds.
+
+**Why J gives exactly zero (post-hoc, verified).** A unitary V with V H Vᵀ = H* that fixes both vertices forces |U_ab(t)| = |U_ba(t)|. The coordinate swap (x₀x₁)(x₂x₃)(x₄x₅)(x₆x₇) is a root-lattice automorphism that fixes root 0 and its antipode and flips J; deviation of V H Vᵀ from H* is 0.0 for J and for the antipodally-odd post-hoc family Jodd (Θ = α·uᵀJv·(g_u+g_v)), and 0.96 for ord. Jodd also gives Dmax = 0 for this pair at every α (peak 0.771–0.880, time average 0.151–0.245). Scan of all 239 pairs (0, b) at α = 0.5: pairs with Dmax > 1e-2: J 114 (max 0.912), Jodd 50 (max 0.137), ord 181 (max 0.111); pole/antipode Dmax: 7e-15, 6e-15, 0.091; pairs with |Dbar| > 1e-2: **0 in all three families** (max 3.7e-3, 2.2e-4, 1.9e-3). So phases break reciprocity for generic pairs only transiently, and structured phases leave this pair exactly reciprocal by symmetry.
+
+## B. Rotating dipole gradient
+
+H(t) = A + ε[cos Ωt·D1 + sgn·sin Ωt·D2], D1, D2 the potentials along the pole axis and along an orthogonal root; modes circ (rotating), lin (breathing along the pole axis only), static (Ω = 0), circ_rev (opposite sense, control). ε ∈ {0.5, 2}; Ω resonant {2, 10, 12, 20, 28, 32} and off-resonant {0.7, 3.3, 7.7, 15.1, 25.5}. 4th-order split-step integrator with exact exponentiation of A. **Header amendment before the first full run:** step h = 0.01 → 0.005 after a one-case smoke test showed ~1e-5 error over T = 20.
+
+**Gates.** RG1 static vs exact (8.2e-7, 5.6e-6), RG2 convergence h vs h/2 (4.9e-6), RG3 chirality control (9.0e-13, 1.6e-12), RG4 static reciprocity (≤ 9.8e-13), RG5 DOP853 cross-check (3.9e-7): **pass**. RG3 confirms that the rotation sense cannot matter for the pole/antipode pair (the reflection in the orthogonal root is a graph automorphism fixing both). **RG0 (unitarity < 1e-10) FAILED as written:** worst 1.9e-10, above threshold in 33 of 48 runs. Cause: the cached exponentials carry ~4e-15 non-unitarity that compounds over 120,000 substeps. It is round-off, ~1e8 times below every claim margin; the gate stays recorded as failed.
+
+**Results (48 runs).**
+- **Static gradient:** peak 0.770 / time average 0.275 (ε = 0.5) and 0.269 / 0.086 (ε = 2), against the undriven 0.882 / 0.363.
+- **Linear breathing:** peaks 0.89–0.999; time average 0.31–0.38, i.e. it undoes the static gradient's suppression but never beats the undriven 0.363 (max 0.380).
+- **Circular rotation:** peaks 0.81–0.96; time average 0.15–0.35, **lower than linear in every cell where the difference exceeds 1e-2 (19 of 22 cells)**.
+- **R1 non-reciprocity** (Dmax > 1e-2): 42 of 44 driven runs, up to 0.81.
+- **R3 resonant enhancement fired in 3 of 24 resonant rows, all ε = 2** (lin Ω = 12; circ Ω = 28, 32). I do not read these as resonances: at high Ω the drive averages out and the time average returns toward the undriven 0.363 (lin Ω = 28, 32: 0.366, 0.365; the Ω = 25.5 controls sit at ~0.367 / 0.307), the lin Ω = 12 row clears its control margin by only 0.0012, and the circ flags arise because the largest circular control (Ω = 25.5) is itself a near-averaged-out case. Reported as computed; the rule was not edited.
+- **Registered expectation (|Dbar| < 1e-2) FAILED:** e.g. circ, ε = 2, Ω = 2 gives Dbar = +0.118 (time-average 0.275 outward vs 0.157 inward).
+
+**Post-hoc diagnostics (unregistered).**
+- **X1, leakage:** the linear drive stays inside the 5-dimensional pole-orbit subspace (leakage ≤ 1.6e-10) because D1 depends only on the orbit class; the circular drive leaves it (mean leakage 0.23–0.47, max 0.40–0.67 at (ε, Ω) = (2, 12), (0.5, 3.3), (2, 2)), and the same three cases show circular time averages 0.188, 0.238, 0.275 against linear 0.380, 0.340, 0.337. Consistent with, not proof of, leakage out of the subspace explaining the lower transfer.
+- **X2, drive phase:** shifting the drive angle by φ = π flips the sign of Dbar exactly (circ +0.118 → −0.118; lin −0.0265 → +0.0265); φ = π/2, 3π/2 give about ±0.0056 (circ) and ±0.0005 (lin). So the large net asymmetry is set by when the drive starts, a protocol timing effect, not an intrinsic one-way property, and rotation sense does not matter (RG3).
+
+## Bottom line
+No one-way transport was found in either extension. Structured phases are symmetry-protected for the pole/antipode pair; unstructured phases give only transient asymmetry (|Dbar| ≤ 1e-3); driven asymmetry flips sign with the drive phase. The linear drive's higher time-averaged transfer than the rotating drive is the one clean new effect, plausibly leakage. Not run: Leech versions, complex phases combined with a non-Hermitian sink (the only route to a genuine one-way effect, and no longer a closed system), and a rotation test from an off-axis start, which is where chirality could show.
+
+---
+
+# Addendum 5 (2026-11-23): rotating gradient from off-axis starts (E8, full 240 x 240)
+
+Files: `rotating_offaxis.py` (header frozen before the run), `outputs/eqbit_drift_001_offaxis.json`. Same drive, integrator (h = 0.005) and window (T = 200) as `rotating_gradient.py`, with an added drive phase φ: angle Ωt + φ. Closed unitary system, Analogy rung.
+
+**Why off-axis.** For the pole/antipode pair the rotation sense provably cannot matter (gate RG3 of Addendum 4): the reflection S in the root r2 is a graph automorphism that fixes root 0 and its antipode and flips the second tilt axis. A start a with a·r2 ≠ 0 is moved by S, and S maps the circ drive to the rev drive, so P_rev(Sa|a) = P_circ(a|Sa) exactly. The asymmetry of the mirror pair (a, Sa) under rotation is therefore a direct chirality probe: reversing the rotation reverses its sign.
+
+**Gates (all pass).** OG1 structure (S preserves adjacency, fixes root 0 and antipode, flips D2, fixes D1, moves both starts); OG2 linear drive gives exact mirror symmetry (6.4e-13); OG3 chirality identity P_rev(Sa|a) = P_circ(a|Sa) (6e-13, 8e-13); OG4 convergence h vs h/2 (2.7e-6); OG5 antipodal relation Dbar_{−a1}(φ) = Dbar_{a1}(φ+π) at all 8 phases (≤ 3.7e-14).
+
+**Disclosed design flaw.** The registered rule for the second start, "first root with dot 0 to root 0 and a·r2 ≠ 0", selects root 1, which *is* r2. Then S a2 = −a2: the mirror pair is an antipodal pair, and the antipodal relation forces its φ-mean to vanish exactly (observed: 0.0000 in all six configurations). Start a2 is therefore uninformative for the phase-independent test C2; it still shows the timing effect (C1 fires in 4 of 6 configurations, Dbar up to ±0.118, antisymmetric under φ → φ+π). The informative start is **a1 = root 4, (2,0,2,0,0,0,0,0)** (a pole neighbour), whose mirror image is (0,2,2,0,0,0,0,0); neither coincides with −a1.
+
+**Results for the informative start a1** (Dbar = time-average of P(a→Sa) − P(Sa→a) over T = 200; φ-mean over 8 drive phases):
+
+| ε | Ω | φ-mean Dbar | phases with \|Dbar\| > 1e-2 | time-avg P(a→Sa) | P(Sa→a) | C2 |
+|---|---|---|---|---|---|---|
+| 0.5 | 2.0 | +0.0116 | 5 of 8 | 0.0507 | 0.0391 | fires (margin 1.6e-3, marginal) |
+| 0.5 | 7.7 | −0.0514 | 8 of 8 | 0.0068 | 0.0582 | fires |
+| 0.5 | 12.0 | +0.0056 | 0 of 8 | 0.0186 | 0.0130 | no |
+| 2.0 | 2.0 | +0.0395 | 8 of 8 | 0.0922 | 0.0527 | fires |
+| 2.0 | 7.7 | −0.0056 | 2 of 8 | 0.0573 | 0.0629 | no |
+| 2.0 | 12.0 | −0.0260 | 8 of 8 | 0.0372 | 0.0632 | fires |
+
+- **C2 (phase-independent chirality) fires in 4 of 6 configurations.** At (0.5, 7.7) and (2, 2) and (2, 12) the sign of Dbar is the same at all eight drive phases, so this is not the timing artifact seen on-axis (where shifting the phase by π flipped the sign). By OG3, reversing the rotation sense flips the sign exactly.
+- **The preferred direction depends on frequency:** positive at Ω = 2, negative at Ω = 7.7 and 12 for ε = 0.5; positive at Ω = 2 and negative at Ω = 12 for ε = 2. The magnitude is a strong preference, not a diode: at (0.5, 7.7) the time-averaged transfer is 8.6 times larger in the Sa → a direction (0.058 vs 0.007), and both directions are nonzero.
+
+**Limits.** One informative start only, so nothing is claimed about generality across roots. T = 200 is a finite window, not an asymptotic average. The pair probabilities are small (0.007–0.09). This is a first-pass result and needs an independent reproduction.
+
+**Interpretation, not tested.** A rotating potential can act as an effective gauge flux (Floquet-induced phases). Addendum 4 found no net asymmetry for *static* complex phases, consistent with a diagonal-ensemble argument that does not apply to a time-dependent H. The present net asymmetry is consistent with that picture, but no Floquet analysis was done here.
+
+**Not run:** more starts (one per orbit class of the mirror/axis stabilizer would map where chirality lives), longer windows, a Leech version (the rotating drive breaks the 7-orbit quotient, so it needs the full 196,560-vertex problem), and a non-Hermitian sink on top.
