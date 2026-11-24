@@ -1,0 +1,102 @@
+{
+ "S1": {
+  "swap_fixes_root0": true,
+  "swap_fixes_antipode": true,
+  "J_dev_VHVt_minus_conjH": 0.0,
+  "Jodd_dev_VHVt_minus_conjH": 0.0,
+  "ord_dev_VHVt_minus_conjH": 0.958851077208406,
+  "pass": true
+ },
+ "S2": {
+  "J": {
+   "pairs_with_Dmax_gt_1e-2": 114,
+   "pairs_with_abs_Dbar_gt_1e-2": 0,
+   "max_Dmax": 0.9119281019060071,
+   "max_abs_Dbar": 0.003707904090328447,
+   "Dmax_pole_antipode": 6.827871601444713e-15,
+   "n_pairs": 239,
+   "top5_Dmax": [
+    [
+     1,
+     0.9119
+    ],
+    [
+     2,
+     0.9119
+    ],
+    [
+     33,
+     0.0238
+    ],
+    [
+     28,
+     0.0238
+    ],
+    [
+     25,
+     0.0238
+    ]
+   ]
+  },
+  "Jodd": {
+   "pairs_with_Dmax_gt_1e-2": 50,
+   "pairs_with_abs_Dbar_gt_1e-2": 0,
+   "max_Dmax": 0.13663395614208082,
+   "max_abs_Dbar": 0.00021653781863644947,
+   "Dmax_pole_antipode": 5.551115123125783e-15,
+   "n_pairs": 239,
+   "top5_Dmax": [
+    [
+     2,
+     0.1366
+    ],
+    [
+     1,
+     0.1366
+    ],
+    [
+     30,
+     0.0341
+    ],
+    [
+     10,
+     0.0341
+    ],
+    [
+     7,
+     0.0341
+    ]
+   ]
+  },
+  "ord": {
+   "pairs_with_Dmax_gt_1e-2": 181,
+   "pairs_with_abs_Dbar_gt_1e-2": 0,
+   "max_Dmax": 0.11111259984165962,
+   "max_abs_Dbar": 0.001875733612087938,
+   "Dmax_pole_antipode": 0.0911910019475311,
+   "n_pairs": 239,
+   "top5_Dmax": [
+    [
+     52,
+     0.1111
+    ],
+    [
+     55,
+     0.1101
+    ],
+    [
+     75,
+     0.0984
+    ],
+    [
+     31,
+     0.0953
+    ],
+    [
+     7,
+     0.0944
+    ]
+   ]
+  }
+ }
+}
