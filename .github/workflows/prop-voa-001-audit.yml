@@ -1,0 +1,27 @@
+name: PROP-VOA-001 independent diagnostic
+
+on:
+  push:
+    branches:
+      - research/prop-voa-001-independent-audit
+    paths:
+      - "experiments/monster_voa_seed/**"
+      - "tests/test_monster_voa_seed_model.py"
+      - ".github/workflows/prop-voa-001-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run PROP-VOA-001 model tests
+        run: python -m unittest tests.test_monster_voa_seed_model -v
+      - name: Emit diagnostic summary
+        run: python experiments/monster_voa_seed/model.py
