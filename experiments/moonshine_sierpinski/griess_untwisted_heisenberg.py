@@ -518,6 +518,91 @@ def untwisted_oscillator_invariance_global_audit() -> dict:
     }
 
 
+
+def untwisted_momentum_invariance_star_audit() -> dict:
+    """Exhaust the momentum-sector invariance star around one Leech orbit.
+
+    Fix alpha=(4,4,0,...,0). The minimal shell contains exactly 4,600
+    vectors beta with (alpha,beta)=-2. For each such beta, gamma=alpha+beta
+    is again a norm-four Leech vector and the product alpha*beta is supported
+    on the orbit [gamma]. The invariant-form identity is checked against
+    c=gamma, where alpha*gamma returns the orbit [beta].
+
+    This is an exhaustive local star around one fixed momentum basis vector,
+    not a global all-triples certificate. The orbit enumeration is drawn
+    from the full 196,560-vector minimal Leech shell.
+    """
+    from experiments.moonshine_sierpinski.leech_golay_construction import (
+        leech_minimal_vectors,
+    )
+
+    alpha = (4, 4) + (0,) * 22
+    alpha_key: BasisKey = ("mom", canonical_momentum_key(alpha)[1])
+    checked = 0
+    output_orbits: set[MomentumKey] = set()
+    beta_orbits: set[MomentumKey] = set()
+
+    for beta in leech_minimal_vectors():
+        inner_numerator = lattice_inner_product_numerator(alpha, beta)
+        if inner_numerator != -16:
+            continue
+
+        beta_key: MomentumKey = canonical_momentum_key(beta)
+        if beta_key in beta_orbits:
+            raise AssertionError("duplicate antipodal beta orbit in fixed momentum star")
+        beta_orbits.add(beta_key)
+
+        gamma = tuple(a + b for a, b in zip(alpha, beta))
+        gamma_key = canonical_momentum_key(gamma)
+        if sum(value * value for value in gamma) != 32:
+            raise AssertionError("momentum-star sum is not a norm-four Leech vector")
+
+        left_product = momentum_momentum_product(alpha, beta)
+        if len(left_product) != 1:
+            raise AssertionError("inner-product -2 momentum product must have one output")
+        output_key, coefficient = next(iter(left_product.items()))
+        if output_key != gamma_key:
+            raise AssertionError("momentum product output does not match alpha + beta orbit")
+        output_orbits.add(output_key)
+
+        probe_key: BasisKey = ("mom", gamma_key[1])
+        right_product = momentum_momentum_product(alpha, gamma_key[1])
+        left_pairing = griess_sparse_bilinear_form(
+            left_product, {probe_key: Fraction(1)}
+        )
+        right_pairing = griess_sparse_bilinear_form(
+            {("mom", beta_key[1]): Fraction(1)}, right_product
+        )
+        if left_pairing != right_pairing:
+            raise AssertionError(
+                "momentum invariant-form mismatch in fixed star for "
+                f"beta={beta_key[1]}: {left_pairing} != {right_pairing}"
+            )
+        checked += 1
+
+    if checked != 4600 or len(beta_orbits) != 4600 or len(output_orbits) != 4600:
+        raise AssertionError(
+            "fixed Leech momentum star must contain 4600 distinct beta/output "
+            f"orbits; got checks={checked}, beta={len(beta_orbits)}, "
+            f"outputs={len(output_orbits)}"
+        )
+
+    return {
+        "fixed_momentum_orbit": alpha_key[1],
+        "minimal_shell_vectors_scanned": 196560,
+        "inner_product_minus_two_vectors": checked,
+        "distinct_beta_orbits": len(beta_orbits),
+        "distinct_output_orbits": len(output_orbits),
+        "invariance_checks": checked,
+        "zero_residual_count": checked,
+        "all_checks_exact": True,
+        "scope": (
+            "exhaustive exact momentum-sector invariant-form star around one "
+            "fixed Leech momentum orbit; not a global all-triples certificate"
+        ),
+    }
+
+
 def untwisted_heisenberg_block_audit() -> dict:
     """Return formula-level scope and exact normalization checks."""
     sample = tuple([4, 4] + [0] * 22)
