@@ -20,6 +20,7 @@ from experiments.moonshine_sierpinski.griess_untwisted_heisenberg import (
     untwisted_invariant_form_audit,
     untwisted_invariant_form_global_audit,
     untwisted_oscillator_invariance_global_audit,
+    untwisted_momentum_invariance_star_audit,
 )
 from experiments.moonshine_sierpinski.leech_lattice_cocycle import (
     lattice_cocycle_sign,
@@ -270,6 +271,16 @@ class UntwistedHeisenbergProductTests(unittest.TestCase):
         self.assertEqual(audit["invariance_checks"], 45840)
         self.assertEqual(audit["zero_residual_count"], 45840)
         self.assertTrue(audit["all_potentially_nonzero_triples_checked"])
+
+    def test_exhaustive_fixed_momentum_invariance_star(self):
+        audit = untwisted_momentum_invariance_star_audit()
+        self.assertEqual(audit["minimal_shell_vectors_scanned"], 196560)
+        self.assertEqual(audit["inner_product_minus_two_vectors"], 4600)
+        self.assertEqual(audit["distinct_beta_orbits"], 4600)
+        self.assertEqual(audit["distinct_output_orbits"], 4600)
+        self.assertEqual(audit["invariance_checks"], 4600)
+        self.assertEqual(audit["zero_residual_count"], 4600)
+        self.assertTrue(audit["all_checks_exact"])
 
     def test_invariant_form_identity_on_untwisted_fixture_triples(self):
         alpha = (4, 4) + (0,) * 22
