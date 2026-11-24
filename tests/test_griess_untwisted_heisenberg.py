@@ -21,6 +21,7 @@ from experiments.moonshine_sierpinski.griess_untwisted_heisenberg import (
     untwisted_invariant_form_global_audit,
     untwisted_oscillator_invariance_global_audit,
     untwisted_momentum_invariance_star_audit,
+    untwisted_mixed_invariance_star_audit,
 )
 from experiments.moonshine_sierpinski.leech_lattice_cocycle import (
     lattice_cocycle_sign,
@@ -280,6 +281,17 @@ class UntwistedHeisenbergProductTests(unittest.TestCase):
         self.assertEqual(audit["distinct_output_orbits"], 4600)
         self.assertEqual(audit["invariance_checks"], 4600)
         self.assertEqual(audit["zero_residual_count"], 4600)
+        self.assertTrue(audit["all_checks_exact"])
+
+    def test_exhaustive_mixed_oscillator_momentum_invariance_star(self):
+        audit = untwisted_mixed_invariance_star_audit()
+        self.assertEqual(audit["minimal_shell_vectors_scanned"], 196560)
+        self.assertEqual(audit["oscillator_basis_dimension"], 300)
+        self.assertEqual(audit["supported_momentum_orbits_for_second_orientation"], 4601)
+        self.assertEqual(audit["orientation_one_checks"], 196560 * 300)
+        self.assertEqual(audit["orientation_two_checks"], 4601 * 300)
+        self.assertEqual(audit["total_exact_invariance_checks"], (196560 + 4601) * 300)
+        self.assertEqual(audit["zero_residual_count"], (196560 + 4601) * 300)
         self.assertTrue(audit["all_checks_exact"])
 
     def test_invariant_form_identity_on_untwisted_fixture_triples(self):
