@@ -9,6 +9,7 @@ from experiments.monster_voa_seed.model import (
     audit_corrupted_shell_control,
     audit_exactness,
     audit_permutation_control,
+    audit_transition_edges,
     build_audit_summary,
     build_class_table,
     canonical_table_bytes,
@@ -38,6 +39,33 @@ class MonsterVOASeedModelTests(unittest.TestCase):
         self.assertEqual(result["root_seeds"], 1)
         self.assertEqual(result["shell_seeds"], 4)
         self.assertEqual(result["twisted_ground_seeds"], 1)
+
+    def test_explicit_transition_edge_audit(self):
+        result = audit_transition_edges(self.rows)
+        self.assertTrue(result["passed"], result["violations"])
+        self.assertEqual(result["enumerated_children"], len(self.rows))
+        self.assertEqual(result["seed_counts"]["root"], 1)
+        self.assertEqual(result["seed_counts"]["d2_leech_shell"], 4)
+        self.assertEqual(result["seed_counts"]["d3_twisted_ground"], 1)
+        self.assertTrue(all(edge["grade_increment"] == "1" for edge in result["edges"]))
+        self.assertTrue(all(edge["sector_transition_valid"] for edge in result["edges"]))
+        self.assertTrue(all(edge["parity_valid"] for edge in result["edges"]))
+
+    def test_transition_edge_audit_rejects_missing_parent(self):
+        from experiments.monster_voa_seed.model import _parent_untwisted
+
+        child = next(
+            row for row in self.rows
+            if row.sector == "untwisted" and row.floor == 3 and row.tau
+        )
+        parent = _parent_untwisted(child)
+        reduced = tuple(row for row in self.rows if row != parent)
+        result = audit_transition_edges(reduced)
+        self.assertFalse(result["passed"])
+        self.assertTrue(any(
+            item["kind"] == "orphan_edge_parent_not_enumerated"
+            for item in result["violations"]
+        ))
 
     def test_corrupted_s2_control_fails_exact_census(self):
         self.assertTrue(audit_corrupted_shell_control(self.shells)["passed"])
