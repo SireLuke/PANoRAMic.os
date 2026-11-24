@@ -194,3 +194,35 @@ orbits, and 4,600 exact zero residuals. This is an exhaustive local
 momentum-star certificate around one fixed Leech orbit. It is not a
 global all-triples proof for the 98,280-dimensional momentum sector and
 does not cover mixed or twisted-sector triples.
+
+
+## Mixed oscillator–momentum invariant-form star — G1h
+
+The mixed-sector audit fixes \(\alpha=(4,4,0,\ldots,0)\) and checks
+both mixed product orderings against all 300 oscillator basis states.
+
+First, for every one of the 196,560 minimal-shell vectors \(\beta\), it
+checks
+\[
+\langle A_{ij}{}_1 E_{[\alpha]},E_{[\beta]}\rangle
+=
+\langle E_{[\alpha]},A_{ij}{}_1 E_{[\beta]}\rangle.
+\]
+This performs 58,968,000 exact residual checks and scans the full shell;
+the pairing support forces both sides to vanish unless the momentum
+orbits agree.
+
+Second, it checks
+\[
+\langle E_{[\alpha]}{}_1 E_{[\beta]},A_{ij}\rangle
+=
+\langle E_{[\beta]},E_{[\alpha]}{}_1 A_{ij}\rangle
+\]
+for all oscillator basis states and the 4,601 supported momentum orbits:
+the opposite orbit and the 4,600 inner-product-minus-two neighbors. This
+adds 1,380,300 exact residual checks.
+
+The audit therefore requires 60,348,300 exact zero residuals. It is an
+exhaustive mixed-sector star around one fixed Leech momentum orbit, not a
+global all-triples certificate for the complete untwisted space. The
+twisted-sector extension and full Griess algebra remain outside scope.
