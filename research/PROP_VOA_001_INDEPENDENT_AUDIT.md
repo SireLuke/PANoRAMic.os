@@ -41,6 +41,28 @@ control are explicit. The six previously adopted amendments remain in force.
 No unresolved-specification status is carried forward from the older draft
 text.
 
+## Preserved class-census diagnostic baseline
+
+The prior census implementation and its reported baseline remain unchanged by
+this additive edge-audit patch:
+
+| Floor | Untwisted fixed | Twisted fixed | Total |
+|---:|---:|---:|---:|
+| 0 | 1 | 0 | 1 |
+| 1 | 0 | 0 | 0 |
+| 2 | 98,580 | 98,304 | 196,884 |
+| 3 | 10,745,856 | 10,747,904 | 21,493,760 |
+| 4 | 432,155,586 | 432,144,384 | 864,299,970 |
+| 5 | 10,122,903,552 | 10,122,952,704 | 20,245,856,256 |
+
+The existing enumerator reported 44 class records across floors 0–5: 34
+projected census classes and 10 unprojected vacuum-shell bridge classes.
+Per-floor record counts were 1, 1, 4, 7, 12, and 19. Its canonical JSON
+encoding was reported as 4,891 bytes against the 65,536-byte ceiling. These
+are inherited diagnostic baseline figures, not results of the new edge audit
+and not a preregistered run. The existing 24-color bosonic occupancy factor
+for mode occupancy r is binomial(23+r, 23), multiplied over occupied modes.
+
 ## Rev. 3 amendment 7 — explicit transition-edge audit
 
 The original C2 closure audit is preserved as a separate result. The additive
