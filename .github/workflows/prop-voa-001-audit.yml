@@ -8,6 +8,13 @@ on:
       - "experiments/monster_voa_seed/**"
       - "tests/test_monster_voa_seed_model.py"
       - ".github/workflows/prop-voa-001-audit.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "experiments/monster_voa_seed/**"
+      - "tests/test_monster_voa_seed_model.py"
+      - ".github/workflows/prop-voa-001-audit.yml"
   workflow_dispatch:
 
 permissions:
