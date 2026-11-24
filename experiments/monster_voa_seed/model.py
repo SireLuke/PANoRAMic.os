@@ -9,6 +9,7 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import asdict, dataclass
 from hashlib import sha256
+from fractions import Fraction
 from math import comb
 import json
 from typing import Iterable
@@ -323,6 +324,209 @@ def audit_closure(rows: Iterable[StateClass]) -> dict:
     }
 
 
+
+def _flat_parts(row: StateClass) -> tuple[int, ...]:
+    return tuple(
+        mode
+        for mode, occupancy in row.tau
+        for _ in range(occupancy)
+    )
+
+
+def conformal_grade(row: StateClass) -> Fraction:
+    """Return the exact VOA conformal grade represented by a class.
+
+    Untwisted: lattice shell grade plus integer oscillator modes.
+    Twisted: 3/2 ground grade plus doubled half-integer oscillator modes.
+    """
+    if row.sector == "untwisted":
+        shell_grade = row.shell if row.shell is not None else 0
+        return Fraction(shell_grade + sum(
+            mode * occupancy for mode, occupancy in row.tau
+        ))
+    if row.sector == "twisted":
+        return Fraction(3, 2) + sum(
+            Fraction(mode * occupancy, 2)
+            for mode, occupancy in row.tau
+        )
+    raise ValueError(f"unknown VOA sector: {row.sector!r}")
+
+
+def _d1_operation(parent: StateClass, child: StateClass) -> str:
+    parent_parts = _flat_parts(parent)
+    child_parts = _flat_parts(child)
+    if parent.sector == "untwisted":
+        if child_parts.count(1) == parent_parts.count(1) + 1:
+            return "D1_ADD_INTEGER_MODE_1"
+        return "D1_RAISE_INTEGER_MODE"
+    if child_parts.count(1) == parent_parts.count(1) + 2:
+        return "D1_ADD_HALF_MODE_PAIR"
+    return "D1_RAISE_HALF_MODE"
+
+
+def audit_transition_edges(rows: Iterable[StateClass]) -> dict:
+    """Audit every class as a seed or an explicit one-grade D1 edge.
+
+    D2 Leech shell seeds and the D3 twisted-ground seed remain separately
+    classified seed operations; neither is counted as propagation.
+    """
+    table = tuple(rows)
+    keys = {_key(row) for row in table}
+    duplicate_keys = len(keys) != len(table)
+    edges = []
+    seeds = []
+    violations = []
+
+    for child in table:
+        child_grade = conformal_grade(child)
+        if child_grade != child.floor:
+            violations.append({
+                "kind": "child_grade_floor_mismatch",
+                "child": _key(child),
+                "conformal_grade": str(child_grade),
+                "declared_floor": child.floor,
+            })
+
+        if (
+            child.sector == "untwisted"
+            and child.floor == 0
+            and child.shell == 0
+            and not child.tau
+        ):
+            seeds.append({
+                "operation": "ROOT_BASE_SEED",
+                "child": _key(child),
+                "grade": str(child_grade),
+            })
+            continue
+
+        if (
+            child.sector == "untwisted"
+            and child.floor > 0
+            and child.shell == child.floor
+            and not child.tau
+        ):
+            seeds.append({
+                "operation": "D2_LEECH_SHELL_SEED",
+                "child": _key(child),
+                "grade": str(child_grade),
+            })
+            continue
+
+        if (
+            child.sector == "twisted"
+            and child.floor == 2
+            and child.tau == ((1, 1),)
+        ):
+            seeds.append({
+                "operation": "D3_TWISTED_GROUND_SEED",
+                "child": _key(child),
+                "grade": str(child_grade),
+            })
+            continue
+
+        try:
+            parent = (
+                _parent_untwisted(child)
+                if child.sector == "untwisted"
+                else _parent_twisted(child)
+            )
+        except ValueError as exc:
+            violations.append({
+                "kind": "orphan_child_without_candidate_parent",
+                "child": _key(child),
+                "detail": str(exc),
+            })
+            continue
+
+        parent_key = _key(parent)
+        if parent_key not in keys:
+            violations.append({
+                "kind": "orphan_edge_parent_not_enumerated",
+                "parent": parent_key,
+                "child": _key(child),
+            })
+            continue
+
+        parent_grade = conformal_grade(parent)
+        increment = child_grade - parent_grade
+        operation = _d1_operation(parent, child)
+        parent_parts = _flat_parts(parent)
+        child_parts = _flat_parts(child)
+
+        sector_ok = parent.sector == child.sector
+        if child.sector == "untwisted":
+            parity_ok = (
+                parent.parity == len(parent_parts) % 2
+                and child.parity == len(child_parts) % 2
+                and (child.parity - parent.parity) % 2
+                    == (len(child_parts) - len(parent_parts)) % 2
+            )
+            projection_ok = (
+                parent.projected == (parent.shell > 0 or parent.parity == 0)
+                and child.projected == (child.shell > 0 or child.parity == 0)
+            )
+        else:
+            parity_ok = (
+                parent.parity == child.parity == 1
+                and len(parent_parts) % 2 == len(child_parts) % 2 == 1
+            )
+            projection_ok = parent.projected and child.projected
+
+        allowed_operation = operation in {
+            "D1_ADD_INTEGER_MODE_1",
+            "D1_RAISE_INTEGER_MODE",
+            "D1_ADD_HALF_MODE_PAIR",
+            "D1_RAISE_HALF_MODE",
+        }
+        edge_ok = (
+            allowed_operation
+            and increment == 1
+            and sector_ok
+            and parity_ok
+            and projection_ok
+        )
+        edge = {
+            "operation": operation,
+            "parent": parent_key,
+            "child": _key(child),
+            "parent_grade": str(parent_grade),
+            "child_grade": str(child_grade),
+            "grade_increment": str(increment),
+            "allowed_operation": allowed_operation,
+            "sector_transition_valid": sector_ok,
+            "parity_valid": parity_ok,
+            "projection_valid": projection_ok,
+            "passed": edge_ok,
+        }
+        edges.append(edge)
+        if not edge_ok:
+            violations.append({
+                "kind": "invalid_transition_edge",
+                "edge": edge,
+            })
+
+    return {
+        "passed": not violations and not duplicate_keys,
+        "enumerated_children": len(table),
+        "candidate_d1_edges": len(edges),
+        "d1_edges": sum(edge["passed"] for edge in edges),
+        "seed_counts": {
+            "root": sum(seed["operation"] == "ROOT_BASE_SEED" for seed in seeds),
+            "d2_leech_shell": sum(
+                seed["operation"] == "D2_LEECH_SHELL_SEED" for seed in seeds
+            ),
+            "d3_twisted_ground": sum(
+                seed["operation"] == "D3_TWISTED_GROUND_SEED" for seed in seeds
+            ),
+        },
+        "edges": edges,
+        "seeds": seeds,
+        "duplicate_class_keys": duplicate_keys,
+        "violations": violations,
+    }
+
+
 def canonical_table_bytes(rows: Iterable[StateClass]) -> bytes:
     payload = {
         "schema": "PROP-VOA-001-class-table-v0.1",
@@ -427,6 +631,14 @@ def build_audit_summary() -> dict:
     encoded = canonical_table_bytes(rows)
     exactness = audit_exactness(rows)
     closure = audit_closure(rows)
+    transition_edges = audit_transition_edges(rows)
+    transition_edges["matches_c2_d1_edge_count"] = (
+        transition_edges["d1_edges"] == closure["d1_edges"]
+    )
+    transition_edges["passed"] = (
+        transition_edges["passed"]
+        and transition_edges["matches_c2_d1_edge_count"]
+    )
     permutation = audit_permutation_control(rows)
     corrupted = audit_corrupted_shell_control(shells)
     return {
@@ -441,6 +653,7 @@ def build_audit_summary() -> dict:
         },
         "census": exactness,
         "closure": closure,
+        "transition_edge_audit": transition_edges,
         "compression": {
             "canonical_json_bytes": len(encoded),
             "limit_bytes": MAX_JSON_BYTES,
@@ -458,6 +671,7 @@ def build_audit_summary() -> dict:
             "used_classes": len(rows),
             "passes": len(rows) <= MAX_CLASSES,
             "max_floor": MAX_FLOOR,
+            "max_transition_increment_conformal_grade": 1,
         },
         "evidence_boundary": (
             "Exact class-count representation diagnostic only; constructs no "
