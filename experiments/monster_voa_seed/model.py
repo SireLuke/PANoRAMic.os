@@ -369,17 +369,27 @@ def audit_permutation_control(rows: Iterable[StateClass], seed: int = 17) -> dic
     from dataclasses import replace
 
     original = tuple(rows)
+    # Keep the permutation inside the projected census. Mixing projected
+    # classes with bridge-only rows changes the projected aggregate by design.
     candidates = [
         index for index, row in enumerate(original)
-        if row.floor == 5 and row.sector == "untwisted"
+        if row.floor == 5 and row.sector == "untwisted" and row.projected
     ]
-    if len(candidates) < 2:
-        raise AssertionError("not enough classes for permutation control")
+    original_values = [original[index].multiplicity for index in candidates]
+    if len(candidates) < 2 or len(set(original_values)) < 2:
+        raise AssertionError(
+            "permutation control needs two projected classes with distinct multiplicities"
+        )
 
-    shuffled_values = [original[index].multiplicity for index in candidates]
+    shuffled_values = list(original_values)
     random.Random(seed).shuffle(shuffled_values)
-    if shuffled_values == [original[index].multiplicity for index in candidates]:
-        shuffled_values = shuffled_values[1:] + shuffled_values[:1]
+    if shuffled_values == original_values:
+        # Guarantee a nontrivial permutation even for an unlucky seed/order.
+        left = next(i for i, value in enumerate(original_values)
+                    if value != original_values[0])
+        shuffled_values[0], shuffled_values[left] = (
+            shuffled_values[left], shuffled_values[0]
+        )
 
     mutated = list(original)
     for index, value in zip(candidates, shuffled_values):
