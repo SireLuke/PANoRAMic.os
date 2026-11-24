@@ -138,7 +138,7 @@ def build_class_table(
 
             for parts in _integer_partitions(floor - shell):
                 tau = _partition_type(parts)
-                parity = sum(parts) % 2
+                parity = len(parts) % 2
                 projected = shell > 0 or parity == 0
                 shell_factor = shell_count // 2 if shell > 0 else 1
                 rows.append(StateClass(
