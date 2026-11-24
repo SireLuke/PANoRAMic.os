@@ -174,3 +174,23 @@ criterion.
 This closes the product-invariance check for the oscillator block only.
 It does not establish the corresponding identity for all momentum triples,
 the twisted sector, or the full Griess algebra.
+
+
+## Fixed momentum-star invariant-form audit — G1g
+
+The next momentum-sector audit fixes the minimal Leech vector
+\(\alpha=(4,4,0,\ldots,0)\) and scans the complete 196,560-vector
+minimal shell. Exactly 4,600 vectors \(\beta\) have
+\((\alpha,\beta)=-2\). For each, the sum
+\(\gamma=\alpha+\beta\) is checked to remain in the norm-four Leech
+shell, the implemented momentum product is checked to land on the
+antipodal orbit \([\gamma]\), and the invariant-form identity is
+evaluated exactly with probe \(c=\gamma\). The reverse product
+\(\alpha*\gamma\) must return the orbit \([\beta]\), with matching
+pairing coefficient.
+
+The audit requires 4,600 distinct beta orbits, 4,600 distinct output
+orbits, and 4,600 exact zero residuals. This is an exhaustive local
+momentum-star certificate around one fixed Leech orbit. It is not a
+global all-triples proof for the 98,280-dimensional momentum sector and
+does not cover mixed or twisted-sector triples.
