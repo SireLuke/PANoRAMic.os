@@ -31,4 +31,6 @@ jobs:
       - name: Run PROP-VOA-001 model tests
         run: python -m unittest discover -s tests -p 'test_monster_voa_seed_model.py' -v
       - name: Emit diagnostic summary
+        env:
+          PYTHONPATH: .
         run: python experiments/monster_voa_seed/model.py
