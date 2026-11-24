@@ -198,3 +198,35 @@ H(t) = A + ε[cos Ωt·D1 + sgn·sin Ωt·D2], D1, D2 the potentials along the p
 
 ## Bottom line
 No one-way transport was found in either extension. Structured phases are symmetry-protected for the pole/antipode pair; unstructured phases give only transient asymmetry (|Dbar| ≤ 1e-3); driven asymmetry flips sign with the drive phase. The linear drive's higher time-averaged transfer than the rotating drive is the one clean new effect, plausibly leakage. Not run: Leech versions, complex phases combined with a non-Hermitian sink (the only route to a genuine one-way effect, and no longer a closed system), and a rotation test from an off-axis start, which is where chirality could show.
+
+---
+
+# Addendum 5 (2026-11-23): rotating gradient from off-axis starts (E8, full 240 x 240)
+
+Files: `rotating_offaxis.py` (header frozen before the run), `outputs/eqbit_drift_001_offaxis.json`. Same drive, integrator (h = 0.005) and window (T = 200) as `rotating_gradient.py`, with an added drive phase φ: angle Ωt + φ. Closed unitary system, Analogy rung.
+
+**Why off-axis.** For the pole/antipode pair the rotation sense provably cannot matter (gate RG3 of Addendum 4): the reflection S in the root r2 is a graph automorphism that fixes root 0 and its antipode and flips the second tilt axis. A start a with a·r2 ≠ 0 is moved by S, and S maps the circ drive to the rev drive, so P_rev(Sa|a) = P_circ(a|Sa) exactly. The asymmetry of the mirror pair (a, Sa) under rotation is therefore a direct chirality probe: reversing the rotation reverses its sign.
+
+**Gates (all pass).** OG1 structure (S preserves adjacency, fixes root 0 and antipode, flips D2, fixes D1, moves both starts); OG2 linear drive gives exact mirror symmetry (6.4e-13); OG3 chirality identity P_rev(Sa|a) = P_circ(a|Sa) (6e-13, 8e-13); OG4 convergence h vs h/2 (2.7e-6); OG5 antipodal relation Dbar_{−a1}(φ) = Dbar_{a1}(φ+π) at all 8 phases (≤ 3.7e-14).
+
+**Disclosed design flaw.** The registered rule for the second start, "first root with dot 0 to root 0 and a·r2 ≠ 0", selects root 1, which *is* r2. Then S a2 = −a2: the mirror pair is an antipodal pair, and the antipodal relation forces its φ-mean to vanish exactly (observed: 0.0000 in all six configurations). Start a2 is therefore uninformative for the phase-independent test C2; it still shows the timing effect (C1 fires in 4 of 6 configurations, Dbar up to ±0.118, antisymmetric under φ → φ+π). The informative start is **a1 = root 4, (2,0,2,0,0,0,0,0)** (a pole neighbour), whose mirror image is (0,2,2,0,0,0,0,0); neither coincides with −a1.
+
+**Results for the informative start a1** (Dbar = time-average of P(a→Sa) − P(Sa→a) over T = 200; φ-mean over 8 drive phases):
+
+| ε | Ω | φ-mean Dbar | phases with \|Dbar\| > 1e-2 | time-avg P(a→Sa) | P(Sa→a) | C2 |
+|---|---|---|---|---|---|---|
+| 0.5 | 2.0 | +0.0116 | 5 of 8 | 0.0507 | 0.0391 | fires (margin 1.6e-3, marginal) |
+| 0.5 | 7.7 | −0.0514 | 8 of 8 | 0.0068 | 0.0582 | fires |
+| 0.5 | 12.0 | +0.0056 | 0 of 8 | 0.0186 | 0.0130 | no |
+| 2.0 | 2.0 | +0.0395 | 8 of 8 | 0.0922 | 0.0527 | fires |
+| 2.0 | 7.7 | −0.0056 | 2 of 8 | 0.0573 | 0.0629 | no |
+| 2.0 | 12.0 | −0.0260 | 8 of 8 | 0.0372 | 0.0632 | fires |
+
+- **C2 (phase-independent chirality) fires in 4 of 6 configurations.** At (0.5, 7.7) and (2, 2) and (2, 12) the sign of Dbar is the same at all eight drive phases, so this is not the timing artifact seen on-axis (where shifting the phase by π flipped the sign). By OG3, reversing the rotation sense flips the sign exactly.
+- **The preferred direction depends on frequency:** positive at Ω = 2, negative at Ω = 7.7 and 12 for ε = 0.5; positive at Ω = 2 and negative at Ω = 12 for ε = 2. The magnitude is a strong preference, not a diode: at (0.5, 7.7) the time-averaged transfer is 8.6 times larger in the Sa → a direction (0.058 vs 0.007), and both directions are nonzero.
+
+**Limits.** One informative start only, so nothing is claimed about generality across roots. T = 200 is a finite window, not an asymptotic average. The pair probabilities are small (0.007–0.09). This is a first-pass result and needs an independent reproduction.
+
+**Interpretation, not tested.** A rotating potential can act as an effective gauge flux (Floquet-induced phases). Addendum 4 found no net asymmetry for *static* complex phases, consistent with a diagonal-ensemble argument that does not apply to a time-dependent H. The present net asymmetry is consistent with that picture, but no Floquet analysis was done here.
+
+**Not run:** more starts (one per orbit class of the mirror/axis stabilizer would map where chirality lives), longer windows, a Leech version (the rotating drive breaks the 7-orbit quotient, so it needs the full 196,560-vertex problem), and a non-Hermitian sink on top.
