@@ -3,6 +3,18 @@ from __future__ import annotations
 
 import json
 
+# --- repo-root bootstrap: makes this file runnable directly, from any
+# working directory (the imports below address packages from the repo
+# root). No-op when the root is already on sys.path. See
+# docs/RUNNING_PYTHON.md.
+import sys as _sys
+from pathlib import Path as _Path
+
+_REPO_ROOT = _Path(__file__).resolve().parents[1]
+if str(_REPO_ROOT) not in _sys.path:
+    _sys.path.insert(0, str(_REPO_ROOT))
+# --- end repo-root bootstrap ---
+
 from core.gauge_theory.su2_lattice import random_gauge_transform, random_lattice
 
 

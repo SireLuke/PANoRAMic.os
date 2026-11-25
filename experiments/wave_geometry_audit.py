@@ -1,5 +1,17 @@
 """Deterministic classical wave geometry audit."""
 import math
+# --- repo-root bootstrap: makes this file runnable directly, from any
+# working directory (the imports below address packages from the repo
+# root). No-op when the root is already on sys.path. See
+# docs/RUNNING_PYTHON.md.
+import sys as _sys
+from pathlib import Path as _Path
+
+_REPO_ROOT = _Path(__file__).resolve().parents[1]
+if str(_REPO_ROOT) not in _sys.path:
+    _sys.path.insert(0, str(_REPO_ROOT))
+# --- end repo-root bootstrap ---
+
 from core.abom_v8.wave_geometry import dirichlet_mode,equal_wave_intensity,fringe_spacing,inner_product,mode_angular_frequency,phase_from_path_difference
 
 def main():

@@ -22,6 +22,18 @@ from collections import Counter, defaultdict
 from fractions import Fraction
 from typing import TypeAlias
 
+# --- repo-root bootstrap: makes this file runnable directly, from any
+# working directory (the imports below address packages from the repo
+# root). No-op when the root is already on sys.path. See
+# docs/RUNNING_PYTHON.md.
+import sys as _sys
+from pathlib import Path as _Path
+
+_REPO_ROOT = _Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in _sys.path:
+    _sys.path.insert(0, str(_REPO_ROOT))
+# --- end repo-root bootstrap ---
+
 from experiments.moonshine_sierpinski.leech_golay_construction import (
     code_words_cached,
 )
