@@ -10,6 +10,18 @@ import json
 import random
 from math import sqrt
 
+# --- repo-root bootstrap: makes this file runnable directly, from any
+# working directory (the imports below address packages from the repo
+# root). No-op when the root is already on sys.path. See
+# docs/RUNNING_PYTHON.md.
+import sys as _sys
+from pathlib import Path as _Path
+
+_REPO_ROOT = _Path(__file__).resolve().parents[1]
+if str(_REPO_ROOT) not in _sys.path:
+    _sys.path.insert(0, str(_REPO_ROOT))
+# --- end repo-root bootstrap ---
+
 from core.geometry.e8_root_system import e8_roots_float
 from experiments.gosset_sierpinski_experiment import PROJECTION
 

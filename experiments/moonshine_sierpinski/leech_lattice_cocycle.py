@@ -18,6 +18,18 @@ together with this recorded basis/cocycle convention.
 """
 from __future__ import annotations
 
+# --- repo-root bootstrap: makes this file runnable directly, from any
+# working directory (the imports below address packages from the repo
+# root). No-op when the root is already on sys.path. See
+# docs/RUNNING_PYTHON.md.
+import sys as _sys
+from pathlib import Path as _Path
+
+_REPO_ROOT = _Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in _sys.path:
+    _sys.path.insert(0, str(_REPO_ROOT))
+# --- end repo-root bootstrap ---
+
 from experiments.moonshine_sierpinski.leech_unimodular_basis import (
     _COORDINATE_BASIS,
 )
