@@ -91,10 +91,12 @@ def local_relation_census(gram: np.ndarray, adjacency: np.ndarray) -> dict:
                 # local census and made this audit appear stalled for minutes.
                 for pair_dot in relation_dots:
                     mask = pair_dots == pair_dot
+                    # A suffix of the upper triangle need not contain every
+                    # relation class.  Validate classes when they occur here;
+                    # global non-emptiness and constancy are checked after all
+                    # rows have contributed.
                     if not np.any(mask):
-                        raise AssertionError(
-                            f"missing pair class {pair_dot} in local relation census"
-                        )
+                        continue
                     f_values = forward_counts[mask]
                     r_values = reverse_counts[mask]
                     f_min, f_max = int(f_values.min()), int(f_values.max())
@@ -107,7 +109,7 @@ def local_relation_census(gram: np.ndarray, adjacency: np.ndarray) -> dict:
                         )
                     by_pair_class[pair_dot].add(f_min)
                     by_pair_class[pair_dot].add(r_min)
-            if any(len(values) != 1 for values in by_pair_class.values()):
+            if any(not values or len(values) != 1 for values in by_pair_class.values()):
                 raise AssertionError(
                     f"intersection number varies for R{dot_a}*R{dot_b}: "
                     f"{by_pair_class}"
