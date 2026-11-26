@@ -37,3 +37,63 @@ package as the registered result.
 
 Results land as JSON next to the script (`B_stats.json`,
 `kernel_probe.json`, `subrank.json`, `rank_result.json`).
+
+## Running it in plain language (added 2026-11-26, at Lucas's request)
+
+There is only **one** script file: `leech_b_rank.py`. There are no other
+pilot files to find, install, or open.
+
+The words `gen`, `build`, `probe`, `subrank`, `eliminate` are **stage
+words**. They are not files, buttons, or menu items. You type one stage
+word at the end of the command, after the script's file path, and the
+script runs that one stage. Running the script with **no** stage word
+runs `gen`, `build`, and `probe` in order, then stops.
+
+Run the stages **in this order, one at a time**:
+
+1. `gen` — builds the list of Leech vectors. Seconds.
+2. `build` — builds the matrix file `B_padded.bin` (~1.2 GB, next to the
+   script). A few minutes. If the files already exist, both of these
+   print `cached` and skip — that is normal, not an error.
+3. `probe` — a sanity check. **You should see:**
+   `KERNEL HIT coord0==+4 (weight 46)` and `1 hits, 1 independent`.
+4. `subrank` — a rehearsal on a small corner of the matrix.
+   **You should see:** `{'submatrix': 8192, 'rank': 8170, 'nullity': 22}`.
+   **Gate: if the rank is anything other than 8170, STOP.** Do not run
+   the next stage — a different number means the matrix on your machine
+   is not the same matrix, and the long run would be wasted.
+5. `eliminate` — the full computation. It prints one line every 512
+   pivots (e.g. `eliminate: rank 512 (col 513)`) and saves a checkpoint
+   file, `elim_ckpt.npz`, at the same moments. Silence between lines is
+   normal; it is working. When it finishes, it writes `rank_result.json`
+   next to the script — that file is the result.
+
+**Stopping and resuming is safe.** If the window is closed, the machine
+reboots, or power is lost, run the same `eliminate` command again: it
+reads the checkpoint and resumes where it left off. Nothing already
+printed is lost.
+
+**One rule:** once `eliminate` has started, do not re-run `probe` or
+`subrank`. `eliminate` is the last stage, and it changes the matrix file
+as it works; the earlier stages must stay as they were run, in order.
+
+**Windows / PowerShell notes** (learned live, 2026-11-26):
+
+- The command must start with the `&` symbol, then the Python path in
+  quotes, then the script path in quotes, then the stage word with no
+  quotes, like this:
+
+  ```
+  & 'C:\Python314\python.exe' 'c:/path/to/leech_b_rank.py' subrank
+  ```
+
+- If you see a `>>` prompt, PowerShell is waiting for a quote you left
+  open. Press **Ctrl+C** to cancel and start the line over.
+- Dropping the `&` gives an "Unexpected token" error — the paths alone
+  are not a command.
+
+**Observed pace** (one data point, not a promise): on a Ryzen 5600X
+(48 GB RAM), 2026-11-26, the first `eliminate` checkpoint printed after
+~1 minute and the next seven blocks arrived every ~2 minutes 12 seconds
+per 512 pivots, steady. Later blocks slow down as the matrix fills in;
+plan on an overnight-class run.
