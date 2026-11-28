@@ -30,12 +30,7 @@ Let (S=\{0,\ldots,98,279\}\setminus\{98,240,\ldots,98,263\}), so (|S|=98,256). W
 3. The 24 omitted rows were applied to that 30-dimensional restricted kernel. Their induced (24\times30) constraint map has GF(2) rank 6 (checked independently in C++ and Python). Thus the kernel surviving all rows has dimension (30-6=24).
 4. A separate five-seed block-Lanczos extraction produced 24 independent vectors in the full kernel. A C++ verifier multiplied those vectors against every row of the full 98,280-by-98,280 matrix: all 98,280 row syndromes were zero for every basis vector. The lane file SHA-256 is `7a9b4967b595ceec75f58c3dc5e6bba6bb0a53c86a8c8e1044afa641c2842cd2`.
 
-If rank(B_S) = 98,250 is confirmed on the rebuilt matrix, the six independent omitted-row constraints give rank at least 98,256; the 24 independent full-kernel vectors give rank at most 98,256. The resulting current inference is:
-
-[
-\boxed{\operatorname{rank}_{\mathbb F_2}(B)=98,256,\qquad
-\operatorname{nullity}_{\mathbb F_2}(B)=24.}
-]
+If rank(B_S) = 98,250 is confirmed on the rebuilt matrix, the six independent omitted-row constraints give rank at least 98,256; the 24 independent full-kernel vectors give rank at most 98,256. The current inferred result is **rank 98,256 / nullity 24**, still provisional pending corrected full elimination.
 
 The 24-dimensional verified kernel proves the full matrix is rank-deficient by at least 24. Exact nullity 24 remains provisional until the corrected full elimination closes the upper/lower bound on the rank.
 
