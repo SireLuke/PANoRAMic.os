@@ -31,10 +31,7 @@ class TestPackedColumnMask(unittest.TestCase):
         real_columns = range(98240, NPAIRS)
         masks = [int(packed_column_mask(c)) for c in real_columns]
         self.assertEqual(len(set(masks)), 40)
-        self.assertEqual(set(masks), {1 << b for b in (7, 15, 23, 31, 39, 47, 55, 63)} |
-                         {1 << b for b in (0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 16, 17,
-                                           18, 19, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 32,
-                                           33, 34, 35, 36, 37, 38)})
+        self.assertEqual(set(masks), {1 << bit for bit in range(40)})
 
 
 class TestEliminationCheckpoint(unittest.TestCase):
