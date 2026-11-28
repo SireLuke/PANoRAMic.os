@@ -1,14 +1,14 @@
 # LEECH-EQBIT-001 — global antipodal cut-rank audit (2026-11-27)
 
-**Status:** independent in-session reconstruction and algebraic verification completed; repository CI and a second human/bench reproduction are pending.
+**Status:** independent matrix reconstruction and kernel verification completed; the inferred full rank is 98,256, but a corrected exact full elimination and a second human/bench reproduction remain pending.
 
 ## Executive finding
 
 The legacy full-elimination result `rank = 98,250` is **not** the rank of the full (98,280\times98,280) matrix. The packed-column mask in `leech_b_rank.py` interpreted NumPy's default big-bit-order byte packing as if the bytes were big-endian within a native little-endian `uint64`. Complete 64-column words were visited in a permuted order, but the final word has only 40 real columns: the legacy mask visits 24 padding bits and only 16 real columns in that word. It therefore omits 24 real coordinates, indices 98,240–98,263.
 
-The legacy elimination result is the rank of the corresponding 98,256-row restriction (equivalently, by symmetry, the 98,280-by-98,256 selected-column matrix), not the full matrix. The restricted rank is 98,250. A 30-dimensional nullspace of that restricted row matrix was recovered; the 24 omitted rows impose six independent additional constraints. The resulting full-matrix rank is **98,256**, and its nullity is **24**.
+The legacy elimination result is the rank of the corresponding 98,256-row restriction (equivalently, by symmetry, the 98,280-by-98,256 selected-column matrix), not the full matrix. The restricted rank is 98,250. A 30-dimensional nullspace of that restricted row matrix was recovered; the 24 omitted rows impose six independent additional constraints. The current rank argument gives a full-matrix rank of **98,256** and nullity **24**, conditional on the restricted rank 98,250 being reproduced on the rebuilt matrix. The 24-dimensional full-kernel lower bound is directly verified; the exact upper bound still needs the corrected full elimination.
 
-This is an exact finite GF(2) computation for the reconstructed matrix, with the evidence and common-mode limitations below. It is not a physical claim and does not imply a Leech–E8 or Leech–VOA coupling.
+This is an exact finite GF(2) kernel verification plus a rank inference assembled from the legacy restricted-rank result and independent coupling checks. It is not yet a fully closed, independently rerun full-rank computation. It is not a physical claim and does not imply a Leech–E8 or Leech–VOA coupling.
 
 ## Matrix contract and reconstruction
 
@@ -30,14 +30,14 @@ Let (S=\{0,\ldots,98,279\}\setminus\{98,240,\ldots,98,263\}), so (|S|=98,256). W
 3. The 24 omitted rows were applied to that 30-dimensional restricted kernel. Their induced (24\times30) constraint map has GF(2) rank 6 (checked independently in C++ and Python). Thus the kernel surviving all rows has dimension (30-6=24).
 4. A separate five-seed block-Lanczos extraction produced 24 independent vectors in the full kernel. A C++ verifier multiplied those vectors against every row of the full 98,280-by-98,280 matrix: all 98,280 row syndromes were zero for every basis vector. The lane file SHA-256 is `7a9b4967b595ceec75f58c3dc5e6bba6bb0a53c86a8c8e1044afa641c2842cd2`.
 
-Together, the six independent constraints give rank at least 98,256; the 24 independent full-kernel vectors give rank at most 98,256. Therefore:
+If rank(B_S) = 98,250 is confirmed on the rebuilt matrix, the six independent omitted-row constraints give rank at least 98,256; the 24 independent full-kernel vectors give rank at most 98,256. The resulting current inference is:
 
 [
 \boxed{\operatorname{rank}_{\mathbb F_2}(B)=98,256,\qquad
 \operatorname{nullity}_{\mathbb F_2}(B)=24.}
 ]
 
-The 24-dimensional nullity is not a claim of “full rank”; the matrix is rank-deficient by 24.
+The 24-dimensional verified kernel proves the full matrix is rank-deficient by at least 24. Exact nullity 24 remains provisional until the corrected full elimination closes the upper/lower bound on the rank.
 
 ## Cross-analysis against the preregistration and existing research
 
@@ -71,8 +71,8 @@ The new tests cover all 64 positions in a complete word, all 40 real positions i
 
 - Run the PR tests and full repository CI.
 - Regenerate `B_padded.bin` from the corrected code; do not reuse a matrix already mutated by the legacy elimination.
-- Rerun the corrected full elimination from a pristine matrix and compare its rank to 98,256.
+- Rerun the corrected full elimination from a pristine matrix; 98,256 is the predicted rank, not yet a completed corrected-run result.
 - Have Cosmo or another independent bench reconstruct the matrix and reproduce the 24-dimensional kernel, ideally with a different GF(2) algorithm.
 - Preserve the original 98,250 output as a historical restricted-matrix result, not as the full rank.
 
-No repository CI result or second-bench reproduction is claimed by this report.
+No repository CI result, corrected full-elimination result, or second-bench reproduction is claimed by this report.
