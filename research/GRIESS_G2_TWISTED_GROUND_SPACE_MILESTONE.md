@@ -89,6 +89,17 @@ Record the lattice inner-product scaling used by this repository alongside the s
 - **G4 remains separate:** combine all four product blocks and certify closure, commutativity, identity, and invariant-form invariance for the full 196,884-dimensional algebra. Do not demand associativity of the Griess product.
 - **G5 remains separate:** construct explicit Monster generators/actions and verify their relations and preservation of the product/form. Published character-table comparisons are reference-data checks, not an implemented action.
 
+## Relationship to the Moonshine × Sierpiński research folder
+
+The existing `experiments/moonshine_sierpinski/` programme contains two distinct reference tracks, and G2 must not blur them:
+
+1. **Sierpiński gasket graph track.** `sierpinski_graph_spectrum.py` builds finite-stage combinatorial Laplacians. Stages 0–3 use a floating-point Jacobi eigensolver; stage 4 is count/trace-only under the current default vertex cap. These are finite graph spectral audits, not spectra of the Leech lattice, VOA, or Monster.
+2. **Modular/lattice track.** `lattice_modular_audit.py` computes exact low-order coefficients for (E_4^k), (Delta), and the Leech theta-series identity (E_4^3-720\Delta). The README explicitly distinguishes the theta-series reference from a coordinate construction; later Golay/Leech modules supply the coordinate realization and VOA precursor.
+
+The folder's README explicitly states that no correspondence between Sierpiński spectra and Monster/VOA data is asserted. G2 is therefore a continuation of the constructive Leech-orbifold/VOA branch, **not** evidence for a Sierpiński–Moonshine spectral correspondence. Any future cross-system claim must be a separate preregistered study with structure-preserving/randomized controls and held-out evaluation, as the README requires.
+
+This separation is intentional: exact modular coefficients, exact Leech/Golay construction, finite Sierpiński graph counts, and floating-point low-stage graph eigenvalues have different evidence grades and must remain separately labelled in reports and tests.
+
 ## Repository entry points and dependencies
 
 - `research/GRIESS_PRODUCT_CONSTRUCTION_SPEC.md` — global G0–G5 programme and product-block contract.
