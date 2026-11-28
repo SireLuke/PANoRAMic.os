@@ -6,14 +6,14 @@
 
 The legacy full-elimination result `rank = 98,250` is **not** the rank of the full (98,280\times98,280) matrix. The packed-column mask in `leech_b_rank.py` interpreted NumPy's default big-bit-order byte packing as if the bytes were big-endian within a native little-endian `uint64`. Complete 64-column words were visited in a permuted order, but the final word has only 40 real columns: the legacy mask visits 24 padding bits and only 16 real columns in that word. It therefore omits 24 real coordinates, indices 98,240–98,263.
 
-The legacy elimination result is the rank of the corresponding 98,256-row restriction (equivalently, by symmetry, the 98,280-by-98,256 selected-column matrix), not the full matrix. The restricted rank is 98,250. A 30-dimensional nullspace of that restricted row matrix was recovered; the 24 omitted rows impose six independent additional constraints. The current rank argument gives a full-matrix rank of **98,256** and nullity **24**, conditional on the restricted rank 98,250 being reproduced on the rebuilt matrix. The 24-dimensional full-kernel lower bound is directly verified; the exact upper bound still needs the corrected full elimination.
+The legacy elimination result is the rank of the corresponding 98,256-row restriction (equivalently, by symmetry, the 98,280-by-98,256 selected-column matrix), not the full matrix. The legacy result reports restricted rank 98,250; this restricted rank still needs to be rerun on the reconstructed matrix. A 30-dimensional subspace of the restricted nullspace was recovered; the 24 omitted rows impose six independent additional constraints on that subspace. The current rank argument gives a full-matrix rank of **98,256** and nullity **24**, conditional on the restricted rank 98,250 being reproduced on the rebuilt matrix. The 24-dimensional full-kernel lower bound is directly verified; the exact upper bound still needs the corrected full elimination.
 
 This is an exact finite GF(2) kernel verification plus a rank inference assembled from the legacy restricted-rank result and independent coupling checks. It is not yet a fully closed, independently rerun full-rank computation. It is not a physical claim and does not imply a Leech–E8 or Leech–VOA coupling.
 
 ## Matrix contract and reconstruction
 
 - Rows/columns: 98,280 antipodal representatives, first nonzero coordinate positive.
-- Entry: (B_{ab}=1) iff the exact scaled integer dot product is (-16).
+- Entry: B[a,b] = 1 iff the exact scaled integer dot product is -16.
 - Matrix is symmetric with zero diagonal under the stated construction.
 - Reconstructed packed matrix SHA-256: `799aa7a473305221ad1091d6a8cdb041110dc2a5abdd182ec9e08b272b07720d`.
 - Nonzeros: 150,696,000; packed size: 1,207,664,640 bytes.
@@ -44,7 +44,7 @@ The 24-dimensional verified kernel proves the full matrix is rank-deficient by a
 ### What agrees
 
 - `research/LEECH24_EQBIT_001.md` defines the Leech minimal shell, antipodal pairing, exact inner-product adjacency, and GF(2) cut-rank as separate from E8/Gosset. This audit follows that 24D Leech graph contract.
-- Its Section 10.2 proves that an antipodal-transversal cut matrix is symmetric with zero diagonal, hence alternating over GF(2), so its rank must be even. The measured full rank 98,256 is even, and the nullity 24 is even. This is a consistency check, not a substitute for the rank computation.
+- Its Section 10.2 proves that an antipodal-transversal cut matrix is symmetric with zero diagonal, hence alternating over GF(2), so its rank must be even. The current predicted full rank 98,256 is even; the verified 24-dimensional kernel lower bound is also even. This is a consistency check, not a substitute for the rank computation.
 - The already filed local-shell result is a different object: the 4,600-by-4,600 cut inside one reference neighborhood has rank 4,600, a perfect matching. That local theorem and its association-scheme calculations are not contradicted by this global 98,280-pair matrix result.
 - The documented 8,192 principal-submatrix gate (rank 8,170, nullity 22) is unaffected by the final partial-word mask, because it ends on a 64-bit boundary. It is a useful regression test but cannot detect the final-word defect.
 
