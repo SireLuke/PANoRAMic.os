@@ -19,6 +19,54 @@ B_BIN = os.path.join(HERE, "B_padded.bin")
 NPAIRS = 98280
 PADCOLS = 98304
 WORDS = PADCOLS // 64
+CHECKPOINT_SCHEMA = 2
+
+
+def packed_column_mask(column):
+    """Mask for a packbits(bitorder='big') column in a little-endian uint64 word.
+
+    The on-disk matrix is a byte stream. NumPy's uint64 memmap below uses
+    explicit little-endian words, so byte order is stable across hosts.
+    """
+    within_word = column % 64
+    bit_in_word = 8 * (within_word // 8) + 7 - (within_word % 8)
+    return np.uint64(1) << np.uint64(bit_in_word)
+
+
+def save_checkpoint(path, rank, next_col):
+    """Atomically save both independent elimination cursors."""
+    tmp = path + ".tmp"
+    with open(tmp, "wb") as stream:
+        np.savez(
+            stream,
+            schema=np.array([CHECKPOINT_SCHEMA], dtype=np.int64),
+            rank=np.array([rank], dtype=np.int64),
+            next_col=np.array([next_col], dtype=np.int64),
+        )
+        stream.flush()
+        os.fsync(stream.fileno())
+    os.replace(tmp, path)
+
+
+def load_checkpoint(path):
+    """Load a v2 checkpoint; reject legacy rank-only cursors as unsafe."""
+    with np.load(path) as saved:
+        required = {"schema", "rank", "next_col"}
+        if not required.issubset(saved.files):
+            raise RuntimeError(
+                "Legacy rank-only checkpoint is unsafe: it does not store "
+                "the next column cursor. Preserve it for audit, move it aside, "
+                "regenerate B_padded.bin from the gen/build stages, then restart."
+            )
+        schema = int(saved["schema"][0])
+        rank = int(saved["rank"][0])
+        next_col = int(saved["next_col"][0])
+    if schema != CHECKPOINT_SCHEMA:
+        raise RuntimeError(f"Unsupported checkpoint schema {schema}")
+    if not (0 <= rank <= next_col <= NPAIRS):
+        raise RuntimeError(f"Invalid checkpoint cursors: rank={rank}, next_col={next_col}")
+    return rank, next_col
+
 
 def log(msg):
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
@@ -165,13 +213,14 @@ def eliminate():
     Sized for a workstation (Lucas's 5600X / 48 GB), not the VM."""
     build()
     CKPT = os.path.join(HERE, "elim_ckpt.npz")
-    B = np.memmap(B_BIN, dtype=np.uint64, mode="r+", shape=(NPAIRS, WORDS))
-    start = 0
+    B = np.memmap(B_BIN, dtype="<u8", mode="r+", shape=(NPAIRS, WORDS))
+    rank = 0
+    next_col = 0
     if os.path.exists(CKPT):
-        start = int(np.load(CKPT)["rank"]); log(f"eliminate: resume at {start}")
-    rank = start
-    for c in range(start, NPAIRS):
-        w, bit = c // 64, np.uint64(1) << np.uint64(63 - c % 64)
+        rank, next_col = load_checkpoint(CKPT)
+        log(f"eliminate: resume at rank {rank}, column {next_col}")
+    for c in range(next_col, NPAIRS):
+        w, bit = c // 64, packed_column_mask(c)
         col = B[rank:, w]
         piv = np.argmax(col & bit != 0) if (col & bit != 0).any() else -1
         if piv < 0: continue
@@ -181,8 +230,14 @@ def eliminate():
         if len(below):
             B[below] ^= B[rank]
         rank += 1
-        if rank % 512 == 0:
-            np.savez(CKPT, rank=rank); log(f"eliminate: rank {rank} (col {c})")
+        if rank and rank % 512 == 0:
+            B.flush()
+            save_checkpoint(CKPT, rank, c + 1)
+            log(f"eliminate: rank {rank} (next col {c + 1})")
+    # Persist matrix pages before publishing the terminal cursor.
+    B.flush()
+    # Persist the terminal cursor too, including trailing zero-pivot columns.
+    save_checkpoint(CKPT, rank, NPAIRS)
     res = dict(rank=rank, nullity=NPAIRS - rank, n=NPAIRS)
     json.dump(res, open(os.path.join(HERE, "rank_result.json"), "w"), indent=1)
     log(f"eliminate: DONE {res}")

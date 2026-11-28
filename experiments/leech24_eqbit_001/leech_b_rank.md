@@ -97,3 +97,12 @@ as it works; the earlier stages must stay as they were run, in order.
 ~1 minute and the next seven blocks arrived every ~2 minutes 12 seconds
 per 512 pivots, steady. Later blocks slow down as the matrix fills in;
 plan on an overnight-class run.
+
+
+## Global rank audit correction (2026-11-27)
+
+The first reported full-run value `rank=98250` was not the full 98,280-by-98,280 rank. A packed-bit endian mismatch caused the final partial 64-bit word to test 24 padding positions and omit 24 real columns (indices 98,240–98,263). Because the matrix is symmetric, the legacy elimination measured the rank of the corresponding 98,256-row restriction.
+
+An independent reconstruction and kernel/coupling analysis gives full-matrix rank **98,256** and nullity **24**. See [the detailed audit](../../research/LEECH_EQBIT_GLOBAL_RANK_AUDIT_2026-11-27.md). The 8,192-by-8,192 subrank gate (8,170 / 22) does not detect this final-word issue because it ends on a 64-bit boundary.
+
+The corrected implementation uses an explicit packed-byte mask and a versioned checkpoint containing both `rank` and `next_col`. A pristine matrix must be regenerated before rerunning; do not reuse a matrix mutated by the legacy elimination. CI and a second independent bench reproduction remain pending.
