@@ -231,8 +231,11 @@ def eliminate():
             B[below] ^= B[rank]
         rank += 1
         if rank and rank % 512 == 0:
+            B.flush()
             save_checkpoint(CKPT, rank, c + 1)
             log(f"eliminate: rank {rank} (next col {c + 1})")
+    # Persist matrix pages before publishing the terminal cursor.
+    B.flush()
     # Persist the terminal cursor too, including trailing zero-pivot columns.
     save_checkpoint(CKPT, rank, NPAIRS)
     res = dict(rank=rank, nullity=NPAIRS - rank, n=NPAIRS)
